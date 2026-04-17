@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 12:34:56 MST 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Fri Apr 17 16:31:35 2026
+# Process ID         : 2205362
+# Current directory  : /nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_microzed/build
+# Command line       : vivado -mode tcl -source ../vivado.tcl
+# Log file           : /nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_microzed/build/vivado.log
+# Journal file       : /nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_microzed/build/vivado.jou
+# Running On         : localhost.localdomain
+# Platform           : Mageia
+# Operating System   : Mageia 9
+# Processor Detail   : Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz
+# CPU Frequency      : 2400.134 MHz
+# CPU Physical cores : 12
+# CPU Logical cores  : 24
+# Host memory        : 101206 MB
+# Swap memory        : 137438 MB
+# Total Virtual      : 238645 MB
+# Available Virtual  : 207097 MB
+#-----------------------------------------------------------
+source ../vivado.tcl
