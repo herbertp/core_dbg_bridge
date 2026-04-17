@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date              : Fri Apr 17 15:50:42 2026
+| Date              : Fri Apr 17 20:09:19 2026
 | Host              : localhost.localdomain running 64-bit Mageia 9
 | Command           : report_datasheet -file datasheet.rpt
 | Design            : top
@@ -15,23 +15,12 @@ Data Sheet Report
 
 Input Ports Setup/Hold
 
-----------+------------+----------+-------+---------------+---------+---------------+---------+----------+
-Reference | Input      | IO Reg   | Delay |     Setup(ns) | Process |      Hold(ns) | Process | Internal |
-Clock     | Port       | Type     | Type  | to Clk (Edge) | Corner  | to Clk (Edge) | Corner  | Clock    |
-----------+------------+----------+-------+---------------+---------+---------------+---------+----------+
-sys_clk   | key[0]     | RAMB36E2 | -     |     2.718 (r) | SLOW    |     1.079 (r) | SLOW    |          |
-sys_clk   | uart_rxd_i | FDPE     | -     |     0.162 (r) | FAST    |     1.415 (r) | SLOW    |          |
-----------+------------+----------+-------+---------------+---------+---------------+---------+----------+
-
-
-Output Ports Clock-to-out
-
-----------+------------+-----------+-------+----------------+---------+----------------+---------+----------+
-Reference | Output     | IO Reg    | Delay | Max Clk (Edge) | Process | Min Clk (Edge) | Process | Internal |
-Clock     | Port       | Type      | Type  |    to port(ns) | Corner  |    to port(ns) | Corner  | Clock    |
-----------+------------+-----------+-------+----------------+---------+----------------+---------+----------+
-sys_clk   | uart_txd_o | FDPE (IO) | -     |      5.929 (r) | SLOW    |      3.085 (r) | FAST    |          |
-----------+------------+-----------+-------+----------------+---------+----------------+---------+----------+
+----------+--------+---------+-------+---------------+---------+---------------+---------+----------+
+Reference | Input  | IO Reg  | Delay |     Setup(ns) | Process |      Hold(ns) | Process | Internal |
+Clock     | Port   | Type    | Type  | to Clk (Edge) | Corner  | to Clk (Edge) | Corner  | Clock    |
+----------+--------+---------+-------+---------------+---------+---------------+---------+----------+
+sys_clk   | key[0] | FDCE    | -     |     2.098 (r) | SLOW    |    -0.282 (r) | SLOW    |          |
+----------+--------+---------+-------+---------------+---------+---------------+---------+----------+
 
 
 Setup between Clocks
@@ -40,25 +29,25 @@ Setup between Clocks
 Source  | Destination |  Src:Rise     | Process |  Src:Rise     | Process |  Src:Fall     | Process |  Src:Fall     | Process |
 Clock   | Clock       | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  |
 --------+-------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
-sys_clk | sys_clk     |         4.992 | SLOW    |               |         |               |         |               |         |
+sys_clk | sys_clk     |         0.433 | SLOW    |               |         |               |         |               |         |
 --------+-------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
 
 
 Setup / Hold times for input bus
 Clocked by: sys_clk
-Worst Case Data Window: 3.797 ns
-Ideal Clock Offset to Actual Clock: -0.820 ns
--------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
-                   |             | Process |             | Process | Setup     |  Hold     | Source Offset |
-Source             |   Setup(ns) | Corner  |    Hold(ns) | Corner  | Slack(ns) | Slack(ns) | to Center(ns) |
--------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
-key[0]             |   2.718 (r) | SLOW    |   1.079 (r) | SLOW    |       inf |       inf |             - |
-key[1]             |           - | -       |           - | -       |       inf |       inf |             - |
-key[2]             |           - | -       |           - | -       |       inf |       inf |             - |
-key[3]             |           - | -       |           - | -       |       inf |       inf |             - |
--------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
-Worst Case Summary |   2.718 (r) | SLOW    |   1.079 (r) | SLOW    |       inf |       inf |             - |
--------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
+Worst Case Data Window: 1.817 ns
+Ideal Clock Offset to Actual Clock: -1.190 ns
+-------------------+-------------+---------+------------+---------+-----------+-----------+---------------+
+                   |             | Process |            | Process | Setup     |  Hold     | Source Offset |
+Source             |   Setup(ns) | Corner  |   Hold(ns) | Corner  | Slack(ns) | Slack(ns) | to Center(ns) |
+-------------------+-------------+---------+------------+---------+-----------+-----------+---------------+
+key[0]             |   2.098 (r) | SLOW    | -0.282 (r) | SLOW    |       inf |       inf |             - |
+key[1]             |           - | -       |          - | -       |       inf |       inf |             - |
+key[2]             |           - | -       |          - | -       |       inf |       inf |             - |
+key[3]             |           - | -       |          - | -       |       inf |       inf |             - |
+-------------------+-------------+---------+------------+---------+-----------+-----------+---------------+
+Worst Case Summary |   2.098 (r) | SLOW    | -0.282 (r) | SLOW    |       inf |       inf |             - |
+-------------------+-------------+---------+------------+---------+-----------+-----------+---------------+
 
 
 
