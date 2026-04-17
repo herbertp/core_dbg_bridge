@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 --  top.vhd
 --	XCKU5P simple VHDL example
---	Version 1.0
+--	Version 1.1
 --
 --  Copyright (C) 2026 H.Poetzl
 --
@@ -40,6 +40,7 @@ end entity top;
 architecture RTL of top is
 
     signal clk_200 : std_logic;
+    signal clk_100 : std_logic;
 
     signal clk_cfg : std_logic;
     signal clk_cfgm : std_logic;
@@ -187,15 +188,28 @@ begin
 	);
 
     --------------------------------------------------------------------
+    -- Clock Divider
+    --------------------------------------------------------------------
+
+    process(clk_200, rst_i)
+    begin
+        if rst_i = '1' then
+            clk_100 <= '0';
+        elsif rising_edge(clk_200) then
+            clk_100 <= not clk_100;
+        end if;
+    end process;
+
+    --------------------------------------------------------------------
     -- Debug Bridge
     --------------------------------------------------------------------
 
     rst_i <= not key(0);
-    clk_i <= clk_200;
+    clk_i <= clk_100;
 
     u_bridge : entity work.dbg_bridge
         generic map (
-            CLK_FREQ     => 200000000,
+            CLK_FREQ     => 100000000,
             UART_SPEED   => 115200
         )
         port map (
@@ -319,7 +333,7 @@ begin
 	generic map (
 	    STAGES => 28 )
 	port map (
-	    clk_in => clk_200,
+	    clk_in => clk_100,
 	    clk_out => done_led );
 
     done_led_n <= not done_led;
