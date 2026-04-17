@@ -26,6 +26,23 @@ set_property -dict [list \
 generate_target all [get_ips axi_bram_ctrl_0]
 synth_ip [get_ips axi_bram_ctrl_0]
 
+# Create Block Memory Generator IP
+create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name blk_mem_gen_0
+set_property -dict [list \
+  CONFIG.Memory_Type {Single_Port_RAM} \
+  CONFIG.Enable_32bit_Address {false} \
+  CONFIG.Use_Byte_Write_Enable {true} \
+  CONFIG.Byte_Size {8} \
+  CONFIG.Write_Width_A {32} \
+  CONFIG.Write_Depth_A {4096} \
+  CONFIG.Read_Width_A {32} \
+  CONFIG.Enable_A {Always_Enabled} \
+  CONFIG.Write_Mode_A {WRITE_FIRST} \
+] [get_ips blk_mem_gen_0]
+
+generate_target all [get_ips blk_mem_gen_0]
+synth_ip [get_ips blk_mem_gen_0]
+
 # 3. Synthesis
 synth_design -top top -part xcku5p-ffvb676-2-e
 write_checkpoint -force $outputDir/post_synth.dcp

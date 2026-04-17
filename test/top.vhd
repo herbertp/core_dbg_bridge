@@ -46,6 +46,19 @@ architecture rtl of top is
     signal mem_rid     : std_logic_vector(3 downto 0);
     signal mem_rlast   : std_logic;
 
+    -- Component declaration for Block Memory Generator (IP)
+    component blk_mem_gen_0 is
+        port (
+            clka  : in  std_logic;
+            rsta  : in  std_logic;
+            ena   : in  std_logic;
+            wea   : in  std_logic_vector(3 downto 0);
+            addra : in  std_logic_vector(13 downto 0);
+            dina  : in  std_logic_vector(31 downto 0);
+            douta : out std_logic_vector(31 downto 0)
+        );
+    end component;
+
     -- Component declaration for AXI BRAM Controller (IP)
     component axi_bram_ctrl_0 is
         port (
@@ -85,11 +98,28 @@ architecture rtl of top is
             s_axi_rresp   : out std_logic_vector(1 downto 0);
             s_axi_rlast   : out std_logic;
             s_axi_rvalid  : out std_logic;
-            s_axi_rready  : in  std_logic
+            s_axi_rready  : in  std_logic;
+            -- BRAM interface
+            bram_rst_a    : out std_logic;
+            bram_clk_a    : out std_logic;
+            bram_en_a     : out std_logic;
+            bram_we_a     : out std_logic_vector(3 downto 0);
+            bram_addr_a   : out std_logic_vector(13 downto 0);
+            bram_wrdata_a : out std_logic_vector(31 downto 0);
+            bram_rddata_a : in  std_logic_vector(31 downto 0)
         );
     end component;
 
     signal rst_n : std_logic;
+
+    -- BRAM interface signals
+    signal bram_rst_a    : std_logic;
+    signal bram_clk_a    : std_logic;
+    signal bram_en_a     : std_logic;
+    signal bram_we_a     : std_logic_vector(3 downto 0);
+    signal bram_addr_a   : std_logic_vector(13 downto 0);
+    signal bram_wrdata_a : std_logic_vector(31 downto 0);
+    signal bram_rddata_a : std_logic_vector(31 downto 0);
 
 begin
 
@@ -183,7 +213,28 @@ begin
             s_axi_rresp   => mem_rresp,
             s_axi_rlast   => mem_rlast,
             s_axi_rvalid  => mem_rvalid,
-            s_axi_rready  => mem_rready
+            s_axi_rready  => mem_rready,
+
+            -- BRAM interface
+            bram_rst_a    => bram_rst_a,
+            bram_clk_a    => bram_clk_a,
+            bram_en_a     => bram_en_a,
+            bram_we_a     => bram_we_a,
+            bram_addr_a   => bram_addr_a,
+            bram_wrdata_a => bram_wrdata_a,
+            bram_rddata_a => bram_rddata_a
+        );
+
+    -- Instantiate Block Memory
+    u_bram : blk_mem_gen_0
+        port map (
+            clka  => bram_clk_a,
+            rsta  => bram_rst_a,
+            ena   => bram_en_a,
+            wea   => bram_we_a,
+            addra => bram_addr_a,
+            dina  => bram_wrdata_a,
+            douta => bram_rddata_a
         );
 
 end architecture rtl;
