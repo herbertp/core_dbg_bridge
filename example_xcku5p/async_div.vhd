@@ -1,9 +1,9 @@
 ----------------------------------------------------------------------------
 --  async_div.vhd
---	Asynchronous Binary Divider
---	Version 1.0
+--	Synchronous Binary Divider (formerly Asynchronous)
+--	Version 1.1
 --
---  Copyright (C) 2013 H.Poetzl
+--  Copyright (C) 2013-2026 H.Poetzl
 --
 --	This program is free software: you can redistribute it and/or
 --	modify it under the terms of the GNU General Public License
@@ -33,45 +33,22 @@ entity async_div is
 	clk_out	: out std_logic		-- output clock
     );
 
-    -- attribute CLOCK_BUFFER_TYPE of clk_out : signal is "BUFG";
-
 end entity async_div;
 
 
 architecture RTL of async_div is
 
-    attribute ASYNC_REG of RTL : architecture is "TRUE";
-
-    signal stage : std_logic_vector(STAGES - 1 downto 0);
-
-    signal invq : std_logic_vector(STAGES - 1 downto 0);
+    signal counter : unsigned(STAGES - 1 downto 0) := (others => '0');
 
 begin
 
-    GEN_STAGE : for N in 0 to STAGES - 1 generate
-	INPUT : if N = 0 generate
-	    FDCE_inst : FDCE
-		port map (
-		    Q => stage(N),
-		    C => clk_in,
-		    CE => '1',
-		    CLR => '0',
-		    D => invq(N));
-	end generate;
-	
-	OTHER : if N > 0 generate
-	    FDCE_inst : FDCE
-		port map (
-		    Q => stage(N),
-		    C => stage(N - 1),
-		    CE => '1',
-		    CLR => '0',
-		    D => invq(N));
-	end generate;
-    end generate;
+    process(clk_in)
+    begin
+        if rising_edge(clk_in) then
+            counter <= counter + 1;
+        end if;
+    end process;
 
-    invq <= not stage;
-
-    clk_out <= stage(STAGES - 1);
+    clk_out <= counter(STAGES - 1);
 
 end RTL;

@@ -179,11 +179,22 @@ begin
     -- Differential Clock Buffer
     --------------------------------------------------------------------
 
-    IBUFGDS_inst : entity work.IBUFGDS
+    IBUFDS_inst : entity work.IBUFDS
 	port map (
 	    I => sys_clk_p,
 	    IB => sys_clk_n,
 	    O => clk_200
+	);
+
+    BUFGCE_DIV_inst : entity work.BUFGCE_DIV
+	generic map (
+	    BUFGCE_DIVIDE => 2
+	)
+	port map (
+	    I => clk_200,
+	    CE => '1',
+	    CLR => '0',
+	    O => clk_i
 	);
 
     --------------------------------------------------------------------
@@ -191,11 +202,10 @@ begin
     --------------------------------------------------------------------
 
     rst_i <= not key(0);
-    clk_i <= clk_200;
 
     u_bridge : entity work.dbg_bridge
         generic map (
-            CLK_FREQ     => 200000000,
+            CLK_FREQ     => 100000000,
             UART_SPEED   => 115200
         )
         port map (
@@ -319,7 +329,7 @@ begin
 	generic map (
 	    STAGES => 28 )
 	port map (
-	    clk_in => clk_200,
+	    clk_in => clk_i,
 	    clk_out => done_led );
 
     done_led_n <= not done_led;
