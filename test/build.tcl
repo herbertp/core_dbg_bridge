@@ -36,7 +36,8 @@ set_property -dict [list \
   CONFIG.Write_Width_A {32} \
   CONFIG.Write_Depth_A {4096} \
   CONFIG.Read_Width_A {32} \
-  CONFIG.Enable_A {Always_Enabled} \
+  CONFIG.Enable_A {Use_ENA_Pin} \
+  CONFIG.Use_RSTA_Pin {true} \
   CONFIG.Write_Mode_A {WRITE_FIRST} \
 ] [get_ips blk_mem_gen_0]
 
