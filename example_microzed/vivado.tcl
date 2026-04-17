@@ -22,6 +22,8 @@ read_verilog ../../src_v/dbg_bridge.v
 read_verilog ../../src_v/dbg_bridge_fifo.v
 read_verilog ../../src_v/dbg_bridge_uart.v
 
+read_xdc ../top.xdc
+
 set_property PART xc7z020clg400-1 [current_project]
 set_property BOARD_PART avnet.com:microzed_7020:part0:1.3 [current_project]
 set_property TARGET_LANGUAGE VHDL [current_project]

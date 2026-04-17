@@ -149,7 +149,7 @@ begin
 
     u_bridge : entity work.dbg_bridge
         generic map (
-            CLK_FREQ     => 200000000,
+            CLK_FREQ     => 100000000,
             UART_SPEED   => 115200
         )
         port map (
