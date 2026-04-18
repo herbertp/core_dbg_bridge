@@ -37,7 +37,7 @@ set_property -dict [list \
   CONFIG.C0.DDR4_DataWidth {32} \
   CONFIG.C0.DDR4_InputClockPeriod {5000} \
   CONFIG.C0.DDR4_AxiSelection {true} \
-  CONFIG.C0.DDR4_AxiDataWidth {64} \
+  CONFIG.C0.DDR4_AxiDataWidth {256} \
   CONFIG.C0.DDR4_AxiAddressWidth {31} \
   CONFIG.C0.DDR4_AxiIDWidth {4} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
@@ -50,7 +50,7 @@ synth_ip [get_ips ddr4_0]
 create_ip -name axi_clock_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_clock_converter_0
 set_property -dict [list \
   CONFIG.ADDR_WIDTH {31} \
-  CONFIG.DATA_WIDTH {64} \
+  CONFIG.DATA_WIDTH {256} \
   CONFIG.ID_WIDTH {4} \
 ] [get_ips axi_clock_converter_0]
 
@@ -62,7 +62,7 @@ create_ip -name axi_dwidth_converter -vendor xilinx.com -library ip -version 2.1
 set_property -dict [list \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.SI_DATA_WIDTH {32} \
-  CONFIG.MI_DATA_WIDTH {64} \
+  CONFIG.MI_DATA_WIDTH {256} \
   CONFIG.SI_ID_WIDTH {4} \
 ] [get_ips axi_dwidth_converter_0]
 
