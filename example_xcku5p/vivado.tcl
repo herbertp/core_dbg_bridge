@@ -30,35 +30,42 @@ set_property TARGET_LANGUAGE VHDL [current_project]
 
 # STEP#2: configure IPs
 
-# Create AXI BRAM Controller
-create_ip -name axi_bram_ctrl -vendor xilinx.com -library ip -version 4.1 -module_name axi_bram_ctrl_0
+# Create DDR4 IP
+create_ip -name ddr4 -vendor xilinx.com -library ip -version 2.2 -module_name ddr4_0
 set_property -dict [list \
-  CONFIG.DATA_WIDTH {32} \
+  CONFIG.C0.DDR4_MemoryPart {MT40A512M16LY-075} \
+  CONFIG.C0.DDR4_DataWidth {32} \
+  CONFIG.C0.DDR4_InputClockPeriod {5000} \
+  CONFIG.C0.DDR4_AxiSelection {true} \
+  CONFIG.C0.DDR4_AxiDataWidth {64} \
+  CONFIG.C0.DDR4_AxiAddressWidth {32} \
+  CONFIG.C0.DDR4_AxiIDWidth {4} \
+  CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
+] [get_ips ddr4_0]
+
+generate_target all [get_ips ddr4_0]
+synth_ip [get_ips ddr4_0]
+
+# Create AXI Clock Converter
+create_ip -name axi_clock_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_clock_converter_0
+set_property -dict [list \
+  CONFIG.DATA_WIDTH {64} \
   CONFIG.ID_WIDTH {4} \
-  CONFIG.MEM_DEPTH {16384} \
-  CONFIG.PROTOCOL {AXI4} \
-  CONFIG.SINGLE_PORT_BRAM {1} \
-] [get_ips axi_bram_ctrl_0]
+] [get_ips axi_clock_converter_0]
 
-generate_target all [get_ips axi_bram_ctrl_0]
-synth_ip [get_ips axi_bram_ctrl_0]
+generate_target all [get_ips axi_clock_converter_0]
+synth_ip [get_ips axi_clock_converter_0]
 
-# Create Block Memory Generator IP
-create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name blk_mem_gen_0
+# Create AXI Data Width Converter
+create_ip -name axi_dwidth_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_dwidth_converter_0
 set_property -dict [list \
-  CONFIG.Memory_Type {Single_Port_RAM} \
-  CONFIG.Enable_32bit_Address {false} \
-  CONFIG.Use_Byte_Write_Enable {true} \
-  CONFIG.Byte_Size {8} \
-  CONFIG.Write_Width_A {32} \
-  CONFIG.Write_Depth_A {65536} \
-  CONFIG.Read_Width_A {32} \
-  CONFIG.Enable_A {Use_ENA_Pin} \
-  CONFIG.Use_RSTA_Pin {true} \
-] [get_ips blk_mem_gen_0]
+  CONFIG.SI_DATA_WIDTH {32} \
+  CONFIG.MI_DATA_WIDTH {64} \
+  CONFIG.ID_WIDTH {4} \
+] [get_ips axi_dwidth_converter_0]
 
-generate_target all [get_ips blk_mem_gen_0]
-synth_ip [get_ips blk_mem_gen_0]
+generate_target all [get_ips axi_dwidth_converter_0]
+synth_ip [get_ips axi_dwidth_converter_0]
 
 # STEP#3: run synthesis, write checkpoint design
 
