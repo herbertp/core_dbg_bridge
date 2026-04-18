@@ -2,7 +2,6 @@
 # 200MHz System Clock (Bank 65)
 set_property PACKAGE_PIN T24 [get_ports sys_clk_p]
 set_property PACKAGE_PIN U24 [get_ports sys_clk_n]
-create_clock -period 5.000 -name sys_clk [get_ports sys_clk_p]
 set_property IOSTANDARD DIFF_SSTL12 [get_ports {sys_clk_*}]
 
 # Debug UART (Bank 84)
