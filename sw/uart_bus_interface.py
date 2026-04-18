@@ -1,117 +1,107 @@
 import serial
+from typing import Callable, Optional
 
 ##################################################################
 # UartBusInterface: UART -> Bus master interface
 ##################################################################
 class UartBusInterface:
-    ##################################################################
-    # Construction
-    ##################################################################
-    def __init__(self, iface = '/dev/ttyUSB1', baud = 115200):
-        self.interface  = iface
-        self.baud       = baud
-        self.uart       = None
-        self.prog_cb    = None
-        self.CMD_WRITE  = 0x10
-        self.CMD_READ   = 0x11
-        self.MAX_SIZE   = 255
+    """
+    UartBusInterface provides a bus master interface over a serial port.
+    """
+    def __init__(self, iface: str = '/dev/ttyUSB1', baud: int = 115200):
+        self.interface = iface
+        self.baud = baud
+        self.uart: Optional[serial.Serial] = None
+        self.prog_cb: Optional[Callable[[int, int], None]] = None
+        self.CMD_WRITE = 0x10
+        self.CMD_READ = 0x11
+        self.MAX_SIZE = 255
         self.BLOCK_SIZE = 128
-        self.GPIO_ADDR  = 0xF0000000
-        self.STS_ADDR   = 0xF0000004
+        self.GPIO_ADDR = 0xF0000000
+        self.STS_ADDR = 0xF0000004
 
-    ##################################################################
-    # set_progress_cb: Set progress callback
-    ##################################################################
-    def set_progress_cb(self, prog_cb):
-        self.prog_cb    = prog_cb
+    def set_progress_cb(self, prog_cb: Callable[[int, int], None]):
+        """Set progress callback."""
+        self.prog_cb = prog_cb
 
-    ##################################################################
-    # connect: Open serial connection
-    ##################################################################
     def connect(self):
+        """Open serial connection."""
         self.uart = serial.Serial(
             port=self.interface,
             baudrate=self.baud,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
-            bytesize=serial.EIGHTBITS
+            bytesize=serial.EIGHTBITS,
+            timeout=1.0  # Add timeout to avoid hanging
         )
-        self.uart.isOpen()
 
         # Check status register
         value = self.read32(self.STS_ADDR)
-        if ((value & 0xFFFF0000) != 0xcafe0000):
-            raise Exception("Target not responding correctly, check interface / baud rate...")
+        if (value & 0xFFFF0000) != 0xcafe0000:
+            raise Exception(f"Target not responding correctly (0x{value:08x}), check interface / baud rate...")
 
-    ##################################################################
-    # read32: Read a word from a specified address
-    ##################################################################
-    def read32(self, addr):
-        # Connect if required
-        if self.uart == None:
+    def read32(self, addr: int) -> int:
+        """Read a 32-bit word from a specified address."""
+        if self.uart is None:
             self.connect()
 
         # Send read command
-        cmd = bytearray([self.CMD_READ, 
-                         4, 
-                        (addr >> 24) & 0xFF, 
-                        (addr >> 16) & 0xFF, 
-                        (addr >> 8) & 0xFF, 
-                        (addr >> 0) & 0xFF])
+        cmd = bytearray([
+            self.CMD_READ,
+            4,
+            (addr >> 24) & 0xFF,
+            (addr >> 16) & 0xFF,
+            (addr >> 8)  & 0xFF,
+            (addr >> 0)  & 0xFF
+        ])
         self.uart.write(cmd)
 
+        resp = self.uart.read(4)
+        if len(resp) < 4:
+            raise Exception("Timeout reading from UART")
+
         value = 0
-        idx   = 0
-        while (idx < 4):
-            b = self.uart.read(1)
-            value |= (ord(b) << (idx * 8))
-            idx += 1
+        for idx, b in enumerate(resp):
+            value |= (b << (idx * 8))
 
         return value
 
-    ##################################################################
-    # write32: Write a word to a specified address
-    ##################################################################
-    def write32(self, addr, value):
-        # Connect if required
-        if self.uart == None:
+    def write32(self, addr: int, value: int):
+        """Write a 32-bit word to a specified address."""
+        if self.uart is None:
             self.connect()
 
         # Send write command
-        cmd = bytearray([self.CMD_WRITE,
-                         4, 
-                        (addr >> 24)  & 0xFF, 
-                        (addr >> 16)  & 0xFF, 
-                        (addr >> 8)   & 0xFF, 
-                        (addr >> 0)   & 0xFF, 
-                        (value >> 0)  & 0xFF, 
-                        (value >> 8)  & 0xFF, 
-                        (value >> 16) & 0xFF, 
-                        (value >> 24) & 0xFF])
+        cmd = bytearray([
+            self.CMD_WRITE,
+            4,
+            (addr >> 24) & 0xFF,
+            (addr >> 16) & 0xFF,
+            (addr >> 8)  & 0xFF,
+            (addr >> 0)  & 0xFF,
+            (value >> 0) & 0xFF,
+            (value >> 8) & 0xFF,
+            (value >> 16) & 0xFF,
+            (value >> 24) & 0xFF
+        ])
         self.uart.write(cmd)
 
-    ##################################################################
-    # write: Write a block of data to a specified address
-    ##################################################################
-    def write(self, addr, data, length, addr_incr=True, max_block_size=-1):
-        # Connect if required
-        if self.uart == None:
+    def write(self, addr: int, data: bytes | bytearray, length: int, addr_incr: bool = True, max_block_size: int = -1):
+        """Write a block of data to a specified address."""
+        if self.uart is None:
             self.connect()
 
-        # Write blocks
-        idx       = 0
+        idx = 0
         remainder = length
 
-        if self.prog_cb != None:
+        if self.prog_cb:
             self.prog_cb(0, length)
 
         if max_block_size == -1:
             max_block_size = self.BLOCK_SIZE
 
         while remainder > 0:
-            l = max_block_size
-            if l > remainder:
-                l = remainder
+            l = min(max_block_size, remainder)
 
             cmd = bytearray(2 + 4 + l)
             cmd[0] = self.CMD_WRITE
@@ -121,78 +111,70 @@ class UartBusInterface:
             cmd[4] = (addr >> 8)  & 0xFF
             cmd[5] = (addr >> 0)  & 0xFF
 
-            for i in range(l):
-                cmd[6+i] = data[idx]
-                idx += 1
+            cmd[6:6+l] = data[idx:idx+l]
+            idx += l
 
             # Write to serial port
             self.uart.write(cmd)
 
-            # Update display
-            if self.prog_cb != None:
+            if self.prog_cb:
                 self.prog_cb(idx, length)
 
             if addr_incr:
-                addr  += l
+                addr += l
             remainder -= l
 
-    ##################################################################
-    # read: Read a block of data from a specified address
-    ##################################################################
-    def read(self, addr, length, addr_incr=True, max_block_size=-1):
-        # Connect if required
-        if self.uart == None:
+    def read(self, addr: int, length: int, addr_incr: bool = True, max_block_size: int = -1) -> bytearray:
+        """Read a block of data from a specified address."""
+        if self.uart is None:
             self.connect()
 
-        idx       = 0
+        idx = 0
         remainder = length
-        data      = bytearray(length)
+        data = bytearray(length)
 
-        if self.prog_cb != None:
+        if self.prog_cb:
             self.prog_cb(0, length)
 
         if max_block_size == -1:
             max_block_size = self.BLOCK_SIZE
 
         while remainder > 0:
-            l = max_block_size
-            if l > remainder:
-                l = remainder
+            l = min(max_block_size, remainder)
 
-            cmd = bytearray(2 + 4)
-            cmd[0] = self.CMD_READ
-            cmd[1] = l & 0xFF
-            cmd[2] = (addr >> 24) & 0xFF
-            cmd[3] = (addr >> 16) & 0xFF
-            cmd[4] = (addr >> 8)  & 0xFF
-            cmd[5] = (addr >> 0)  & 0xFF
+            cmd = bytearray([
+                self.CMD_READ,
+                l & 0xFF,
+                (addr >> 24) & 0xFF,
+                (addr >> 16) & 0xFF,
+                (addr >> 8)  & 0xFF,
+                (addr >> 0)  & 0xFF
+            ])
 
             # Write to serial port
             self.uart.write(cmd)
 
             # Read block response
-            for i in range(l):
-                data[idx] = ord(self.uart.read(1)) & 0xFF
-                idx += 1
+            resp = self.uart.read(l)
+            if len(resp) < l:
+                raise Exception(f"Timeout reading from UART (expected {l}, got {len(resp)})")
 
-            # Update display
-            if self.prog_cb != None:
+            data[idx:idx+l] = resp
+            idx += l
+
+            if self.prog_cb:
                 self.prog_cb(idx, length)
 
             if addr_incr:
-                addr  += l
+                addr += l
             remainder -= l
 
         return data
 
-    ##################################################################
-    # read_gpio: Read GPIO bus
-    ##################################################################
-    def read_gpio(self):
+    def read_gpio(self) -> int:
+        """Read GPIO bus."""
         return self.read32(self.GPIO_ADDR)
 
-    ##################################################################
-    # write_gpio: Write a byte to GPIO
-    ##################################################################
-    def write_gpio(self, value):
+    def write_gpio(self, value: int):
+        """Write a byte to GPIO."""
         self.write32(self.GPIO_ADDR, value)

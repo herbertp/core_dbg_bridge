@@ -1,29 +1,26 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import argparse
 
-from bus_interface import *
+from bus_interface import BusInterface
 
 ##################################################################
 # Print iterations progress
 ##################################################################
 def print_progress(iteration, total, prefix='', suffix='', decimals=1, bar_length=50):
-    str_format = "{0:." + str(decimals) + "f}"
-    percents = str_format.format(100 * (iteration / float(total)))
+    percents = f"{100 * (iteration / float(total)):.{decimals}f}"
     filled_length = int(round(bar_length * iteration / float(total)))
     bar = 'X' * filled_length + ' ' * (bar_length - filled_length)
 
-    sys.stdout.write('\r%s |%s| %s%s %s' % (prefix, bar, percents, '%', suffix)),
+    print(f'\r{prefix} |{bar}| {percents}% {suffix}', end='', flush=True)
 
     if iteration == total:
-        sys.stdout.write('\n')
-    sys.stdout.flush()
+        print()
 
 ##################################################################
 # Main
 ##################################################################
-def main(argv):
-    
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', dest='type',    default='uart',                     help='Device type (uart|socket)')
     parser.add_argument('-d', dest='device',  default='/dev/ttyUSB1',             help='Serial Device')
@@ -38,16 +35,17 @@ def main(argv):
     bus_if.set_progress_cb(print_progress)
 
     # Open file
-    file     = open(args.filename, mode='rb')
-    data     = file.read()
+    with open(args.filename, mode='rb') as f:
+        data = f.read()
+
     filesize = len(data)
 
     # Size override
     if args.size != -1 and filesize > args.size:
         filesize = args.size
 
-    addr   = int(args.address, 0)
-    print("Load: %d bytes to 0x%08x" % (filesize, addr))
+    addr = int(args.address, 0)
+    print(f"Load: {filesize} bytes to 0x{addr:08x}")
 
     # Write to target
     bus_if.write(addr, data, filesize)
@@ -58,17 +56,14 @@ def main(argv):
         data_rb = bus_if.read(addr, filesize)
 
         for i in range(filesize):
-            if sys.version_info[0] < 3:
-                exp = ord(data[i]) & 0xFF
-            else:
-                exp = data[i] & 0xFF
+            # In Python 3, data[i] is already an int for bytes/bytearray
+            exp = data[i] & 0xFF
 
             if data_rb[i] != exp:
-                print("Data mismatches @ %d: %s != %d" % (addr + i,  str(data_rb[i]), exp))
+                print(f"Data mismatches @ {addr + i}: {data_rb[i]} != {exp}")
                 sys.exit(-1)
 
         print("Verify: Done")
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
-
+   main()
