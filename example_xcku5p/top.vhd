@@ -106,7 +106,7 @@ architecture RTL of top is
 
     signal dwc_awvalid : std_logic;
     signal dwc_awready : std_logic;
-    signal dwc_awaddr  : std_logic_vector(31 downto 0);
+    signal dwc_awaddr  : std_logic_vector(30 downto 0);
     signal dwc_awid    : std_logic_vector(3 downto 0);
     signal dwc_awlen   : std_logic_vector(7 downto 0);
     signal dwc_awburst : std_logic_vector(1 downto 0);
@@ -124,7 +124,7 @@ architecture RTL of top is
 
     signal dwc_arvalid : std_logic;
     signal dwc_arready : std_logic;
-    signal dwc_araddr  : std_logic_vector(31 downto 0);
+    signal dwc_araddr  : std_logic_vector(30 downto 0);
     signal dwc_arid    : std_logic_vector(3 downto 0);
     signal dwc_arlen   : std_logic_vector(7 downto 0);
     signal dwc_arburst : std_logic_vector(1 downto 0);
@@ -142,7 +142,7 @@ architecture RTL of top is
 
     signal m_awvalid : std_logic;
     signal m_awready : std_logic;
-    signal m_awaddr  : std_logic_vector(31 downto 0);
+    signal m_awaddr  : std_logic_vector(30 downto 0);
     signal m_awid    : std_logic_vector(3 downto 0);
     signal m_awlen   : std_logic_vector(7 downto 0);
     signal m_awburst : std_logic_vector(1 downto 0);
@@ -160,7 +160,7 @@ architecture RTL of top is
 
     signal m_arvalid : std_logic;
     signal m_arready : std_logic;
-    signal m_araddr  : std_logic_vector(31 downto 0);
+    signal m_araddr  : std_logic_vector(30 downto 0);
     signal m_arid    : std_logic_vector(3 downto 0);
     signal m_arlen   : std_logic_vector(7 downto 0);
     signal m_arburst : std_logic_vector(1 downto 0);
@@ -249,7 +249,7 @@ architecture RTL of top is
             s_axi_aclk    : in  std_logic;
             s_axi_aresetn : in  std_logic;
             s_axi_awid    : in  std_logic_vector(3 downto 0);
-            s_axi_awaddr  : in  std_logic_vector(31 downto 0);
+            s_axi_awaddr  : in  std_logic_vector(30 downto 0);
             s_axi_awlen   : in  std_logic_vector(7 downto 0);
             s_axi_awsize  : in  std_logic_vector(2 downto 0);
             s_axi_awburst : in  std_logic_vector(1 downto 0);
@@ -270,7 +270,7 @@ architecture RTL of top is
             s_axi_bvalid  : out std_logic;
             s_axi_bready  : in  std_logic;
             s_axi_arid    : in  std_logic_vector(3 downto 0);
-            s_axi_araddr  : in  std_logic_vector(31 downto 0);
+            s_axi_araddr  : in  std_logic_vector(30 downto 0);
             s_axi_arlen   : in  std_logic_vector(7 downto 0);
             s_axi_arsize  : in  std_logic_vector(2 downto 0);
             s_axi_arburst : in  std_logic_vector(1 downto 0);
@@ -290,7 +290,7 @@ architecture RTL of top is
             m_axi_aclk    : in  std_logic;
             m_axi_aresetn : in  std_logic;
             m_axi_awid    : out std_logic_vector(3 downto 0);
-            m_axi_awaddr  : out std_logic_vector(31 downto 0);
+            m_axi_awaddr  : out std_logic_vector(30 downto 0);
             m_axi_awlen   : out std_logic_vector(7 downto 0);
             m_axi_awsize  : out std_logic_vector(2 downto 0);
             m_axi_awburst : out std_logic_vector(1 downto 0);
@@ -311,7 +311,7 @@ architecture RTL of top is
             m_axi_bvalid  : in  std_logic;
             m_axi_bready  : out std_logic;
             m_axi_arid    : out std_logic_vector(3 downto 0);
-            m_axi_araddr  : out std_logic_vector(31 downto 0);
+            m_axi_araddr  : out std_logic_vector(30 downto 0);
             m_axi_arlen   : out std_logic_vector(7 downto 0);
             m_axi_arsize  : out std_logic_vector(2 downto 0);
             m_axi_arburst : out std_logic_vector(1 downto 0);
@@ -340,7 +340,7 @@ architecture RTL of top is
             s_axi_aclk    : in  std_logic;
             s_axi_aresetn : in  std_logic;
             s_axi_awid    : in  std_logic_vector(3 downto 0);
-            s_axi_awaddr  : in  std_logic_vector(31 downto 0);
+            s_axi_awaddr  : in  std_logic_vector(30 downto 0);
             s_axi_awlen   : in  std_logic_vector(7 downto 0);
             s_axi_awsize  : in  std_logic_vector(2 downto 0);
             s_axi_awburst : in  std_logic_vector(1 downto 0);
@@ -361,7 +361,7 @@ architecture RTL of top is
             s_axi_bvalid  : out std_logic;
             s_axi_bready  : in  std_logic;
             s_axi_arid    : in  std_logic_vector(3 downto 0);
-            s_axi_araddr  : in  std_logic_vector(31 downto 0);
+            s_axi_araddr  : in  std_logic_vector(30 downto 0);
             s_axi_arlen   : in  std_logic_vector(7 downto 0);
             s_axi_arsize  : in  std_logic_vector(2 downto 0);
             s_axi_arburst : in  std_logic_vector(1 downto 0);
@@ -378,7 +378,7 @@ architecture RTL of top is
             s_axi_rlast   : out std_logic;
             s_axi_rvalid  : out std_logic;
             s_axi_rready  : in  std_logic;
-            m_axi_awaddr  : out std_logic_vector(31 downto 0);
+            m_axi_awaddr  : out std_logic_vector(30 downto 0);
             m_axi_awlen   : out std_logic_vector(7 downto 0);
             m_axi_awsize  : out std_logic_vector(2 downto 0);
             m_axi_awburst : out std_logic_vector(1 downto 0);
@@ -397,7 +397,7 @@ architecture RTL of top is
             m_axi_bresp   : in  std_logic_vector(1 downto 0);
             m_axi_bvalid  : in  std_logic;
             m_axi_bready  : out std_logic;
-            m_axi_araddr  : out std_logic_vector(31 downto 0);
+            m_axi_araddr  : out std_logic_vector(30 downto 0);
             m_axi_arlen   : out std_logic_vector(7 downto 0);
             m_axi_arsize  : out std_logic_vector(2 downto 0);
             m_axi_arburst : out std_logic_vector(1 downto 0);
@@ -459,7 +459,7 @@ begin
             c0_ddr4_aresetn        => ui_rst_n,
 
             c0_ddr4_s_axi_awid     => m_awid,
-            c0_ddr4_s_axi_awaddr   => m_awaddr(30 downto 0),
+            c0_ddr4_s_axi_awaddr   => m_awaddr,
             c0_ddr4_s_axi_awlen    => m_awlen,
             c0_ddr4_s_axi_awsize   => "011", -- 8 bytes (64-bit)
             c0_ddr4_s_axi_awburst  => m_awburst,
@@ -479,7 +479,7 @@ begin
             c0_ddr4_s_axi_bvalid   => m_bvalid,
             c0_ddr4_s_axi_bready   => m_bready,
             c0_ddr4_s_axi_arid     => m_arid,
-            c0_ddr4_s_axi_araddr   => m_araddr(30 downto 0),
+            c0_ddr4_s_axi_araddr   => m_araddr,
             c0_ddr4_s_axi_arlen    => m_arlen,
             c0_ddr4_s_axi_arsize   => "011", -- 8 bytes (64-bit)
             c0_ddr4_s_axi_arburst  => m_arburst,
@@ -564,7 +564,7 @@ begin
             s_axi_aclk    => clk_100,
             s_axi_aresetn => rst_100_n,
             s_axi_awid    => mem_awid,
-            s_axi_awaddr  => mem_awaddr,
+            s_axi_awaddr  => mem_awaddr(30 downto 0),
             s_axi_awlen   => mem_awlen,
             s_axi_awsize  => "010", -- 4 bytes (32-bit)
             s_axi_awburst => mem_awburst,
@@ -585,7 +585,7 @@ begin
             s_axi_bvalid  => mem_bvalid,
             s_axi_bready  => mem_bready,
             s_axi_arid    => mem_arid,
-            s_axi_araddr  => mem_araddr,
+            s_axi_araddr  => mem_araddr(30 downto 0),
             s_axi_arlen   => mem_arlen,
             s_axi_arsize  => "010", -- 4 bytes (32-bit)
             s_axi_arburst => mem_arburst,
