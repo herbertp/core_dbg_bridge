@@ -40,6 +40,8 @@ set_property -dict [list \
   CONFIG.C0.DDR4_AxiDataWidth {256} \
   CONFIG.C0.DDR4_AxiAddressWidth {31} \
   CONFIG.C0.DDR4_AxiIDWidth {4} \
+  CONFIG.C0.DDR4_Ordering {Normal} \
+  CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
 ] [get_ips ddr4_0]
 
@@ -78,14 +80,14 @@ write_checkpoint -force $ODIR/post_synth
 
 opt_design -propconst -sweep -retarget -remap
 
-place_design -directive Quick
+place_design -directive Explore
 phys_opt_design -critical_cell_opt -critical_pin_opt -placement_opt -hold_fix -restruct_opt -retime
 power_opt_design
 write_checkpoint -force $ODIR/post_place
 
 # STEP#5: run router, write checkpoint design
 
-route_design -directive Quick
+route_design -directive Explore
 write_checkpoint -force $ODIR/post_route
 
 

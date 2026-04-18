@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 --  top.vhd
 --	XCKU5P simple VHDL example
---	Version 1.0
+--	Version 1.1 - DDR4 Support
 --
 --  Copyright (C) 2026 H.Poetzl
 --
@@ -70,7 +70,7 @@ architecture RTL of top is
 
     signal mem_awvalid : std_logic;
     signal mem_awready : std_logic;
-    signal mem_awaddr  : std_logic_vector(31 downto 0);
+    signal mem_awaddr  : std_logic_vector(30 downto 0);
     signal mem_awid    : std_logic_vector(3 downto 0);
     signal mem_awlen   : std_logic_vector(7 downto 0);
     signal mem_awburst : std_logic_vector(1 downto 0);
@@ -88,7 +88,7 @@ architecture RTL of top is
 
     signal mem_arvalid : std_logic;
     signal mem_arready : std_logic;
-    signal mem_araddr  : std_logic_vector(31 downto 0);
+    signal mem_araddr  : std_logic_vector(30 downto 0);
     signal mem_arid    : std_logic_vector(3 downto 0);
     signal mem_arlen   : std_logic_vector(7 downto 0);
     signal mem_arburst : std_logic_vector(1 downto 0);
@@ -101,7 +101,7 @@ architecture RTL of top is
     signal mem_rlast   : std_logic;
 
     --------------------------------------------------------------------
-    -- AXI Data Width Conversion (32 -> 64)
+    -- AXI Data Width Conversion (32 -> 256)
     --------------------------------------------------------------------
 
     signal dwc_awvalid : std_logic;
@@ -425,6 +425,9 @@ architecture RTL of top is
 
     signal calib_complete : std_logic;
 
+    signal bridge_awaddr : std_logic_vector(31 downto 0);
+    signal bridge_araddr : std_logic_vector(31 downto 0);
+
 begin
 
     --------------------------------------------------------------------
@@ -519,7 +522,7 @@ begin
 
             mem_awvalid_o  => mem_awvalid,
             mem_awready_i  => mem_awready,
-            mem_awaddr_o   => mem_awaddr,
+            mem_awaddr_o   => bridge_awaddr,
             mem_awid_o     => mem_awid,
             mem_awlen_o    => mem_awlen,
             mem_awburst_o  => mem_awburst,
@@ -537,7 +540,7 @@ begin
 
             mem_arvalid_o  => mem_arvalid,
             mem_arready_i  => mem_arready,
-            mem_araddr_o   => mem_araddr,
+            mem_araddr_o   => bridge_araddr,
             mem_arid_o     => mem_arid,
             mem_arlen_o    => mem_arlen,
             mem_arburst_o  => mem_arburst,
@@ -553,8 +556,11 @@ begin
             gpio_outputs_o => open
         );
 
+    mem_awaddr <= bridge_awaddr(30 downto 0);
+    mem_araddr <= bridge_araddr(30 downto 0);
+
     --------------------------------------------------------------------
-    -- AXI Data Width Converter (32 -> 64)
+    -- AXI Data Width Converter (32 -> 256)
     --------------------------------------------------------------------
 
     rst_100_n <= not rst_i;
@@ -564,7 +570,7 @@ begin
             s_axi_aclk    => clk_100,
             s_axi_aresetn => rst_100_n,
             s_axi_awid    => mem_awid,
-            s_axi_awaddr  => mem_awaddr(30 downto 0),
+            s_axi_awaddr  => mem_awaddr,
             s_axi_awlen   => mem_awlen,
             s_axi_awsize  => "010", -- 4 bytes (32-bit)
             s_axi_awburst => mem_awburst,
@@ -585,7 +591,7 @@ begin
             s_axi_bvalid  => mem_bvalid,
             s_axi_bready  => mem_bready,
             s_axi_arid    => mem_arid,
-            s_axi_araddr  => mem_araddr(30 downto 0),
+            s_axi_araddr  => mem_araddr,
             s_axi_arlen   => mem_arlen,
             s_axi_arsize  => "010", -- 4 bytes (32-bit)
             s_axi_arburst => mem_arburst,
