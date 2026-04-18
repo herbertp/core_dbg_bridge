@@ -201,7 +201,7 @@ architecture RTL of top is
             addn_ui_clkout1        : out   std_logic;
             c0_ddr4_aresetn        : in    std_logic;
             c0_ddr4_s_axi_awid     : in    std_logic_vector(3 downto 0);
-            c0_ddr4_s_axi_awaddr   : in    std_logic_vector(31 downto 0);
+            c0_ddr4_s_axi_awaddr   : in    std_logic_vector(30 downto 0);
             c0_ddr4_s_axi_awlen    : in    std_logic_vector(7 downto 0);
             c0_ddr4_s_axi_awsize   : in    std_logic_vector(2 downto 0);
             c0_ddr4_s_axi_awburst  : in    std_logic_vector(1 downto 0);
@@ -221,7 +221,7 @@ architecture RTL of top is
             c0_ddr4_s_axi_bvalid   : out   std_logic;
             c0_ddr4_s_axi_bready   : in    std_logic;
             c0_ddr4_s_axi_arid     : in    std_logic_vector(3 downto 0);
-            c0_ddr4_s_axi_araddr   : in    std_logic_vector(31 downto 0);
+            c0_ddr4_s_axi_araddr   : in    std_logic_vector(30 downto 0);
             c0_ddr4_s_axi_arlen    : in    std_logic_vector(7 downto 0);
             c0_ddr4_s_axi_arsize   : in    std_logic_vector(2 downto 0);
             c0_ddr4_s_axi_arburst  : in    std_logic_vector(1 downto 0);
@@ -459,7 +459,7 @@ begin
             c0_ddr4_aresetn        => ui_rst_n,
 
             c0_ddr4_s_axi_awid     => m_awid,
-            c0_ddr4_s_axi_awaddr   => m_awaddr,
+            c0_ddr4_s_axi_awaddr   => m_awaddr(30 downto 0),
             c0_ddr4_s_axi_awlen    => m_awlen,
             c0_ddr4_s_axi_awsize   => "011", -- 8 bytes (64-bit)
             c0_ddr4_s_axi_awburst  => m_awburst,
@@ -479,7 +479,7 @@ begin
             c0_ddr4_s_axi_bvalid   => m_bvalid,
             c0_ddr4_s_axi_bready   => m_bready,
             c0_ddr4_s_axi_arid     => m_arid,
-            c0_ddr4_s_axi_araddr   => m_araddr,
+            c0_ddr4_s_axi_araddr   => m_araddr(30 downto 0),
             c0_ddr4_s_axi_arlen    => m_arlen,
             c0_ddr4_s_axi_arsize   => "011", -- 8 bytes (64-bit)
             c0_ddr4_s_axi_arburst  => m_arburst,

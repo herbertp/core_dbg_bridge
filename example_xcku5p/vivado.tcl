@@ -38,7 +38,7 @@ set_property -dict [list \
   CONFIG.C0.DDR4_InputClockPeriod {5000} \
   CONFIG.C0.DDR4_AxiSelection {true} \
   CONFIG.C0.DDR4_AxiDataWidth {64} \
-  CONFIG.C0.DDR4_AxiAddressWidth {32} \
+  CONFIG.C0.DDR4_AxiAddressWidth {31} \
   CONFIG.C0.DDR4_AxiIDWidth {4} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
 ] [get_ips ddr4_0]
