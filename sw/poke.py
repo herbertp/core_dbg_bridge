@@ -1,14 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import argparse
 
-from bus_interface import *
+from bus_interface import BusInterface
 
 ##################################################################
 # Main
 ##################################################################
-def main(argv):
-    
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', dest='type',   default='uart',                  help='Device type (uart|socket)')
     parser.add_argument('-d', dest='device', default='/dev/ttyUSB1',          help='Serial Device')
@@ -25,4 +24,4 @@ def main(argv):
     bus_if.write32(addr, value)
 
 if __name__ == "__main__":
-   main(sys.argv[1:])
+   main()

@@ -1,16 +1,15 @@
-import sys
-
-from uart_bus_interface import *
-from socket_interface import *
+from uart_bus_interface import UartBusInterface
+from socket_interface import SocketInterface
 
 ##################################################################
 # BusInterface: Bus Interface Wrapper
 ##################################################################
 class BusInterface:
-    ##################################################################
-    # Construction
-    ##################################################################
-    def __init__(self, iface_type = 'uart', iface = '/dev/ttyUSB1', baud = 115200):
+    """
+    BusInterface provides a common interface for communicating with a target
+    device over either UART or a socket connection.
+    """
+    def __init__(self, iface_type: str = 'uart', iface: str = '/dev/ttyUSB1', baud: int = 115200):
         if iface_type == "uart":
             self.bus = UartBusInterface(iface, baud)
         elif iface_type == "socket":
@@ -18,56 +17,48 @@ class BusInterface:
         else:
             self.bus = None
 
-    ##################################################################
-    # set_progress_cb: Set progress callback
-    ##################################################################
     def set_progress_cb(self, prog_cb):
-        self.bus.set_progress_cb(prog_cb)
+        """Set progress callback."""
+        if self.bus:
+            self.bus.set_progress_cb(prog_cb)
 
-    ##################################################################
-    # open: Open connection
-    ##################################################################
     def open(self):
+        """Open connection."""
         pass
 
-    ##################################################################
-    # close: Close connection
-    ##################################################################
     def close(self):
+        """Close connection."""
         pass
 
-    ##################################################################
-    # write: Write a block of data to a specified address
-    ##################################################################
-    def write(self, addr, data, length, addr_incr=True, max_block_size=-1):
-        self.bus.write(addr, data, length, addr_incr, max_block_size)
+    def write(self, addr: int, data: bytes | bytearray, length: int, addr_incr: bool = True, max_block_size: int = -1):
+        """Write a block of data to a specified address."""
+        if self.bus:
+            self.bus.write(addr, data, length, addr_incr, max_block_size)
 
-    ##################################################################
-    # read: Read a block of data from a specified address
-    ##################################################################
-    def read(self, addr, length, addr_incr=True, max_block_size=-1):
-        return self.bus.read(addr, length, addr_incr, max_block_size)
+    def read(self, addr: int, length: int, addr_incr: bool = True, max_block_size: int = -1) -> bytearray:
+        """Read a block of data from a specified address."""
+        if self.bus:
+            return self.bus.read(addr, length, addr_incr, max_block_size)
+        return bytearray()
 
-    ##################################################################
-    # read32: Read a word from a specified address
-    ##################################################################
-    def read32(self, addr):
-        return self.bus.read32(addr)
+    def read32(self, addr: int) -> int:
+        """Read a 32-bit word from a specified address."""
+        if self.bus:
+            return self.bus.read32(addr)
+        return 0
 
-    ##################################################################
-    # write32: Write a word to a specified address
-    ##################################################################
-    def write32(self, addr, value):
-        return self.bus.write32(addr, value)
+    def write32(self, addr: int, value: int):
+        """Write a 32-bit word to a specified address."""
+        if self.bus:
+            self.bus.write32(addr, value)
   
-    ##################################################################
-    # read_gpio: Read GPIO bus
-    ##################################################################
-    def read_gpio(self):
-        return self.bus.read_gpio()
+    def read_gpio(self) -> int:
+        """Read GPIO bus."""
+        if self.bus:
+            return self.bus.read_gpio()
+        return 0
 
-    ##################################################################
-    # write_gpio: Write a byte to GPIO
-    ##################################################################
-    def write_gpio(self, value):
-        return self.bus.write_gpio(value)
+    def write_gpio(self, value: int):
+        """Write a value to GPIO."""
+        if self.bus:
+            self.bus.write_gpio(value)
