@@ -10,6 +10,60 @@ set_param messaging.defaultLimit 10000
 set_param place.sliceLegEffortLimit 2000
 # set_param board.repoPaths [list /opt/Xilinx/XilinxBoardStore/2025.2/boards]
 
+# Helper procedure to generate or reuse IP
+proc generate_ip {ip_name ip_vendor ip_lib ip_version ip_module_name ip_properties} {
+    set ip_dir "ip/$ip_module_name"
+    set xci_file "$ip_dir/$ip_module_name.xci"
+    set dcp_file "$ip_dir/$ip_module_name.dcp"
+
+    set rebuild 0
+    set loaded 0
+    if {![file exists $xci_file]} {
+        set rebuild 1
+        puts "IP $ip_module_name: XCI file not found, building..."
+    } else {
+        if {[catch {read_ip $xci_file} err]} {
+            puts "IP $ip_module_name: Error reading $xci_file: $err"
+            set rebuild 1
+        } else {
+            set loaded 1
+            set current_ip [get_ips $ip_module_name]
+            foreach {prop value} $ip_properties {
+                set current_val [get_property $prop $current_ip]
+                if {[string compare -nocase $current_val $value] != 0} {
+                    set rebuild 1
+                    puts "IP $ip_module_name: Property $prop mismatch (current: $current_val, desired: $value), rebuilding..."
+                    break
+                }
+            }
+        }
+    }
+
+    if {!$rebuild && ![file exists $dcp_file]} {
+        set rebuild 1
+        puts "IP $ip_module_name: DCP file not found, rebuilding..."
+    }
+
+    if {$rebuild} {
+        if {$loaded} {
+            remove_files [get_files $xci_file]
+        }
+        if {[file exists $ip_dir]} {
+            file delete -force $ip_dir
+        }
+        if {![file exists ip]} {
+            file mkdir ip
+        }
+        create_ip -name $ip_name -vendor $ip_vendor -library $ip_lib -version $ip_version -module_name $ip_module_name -dir ip
+        set_property -dict $ip_properties [get_ips $ip_module_name]
+        generate_target all [get_ips $ip_module_name]
+        synth_ip [get_ips $ip_module_name]
+    } else {
+        puts "IP $ip_module_name: Reusing existing build products."
+    }
+}
+
+
 # STEP#1: setup design sources and constraints
 
 read_vhdl -vhdl2008 ../vivado_pkg.vhd
@@ -31,8 +85,7 @@ set_property TARGET_LANGUAGE VHDL [current_project]
 # STEP#2: configure IPs
 
 # Create DDR4 IP
-create_ip -name ddr4 -vendor xilinx.com -library ip -version 2.2 -module_name ddr4_0
-set_property -dict [list \
+generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_MemoryPart {MT40A512M16LY-075} \
   CONFIG.C0.DDR4_DataWidth {32} \
   CONFIG.C0.DDR4_InputClockPeriod {5000} \
@@ -43,33 +96,22 @@ set_property -dict [list \
   CONFIG.C0.DDR4_Ordering {Normal} \
   CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
-] [get_ips ddr4_0]
-
-generate_target all [get_ips ddr4_0]
-synth_ip [get_ips ddr4_0]
+]
 
 # Create AXI Clock Converter
-create_ip -name axi_clock_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_clock_converter_0
-set_property -dict [list \
+generate_ip axi_clock_converter xilinx.com ip 2.1 axi_clock_converter_0 [list \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.DATA_WIDTH {256} \
   CONFIG.ID_WIDTH {4} \
-] [get_ips axi_clock_converter_0]
-
-generate_target all [get_ips axi_clock_converter_0]
-synth_ip [get_ips axi_clock_converter_0]
+]
 
 # Create AXI Data Width Converter
-create_ip -name axi_dwidth_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_dwidth_converter_0
-set_property -dict [list \
+generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.SI_DATA_WIDTH {32} \
   CONFIG.MI_DATA_WIDTH {256} \
   CONFIG.SI_ID_WIDTH {4} \
-] [get_ips axi_dwidth_converter_0]
-
-generate_target all [get_ips axi_dwidth_converter_0]
-synth_ip [get_ips axi_dwidth_converter_0]
+]
 
 # STEP#3: run synthesis, write checkpoint design
 
