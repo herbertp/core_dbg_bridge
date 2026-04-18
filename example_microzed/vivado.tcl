@@ -5,7 +5,7 @@
 # Copyright (C) 2013-2026 H.Poetzl
 
 set ODIR .
-set NAME blink
+set NAME debug
 set_param messaging.defaultLimit 10000
 set_param place.sliceLegEffortLimit 2000
 set_param board.repoPaths [list /opt/Xilinx/XilinxBoardStore/2025.2/boards]
@@ -16,7 +16,13 @@ read_vhdl ../vivado_pkg.vhd
 
 read_vhdl ../async_div.vhd
 read_vhdl ../ps7_stub.vhd
-read_vhdl ../blink.vhd
+read_vhdl ../top.vhd
+
+read_verilog ../../src_v/dbg_bridge.v
+read_verilog ../../src_v/dbg_bridge_fifo.v
+read_verilog ../../src_v/dbg_bridge_uart.v
+
+read_xdc ../top.xdc
 
 set_property PART xc7z020clg400-1 [current_project]
 set_property BOARD_PART avnet.com:microzed_7020:part0:1.3 [current_project]
@@ -26,7 +32,7 @@ set_property TARGET_LANGUAGE VHDL [current_project]
 
 # STEP#3: run synthesis, write checkpoint design
 
-synth_design -top blink -flatten rebuilt    
+synth_design -top top -flatten rebuilt
 write_checkpoint -force $ODIR/post_synth
 
 # STEP#4: run placement and logic optimzation, write checkpoint design

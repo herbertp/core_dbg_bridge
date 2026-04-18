@@ -3,23 +3,23 @@
 # SW Build 6299465 on Fri Nov 14 12:34:56 MST 2025
 # IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
 # SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
-# Start of session at: Fri Apr 17 15:43:38 2026
-# Process ID         : 2045526
-# Current directory  : /nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build
+# Start of session at: Fri Apr 17 20:02:26 2026
+# Process ID         : 3335487
+# Current directory  : /nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build
 # Command line       : vivado -mode tcl -source ../vivado.tcl
-# Log file           : /nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/vivado.log
-# Journal file       : /nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/vivado.jou
+# Log file           : /nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/vivado.log
+# Journal file       : /nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/vivado.jou
 # Running On         : localhost.localdomain
 # Platform           : Mageia
 # Operating System   : Mageia 9
 # Processor Detail   : Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz
-# CPU Frequency      : 2399.407 MHz
+# CPU Frequency      : 1873.859 MHz
 # CPU Physical cores : 12
 # CPU Logical cores  : 24
 # Host memory        : 101206 MB
 # Swap memory        : 137438 MB
 # Total Virtual      : 238645 MB
-# Available Virtual  : 207562 MB
+# Available Virtual  : 205166 MB
 #-----------------------------------------------------------
 source ../vivado.tcl
 # set ODIR .
@@ -66,11 +66,11 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcku5p'
 INFO: [Device 21-403] Loading part xcku5p-ffvb676-2-i
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 2046395
+INFO: [Synth 8-7075] Helper process launched with PID 3336623
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 2956.445 ; gain = 180.656 ; free physical = 14977 ; free virtual = 196170
+Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 2955.324 ; gain = 179.688 ; free physical = 12175 ; free virtual = 194563
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/synth/axi_bram_ctrl_0.vhd:108]
+INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/synth/axi_bram_ctrl_0.vhd:108]
 	Parameter C_BRAM_INST_MODE bound to: EXTERNAL - type: string 
 	Parameter C_MEMORY_DEPTH bound to: 16384 - type: integer 
 	Parameter C_BRAM_ADDR_WIDTH bound to: 14 - type: integer 
@@ -89,68 +89,68 @@ INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILIN
 	Parameter C_ECC_TYPE bound to: 0 - type: integer 
 	Parameter C_FAULT_INJECT bound to: 0 - type: integer 
 	Parameter C_ECC_ONOFF_RESET_VALUE bound to: 0 - type: integer 
-INFO: [Synth 8-3491] module 'axi_bram_ctrl' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:31263' bound to instance 'U0' of component 'axi_bram_ctrl' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/synth/axi_bram_ctrl_0.vhd:268]
-INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:31434]
-INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_top' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:30438]
-INFO: [Synth 8-638] synthesizing module 'full_axi' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29196]
-WARNING: [Synth 8-6774] Null subtype or type declaration found [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29266]
-INFO: [Synth 8-3919] null assignment ignored [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29266]
-INFO: [Synth 8-3919] null assignment ignored [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29472]
-INFO: [Synth 8-638] synthesizing module 'sng_port_arb' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11397]
-INFO: [Synth 8-256] done synthesizing module 'sng_port_arb' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11397]
-INFO: [Synth 8-638] synthesizing module 'wr_chnl' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:24080]
-INFO: [Synth 8-506] null port 'FaultInjectECC' ignored [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:24047]
-INFO: [Synth 8-638] synthesizing module 'wrap_brst' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12386]
-INFO: [Synth 8-256] done synthesizing module 'wrap_brst' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12386]
-INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:25423]
-INFO: [Synth 8-638] synthesizing module 'ua_narrow' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11925]
-INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12104]
-INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12143]
-INFO: [Synth 8-256] done synthesizing module 'ua_narrow' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11925]
-INFO: [Synth 8-638] synthesizing module 'SRL_FIFO' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:91]
-INFO: [Synth 8-3491] module 'FDR' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49383' bound to instance 'Data_Exists_DFF' of component 'FDR' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:188]
+INFO: [Synth 8-3491] module 'axi_bram_ctrl' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:31263' bound to instance 'U0' of component 'axi_bram_ctrl' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/synth/axi_bram_ctrl_0.vhd:268]
+INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:31434]
+INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_top' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:30438]
+INFO: [Synth 8-638] synthesizing module 'full_axi' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29196]
+WARNING: [Synth 8-6774] Null subtype or type declaration found [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29266]
+INFO: [Synth 8-3919] null assignment ignored [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29266]
+INFO: [Synth 8-3919] null assignment ignored [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29472]
+INFO: [Synth 8-638] synthesizing module 'sng_port_arb' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11397]
+INFO: [Synth 8-256] done synthesizing module 'sng_port_arb' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11397]
+INFO: [Synth 8-638] synthesizing module 'wr_chnl' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:24080]
+INFO: [Synth 8-506] null port 'FaultInjectECC' ignored [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:24047]
+INFO: [Synth 8-638] synthesizing module 'wrap_brst' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12386]
+INFO: [Synth 8-256] done synthesizing module 'wrap_brst' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12386]
+INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:25423]
+INFO: [Synth 8-638] synthesizing module 'ua_narrow' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11925]
+INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12104]
+INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:12143]
+INFO: [Synth 8-256] done synthesizing module 'ua_narrow' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:11925]
+INFO: [Synth 8-638] synthesizing module 'SRL_FIFO' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:91]
+INFO: [Synth 8-3491] module 'FDR' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49383' bound to instance 'Data_Exists_DFF' of component 'FDR' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:188]
 INFO: [Synth 8-6157] synthesizing module 'FDR' [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49383]
 INFO: [Synth 8-6155] done synthesizing module 'FDR' (0#1) [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49383]
-INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
+INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
 INFO: [Synth 8-6157] synthesizing module 'MUXCY_L' [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872]
 INFO: [Synth 8-6155] done synthesizing module 'MUXCY_L' (0#1) [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872]
-INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
+INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
 INFO: [Synth 8-6157] synthesizing module 'XORCY' [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315]
 INFO: [Synth 8-6155] done synthesizing module 'XORCY' (0#1) [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315]
-INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
+INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
 INFO: [Synth 8-6157] synthesizing module 'FDRE' [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396]
 INFO: [Synth 8-6155] done synthesizing module 'FDRE' (0#1) [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396]
-INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
-INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
-INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
-INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
-INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
-INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
-INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
-INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
-INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
-INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
+INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
+INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
+INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
+INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
+INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
+INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
+INFO: [Synth 8-3491] module 'MUXCY_L' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:104872' bound to instance 'MUXCY_L_I' of component 'MUXCY_L' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:205]
+INFO: [Synth 8-3491] module 'XORCY' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:171315' bound to instance 'XORCY_I' of component 'XORCY' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:212]
+INFO: [Synth 8-3491] module 'FDRE' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:49396' bound to instance 'FDRE_I' of component 'FDRE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:218]
+INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
 INFO: [Synth 8-6157] synthesizing module 'SRL16E' [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334]
 INFO: [Synth 8-6155] done synthesizing module 'SRL16E' (0#1) [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334]
-INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
-INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
-INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
-INFO: [Synth 8-256] done synthesizing module 'SRL_FIFO' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:91]
-INFO: [Synth 8-256] done synthesizing module 'wr_chnl' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:24080]
-WARNING: [Synth 8-6778] Component port with null array found, Will be ignored [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29936]
-INFO: [Synth 8-638] synthesizing module 'rd_chnl' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:14672]
-INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:16057]
-INFO: [Synth 8-256] done synthesizing module 'rd_chnl' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:14672]
-INFO: [Synth 8-256] done synthesizing module 'full_axi' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29196]
-INFO: [Synth 8-256] done synthesizing module 'axi_bram_ctrl_top' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:30438]
-INFO: [Synth 8-256] done synthesizing module 'axi_bram_ctrl' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:31434]
-INFO: [Synth 8-256] done synthesizing module 'axi_bram_ctrl_0' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/synth/axi_bram_ctrl_0.vhd:108]
-INFO: [Synth 8-6014] Unused sequential element curr_awsize_reg_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:25239]
-INFO: [Synth 8-6014] Unused sequential element curr_awlen_reg_1_or_2_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:25517]
-INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.axi_arsize_pipe_max_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:15432]
-INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.curr_arsize_reg_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:15924]
-INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.no_ar_ack_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:19829]
-INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.do_cmplt_burst_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/hdl/axi_bram_ctrl_v4_1_rfs.vhd:21170]
+INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
+INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
+INFO: [Synth 8-3491] module 'SRL16E' declared at '/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:165334' bound to instance 'SRL16E_I' of component 'SRL16E' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:229]
+INFO: [Synth 8-256] done synthesizing module 'SRL_FIFO' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:91]
+INFO: [Synth 8-256] done synthesizing module 'wr_chnl' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:24080]
+WARNING: [Synth 8-6778] Component port with null array found, Will be ignored [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29936]
+INFO: [Synth 8-638] synthesizing module 'rd_chnl' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:14672]
+INFO: [Synth 8-226] default block is never used [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:16057]
+INFO: [Synth 8-256] done synthesizing module 'rd_chnl' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:14672]
+INFO: [Synth 8-256] done synthesizing module 'full_axi' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:29196]
+INFO: [Synth 8-256] done synthesizing module 'axi_bram_ctrl_top' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:30438]
+INFO: [Synth 8-256] done synthesizing module 'axi_bram_ctrl' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:31434]
+INFO: [Synth 8-256] done synthesizing module 'axi_bram_ctrl_0' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/synth/axi_bram_ctrl_0.vhd:108]
+INFO: [Synth 8-6014] Unused sequential element curr_awsize_reg_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:25239]
+INFO: [Synth 8-6014] Unused sequential element curr_awlen_reg_1_or_2_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:25517]
+INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.axi_arsize_pipe_max_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:15432]
+INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.curr_arsize_reg_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:15924]
+INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.no_ar_ack_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:19829]
+INFO: [Synth 8-6014] Unused sequential element GEN_NO_RD_CMD_OPT.do_cmplt_burst_reg was removed.  [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/hdl/axi_bram_ctrl_v4_1_rfs.vhd:21170]
 INFO: [Synth 8-7129] Port curr_axlen[7] in module wrap_brst is either unconnected or has no load
 INFO: [Synth 8-7129] Port curr_axlen[6] in module wrap_brst is either unconnected or has no load
 INFO: [Synth 8-7129] Port curr_axlen[5] in module wrap_brst is either unconnected or has no load
@@ -448,38 +448,38 @@ INFO: [Synth 8-7129] Port BRAM_RdData_B[2] in module axi_bram_ctrl_top is either
 INFO: [Synth 8-7129] Port BRAM_RdData_B[1] in module axi_bram_ctrl_top is either unconnected or has no load
 INFO: [Synth 8-7129] Port BRAM_RdData_B[0] in module axi_bram_ctrl_top is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 3062.438 ; gain = 286.648 ; free physical = 14911 ; free virtual = 196105
+Finished RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 3062.316 ; gain = 286.680 ; free physical = 12145 ; free virtual = 194535
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 3062.438 ; gain = 286.648 ; free physical = 14897 ; free virtual = 196091
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 3062.316 ; gain = 286.680 ; free physical = 12148 ; free virtual = 194537
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 3062.438 ; gain = 286.648 ; free physical = 14897 ; free virtual = 196091
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 3062.316 ; gain = 286.680 ; free physical = 12148 ; free virtual = 194537
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3070.438 ; gain = 0.000 ; free physical = 14900 ; free virtual = 196094
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3062.316 ; gain = 0.000 ; free physical = 12166 ; free virtual = 194556
 INFO: [Netlist 29-17] Analyzing 9 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
-create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3152.676 ; gain = 6.406 ; free physical = 14906 ; free virtual = 196100
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
+create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3151.352 ; gain = 3.203 ; free physical = 12247 ; free virtual = 194637
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3152.676 ; gain = 0.000 ; free physical = 14905 ; free virtual = 196099
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3151.352 ; gain = 0.000 ; free physical = 12247 ; free virtual = 194637
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 5 instances were transformed.
   FDR => FDRE: 1 instance 
   MUXCY_L => MUXCY: 4 instances
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3152.711 ; gain = 0.000 ; free physical = 14928 ; free virtual = 196122
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3151.387 ; gain = 0.000 ; free physical = 12281 ; free virtual = 194671
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3152.711 ; gain = 376.922 ; free physical = 14971 ; free virtual = 196166
+Finished Constraint Validation : Time (s): cpu = 00:00:27 ; elapsed = 00:00:28 . Memory (MB): peak = 3151.387 ; gain = 375.750 ; free physical = 12239 ; free virtual = 194630
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -487,13 +487,13 @@ Start Loading Part and Timing Information
 Loading part: xcku5p-ffvb676-2-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3160.680 ; gain = 384.891 ; free physical = 14970 ; free virtual = 196165
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:27 ; elapsed = 00:00:28 . Memory (MB): peak = 3159.355 ; gain = 383.719 ; free physical = 12247 ; free virtual = 194637
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:28 ; elapsed = 00:00:28 . Memory (MB): peak = 3160.680 ; gain = 384.891 ; free physical = 14972 ; free virtual = 196166
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:27 ; elapsed = 00:00:28 . Memory (MB): peak = 3159.355 ; gain = 383.719 ; free physical = 12245 ; free virtual = 194635
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'arb_sm_cs_reg' in module 'sng_port_arb'
 INFO: [Synth 8-802] inferred FSM for state register 'GEN_WDATA_SM_NO_ECC_SNG_REG_WREADY.wr_data_sng_sm_cs_reg' in module 'wr_chnl'
@@ -540,7 +540,7 @@ INFO: [Synth 8-3354] encoded FSM with state register 'GEN_NO_RD_CMD_OPT.rd_data_
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'GEN_NO_RD_CMD_OPT.rlast_sm_cs_reg' using encoding 'sequential' in module 'rd_chnl'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3160.680 ; gain = 384.891 ; free physical = 14950 ; free virtual = 196146
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:29 ; elapsed = 00:00:29 . Memory (MB): peak = 3159.355 ; gain = 383.719 ; free physical = 12241 ; free virtual = 194633
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -880,25 +880,25 @@ INFO: [Synth 8-7129] Port bram_rddata_b[2] in module axi_bram_ctrl is either unc
 INFO: [Synth 8-7129] Port bram_rddata_b[1] in module axi_bram_ctrl is either unconnected or has no load
 INFO: [Synth 8-7129] Port bram_rddata_b[0] in module axi_bram_ctrl is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:35 ; elapsed = 00:00:36 . Memory (MB): peak = 3160.680 ; gain = 384.891 ; free physical = 14321 ; free virtual = 195516
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:33 ; elapsed = 00:00:34 . Memory (MB): peak = 3159.355 ; gain = 383.719 ; free physical = 10321 ; free virtual = 192713
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:44 ; elapsed = 00:00:45 . Memory (MB): peak = 3694.332 ; gain = 918.543 ; free physical = 14058 ; free virtual = 195255
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:43 ; elapsed = 00:00:44 . Memory (MB): peak = 3686.039 ; gain = 910.402 ; free physical = 11329 ; free virtual = 193722
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:46 ; elapsed = 00:00:47 . Memory (MB): peak = 3754.941 ; gain = 979.152 ; free physical = 14159 ; free virtual = 195356
+Finished Timing Optimization : Time (s): cpu = 00:00:45 ; elapsed = 00:00:46 . Memory (MB): peak = 3747.648 ; gain = 972.012 ; free physical = 11347 ; free virtual = 193740
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:46 ; elapsed = 00:00:48 . Memory (MB): peak = 3762.949 ; gain = 987.160 ; free physical = 14172 ; free virtual = 195369
+Finished Technology Mapping : Time (s): cpu = 00:00:45 ; elapsed = 00:00:46 . Memory (MB): peak = 3747.648 ; gain = 972.012 ; free physical = 11342 ; free virtual = 193734
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -916,37 +916,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14143 ; free virtual = 195340
+Finished IO Insertion : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11304 ; free virtual = 193697
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14143 ; free virtual = 195340
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11304 ; free virtual = 193697
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14149 ; free virtual = 195346
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11300 ; free virtual = 193693
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14149 ; free virtual = 195346
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11300 ; free virtual = 193693
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14147 ; free virtual = 195344
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11298 ; free virtual = 193691
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14147 ; free virtual = 195344
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11296 ; free virtual = 193689
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -978,22 +978,22 @@ Report Cell Usage:
 |14    |FDSE    |     1|
 +------+--------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14147 ; free virtual = 195344
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:50 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11296 ; free virtual = 193689
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:43 ; elapsed = 00:00:44 . Memory (MB): peak = 3918.730 ; gain = 1052.668 ; free physical = 14138 ; free virtual = 195334
-Synthesis Optimization Complete : Time (s): cpu = 00:00:52 ; elapsed = 00:00:54 . Memory (MB): peak = 3918.730 ; gain = 1142.941 ; free physical = 14138 ; free virtual = 195334
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:42 ; elapsed = 00:00:43 . Memory (MB): peak = 3918.461 ; gain = 1053.754 ; free physical = 11301 ; free virtual = 193694
+Synthesis Optimization Complete : Time (s): cpu = 00:00:51 ; elapsed = 00:00:52 . Memory (MB): peak = 3918.461 ; gain = 1142.824 ; free physical = 11301 ; free virtual = 193694
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14158 ; free virtual = 195355
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11300 ; free virtual = 193693
 INFO: [Netlist 29-17] Analyzing 11 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
-WARNING: [Constraints 18-633] Creating clock s_axi_aclk with 2 sources. [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0_ooc.xdc:55]
-create_clock: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14387 ; free virtual = 195585
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
+WARNING: [Constraints 18-633] Creating clock s_axi_aclk with 2 sources. [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0_ooc.xdc:55]
+create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11664 ; free virtual = 194057
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0_ooc.xdc] for cell 'U0'
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14387 ; free virtual = 195585
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11664 ; free virtual = 194057
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 2 instances were transformed.
   (CARRY4) => CARRY8: 1 instance 
@@ -1003,19 +1003,19 @@ Synth Design complete | Checksum: eedcb07d
 INFO: [Common 17-83] Releasing license: Synthesis
 666 Infos, 3 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:22 ; elapsed = 00:01:19 . Memory (MB): peak = 3918.730 ; gain = 2216.160 ; free physical = 14413 ; free virtual = 195611
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3086.330; main = 2935.929; forked = 290.260
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4819.824; main = 3883.211; forked = 996.871
+synth_design: Time (s): cpu = 00:01:20 ; elapsed = 00:01:18 . Memory (MB): peak = 3918.461 ; gain = 2217.043 ; free physical = 11669 ; free virtual = 194062
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3145.028; main = 2936.187; forked = 292.478
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4865.527; main = 3882.941; forked = 996.875
 INFO: [Coretcl 2-1174] Renamed 11 cell refs.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11680 ; free virtual = 194073
 INFO: [Timing 38-480] Writing timing data to binary archive.
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14405 ; free virtual = 195603
-INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0.dcp' has been generated.
+INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0.dcp' has been generated.
 INFO: [Vivado 12-3441] generate_netlist_ip - operation complete
-synth_ip: Time (s): cpu = 00:01:23 ; elapsed = 00:01:22 . Memory (MB): peak = 3918.730 ; gain = 2216.160 ; free physical = 14437 ; free virtual = 195634
-INFO: [Common 17-2834] synth_ip peak Physical Memory [PSS] (MB): overall = 3086.330; main = 2937.035; forked = 290.260
-INFO: [Common 17-2834] synth_ip peak Virtual Memory [VSS] (MB): overall = 4819.824; main = 3915.227; forked = 996.871
+synth_ip: Time (s): cpu = 00:01:21 ; elapsed = 00:01:20 . Memory (MB): peak = 3918.461 ; gain = 2217.043 ; free physical = 11676 ; free virtual = 194069
+INFO: [Common 17-2834] synth_ip peak Physical Memory [PSS] (MB): overall = 3145.028; main = 2936.187; forked = 292.478
+INFO: [Common 17-2834] synth_ip peak Virtual Memory [VSS] (MB): overall = 4865.527; main = 3914.957; forked = 996.875
 # create_ip -name blk_mem_gen -vendor xilinx.com -library ip -version 8.4 -module_name blk_mem_gen_0
-create_ip: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14382 ; free virtual = 195579
+create_ip: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11758 ; free virtual = 194151
 # set_property -dict [list \
 #   CONFIG.Memory_Type {Single_Port_RAM} \
 #   CONFIG.Enable_32bit_Address {false} \
@@ -1043,9 +1043,9 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xcku5p'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcku5p'
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14138 ; free virtual = 195350
+Starting RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11431 ; free virtual = 193839
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/synth/blk_mem_gen_0.vhd:72]
+INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/synth/blk_mem_gen_0.vhd:72]
 	Parameter C_FAMILY bound to: kintexuplus - type: string 
 	Parameter C_XDEVICEFAMILY bound to: kintexuplus - type: string 
 	Parameter C_ELABORATION_DIR bound to: ./ - type: string 
@@ -1121,8 +1121,8 @@ INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/
 	Parameter C_COUNT_36K_BRAM bound to: 64 - type: string 
 	Parameter C_COUNT_18K_BRAM bound to: 0 - type: string 
 	Parameter C_EST_POWER_SUMMARY bound to: Estimated Power for IP     :     17.074762 mW - type: string 
-INFO: [Synth 8-3491] module 'blk_mem_gen_v8_4_12' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/hdl/blk_mem_gen_v8_4_vhsyn_rfs.vhd:195209' bound to instance 'U0' of component 'blk_mem_gen_v8_4_12' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/synth/blk_mem_gen_0.vhd:241]
-INFO: [Synth 8-256] done synthesizing module 'blk_mem_gen_0' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/synth/blk_mem_gen_0.vhd:72]
+INFO: [Synth 8-3491] module 'blk_mem_gen_v8_4_12' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/hdl/blk_mem_gen_v8_4_vhsyn_rfs.vhd:195209' bound to instance 'U0' of component 'blk_mem_gen_v8_4_12' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/synth/blk_mem_gen_0.vhd:241]
+INFO: [Synth 8-256] done synthesizing module 'blk_mem_gen_0' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/synth/blk_mem_gen_0.vhd:72]
 INFO: [Synth 8-7129] Port CLKB in module blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTB_I[31] in module blk_mem_output_block is either unconnected or has no load
 INFO: [Synth 8-7129] Port DOUTB_I[30] in module blk_mem_output_block is either unconnected or has no load
@@ -4691,34 +4691,34 @@ INFO: [Synth 8-7129] Port S_AXI_INJECTDBITERR in module blk_mem_gen_v8_4_12_synt
 INFO: [Synth 8-7129] Port deepsleep in module blk_mem_gen_v8_4_12 is either unconnected or has no load
 INFO: [Synth 8-7129] Port shutdown in module blk_mem_gen_v8_4_12 is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:28 ; elapsed = 00:00:30 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 13945 ; free virtual = 195160
+Finished RTL Elaboration : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11053 ; free virtual = 193423
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:28 ; elapsed = 00:00:30 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 13945 ; free virtual = 195159
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:29 ; elapsed = 00:00:31 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11059 ; free virtual = 193429
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:28 ; elapsed = 00:00:30 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 13945 ; free virtual = 195159
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:29 ; elapsed = 00:00:31 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11059 ; free virtual = 193429
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.06 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 13978 ; free virtual = 195193
+Netlist sorting complete. Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11091 ; free virtual = 193462
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc] for cell 'U0'
-create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14147 ; free virtual = 195362
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0_ooc.xdc] for cell 'U0'
+create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11319 ; free virtual = 193689
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0_ooc.xdc] for cell 'U0'
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14154 ; free virtual = 195369
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11319 ; free virtual = 193689
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.1 ; elapsed = 00:00:00.07 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14135 ; free virtual = 195350
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.13 ; elapsed = 00:00:00.09 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11332 ; free virtual = 193702
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:46 ; elapsed = 00:00:47 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14233 ; free virtual = 195448
+Finished Constraint Validation : Time (s): cpu = 00:00:47 ; elapsed = 00:00:49 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11432 ; free virtual = 193802
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -4726,16 +4726,16 @@ Start Loading Part and Timing Information
 Loading part: xcku5p-ffvb676-2-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:46 ; elapsed = 00:00:47 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14229 ; free virtual = 195444
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:47 ; elapsed = 00:00:49 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11430 ; free virtual = 193800
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:46 ; elapsed = 00:00:47 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14220 ; free virtual = 195436
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:47 ; elapsed = 00:00:49 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11430 ; free virtual = 193800
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:47 ; elapsed = 00:00:49 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14199 ; free virtual = 195417
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:49 ; elapsed = 00:00:51 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11469 ; free virtual = 193841
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -4962,25 +4962,25 @@ INFO: [Synth 8-7129] Port s_axi_rready in module blk_mem_gen_v8_4_12 is either u
 INFO: [Synth 8-7129] Port s_axi_injectsbiterr in module blk_mem_gen_v8_4_12 is either unconnected or has no load
 INFO: [Synth 8-7129] Port s_axi_injectdbiterr in module blk_mem_gen_v8_4_12 is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:52 ; elapsed = 00:00:53 . Memory (MB): peak = 3918.730 ; gain = 0.000 ; free physical = 14257 ; free virtual = 195475
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:53 ; elapsed = 00:00:55 . Memory (MB): peak = 3918.461 ; gain = 0.000 ; free physical = 11501 ; free virtual = 193874
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 4006.773 ; gain = 88.043 ; free physical = 14222 ; free virtual = 195442
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:03 ; elapsed = 00:01:05 . Memory (MB): peak = 4006.504 ; gain = 88.043 ; free physical = 11549 ; free virtual = 193923
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 4006.773 ; gain = 88.043 ; free physical = 14195 ; free virtual = 195413
+Finished Timing Optimization : Time (s): cpu = 00:01:03 ; elapsed = 00:01:05 . Memory (MB): peak = 4006.504 ; gain = 88.043 ; free physical = 11549 ; free virtual = 193922
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:01:01 ; elapsed = 00:01:03 . Memory (MB): peak = 4006.773 ; gain = 88.043 ; free physical = 14197 ; free virtual = 195415
+Finished Technology Mapping : Time (s): cpu = 00:01:03 ; elapsed = 00:01:05 . Memory (MB): peak = 4006.504 ; gain = 88.043 ; free physical = 11545 ; free virtual = 193919
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -4998,37 +4998,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14164 ; free virtual = 195382
+Finished IO Insertion : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193826
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14164 ; free virtual = 195382
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193826
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14144 ; free virtual = 195362
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193826
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14143 ; free virtual = 195361
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193826
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14148 ; free virtual = 195366
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193827
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14147 ; free virtual = 195366
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193827
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -5054,19 +5054,19 @@ Report Cell Usage:
 |8     |FDRE     |    17|
 +------+---------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:01:07 ; elapsed = 00:01:09 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14147 ; free virtual = 195366
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11453 ; free virtual = 193827
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:58 ; elapsed = 00:01:00 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14184 ; free virtual = 195402
-Synthesis Optimization Complete : Time (s): cpu = 00:01:08 ; elapsed = 00:01:10 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14184 ; free virtual = 195402
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:58 ; elapsed = 00:01:00 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11480 ; free virtual = 193854
+Synthesis Optimization Complete : Time (s): cpu = 00:01:09 ; elapsed = 00:01:11 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 11480 ; free virtual = 193853
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14337 ; free virtual = 195556
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11616 ; free virtual = 193988
 INFO: [Netlist 29-17] Analyzing 96 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Netlist 29-28] Unisim Transformation completed in 5 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc] for cell 'U0'
-create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14345 ; free virtual = 195564
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0_ooc.xdc] for cell 'U0'
+create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10724 ; free virtual = 193098
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0_ooc.xdc] for cell 'U0'
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[0].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
@@ -5132,7 +5132,7 @@ INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/inst_blk_mem_
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[7].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[8].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
 INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[9].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14336 ; free virtual = 195556
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10742 ; free virtual = 193115
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
@@ -5140,17 +5140,17 @@ Synth Design complete | Checksum: c496ca8a
 INFO: [Common 17-83] Releasing license: Synthesis
 3855 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:22 ; elapsed = 00:01:20 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14317 ; free virtual = 195536
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3191.404; main = 2982.648; forked = 289.040
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5003.652; main = 4006.777; forked = 996.875
+synth_design: Time (s): cpu = 00:01:23 ; elapsed = 00:01:20 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 10400 ; free virtual = 192774
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3215.563; main = 2979.980; forked = 291.210
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5003.379; main = 4006.508; forked = 996.871
 INFO: [Coretcl 2-1174] Renamed 133 cell refs.
 INFO: [Timing 38-480] Writing timing data to binary archive.
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14317 ; free virtual = 195536
-INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0.dcp' has been generated.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10285 ; free virtual = 192659
+INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0.dcp' has been generated.
 INFO: [Vivado 12-3441] generate_netlist_ip - operation complete
-synth_ip: Time (s): cpu = 00:01:24 ; elapsed = 00:01:23 . Memory (MB): peak = 4071.586 ; gain = 152.855 ; free physical = 14315 ; free virtual = 195537
-INFO: [Common 17-2834] synth_ip peak Physical Memory [PSS] (MB): overall = 3191.404; main = 2982.648; forked = 289.040
-INFO: [Common 17-2834] synth_ip peak Virtual Memory [VSS] (MB): overall = 5003.652; main = 4006.777; forked = 996.875
+synth_ip: Time (s): cpu = 00:01:25 ; elapsed = 00:01:23 . Memory (MB): peak = 4071.316 ; gain = 152.855 ; free physical = 9669 ; free virtual = 192046
+INFO: [Common 17-2834] synth_ip peak Physical Memory [PSS] (MB): overall = 3215.563; main = 2979.980; forked = 291.210
+INFO: [Common 17-2834] synth_ip peak Virtual Memory [VSS] (MB): overall = 5003.379; main = 4006.508; forked = 996.871
 # synth_design -top top -flatten rebuilt
 Command: synth_design -top top -flatten rebuilt
 Starting synth_design
@@ -5159,69 +5159,69 @@ Attempting to get a license for feature 'Synthesis' and/or device 'xcku5p'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcku5p'
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13200 ; free virtual = 194422
+Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10822 ; free virtual = 193198
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-638] synthesizing module 'top' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:40]
+INFO: [Synth 8-638] synthesizing module 'top' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:40]
 INFO: [Synth 8-6157] synthesizing module 'IBUFGDS' [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:83467]
 INFO: [Synth 8-6155] done synthesizing module 'IBUFGDS' (0#1) [/opt/Xilinx/2025.2/Vivado/scripts/rt/data/unisim_comp.v:83467]
-INFO: [Synth 8-6157] synthesizing module 'dbg_bridge' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge.v:39]
-	Parameter CLK_FREQ bound to: 200000000 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'dbg_bridge' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge.v:39]
+	Parameter CLK_FREQ bound to: 100000000 - type: integer 
 	Parameter UART_SPEED bound to: 115200 - type: integer 
-INFO: [Synth 8-6157] synthesizing module 'dbg_bridge_uart' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge_uart.v:38]
+INFO: [Synth 8-6157] synthesizing module 'dbg_bridge_uart' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge_uart.v:38]
 	Parameter UART_DIVISOR_W bound to: 32 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'dbg_bridge_uart' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge_uart.v:38]
-INFO: [Synth 8-6157] synthesizing module 'dbg_bridge_fifo' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge_fifo.v:38]
+INFO: [Synth 8-6155] done synthesizing module 'dbg_bridge_uart' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge_uart.v:38]
+INFO: [Synth 8-6157] synthesizing module 'dbg_bridge_fifo' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge_fifo.v:38]
 	Parameter WIDTH bound to: 8 - type: integer 
 	Parameter DEPTH bound to: 8 - type: integer 
 	Parameter ADDR_W bound to: 3 - type: integer 
-INFO: [Synth 8-6155] done synthesizing module 'dbg_bridge_fifo' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge_fifo.v:38]
-WARNING: [Synth 8-693] zero replication count - replication ignored [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge.v:438]
-INFO: [Synth 8-6155] done synthesizing module 'dbg_bridge' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge.v:39]
-INFO: [Synth 8-3491] module 'axi_bram_ctrl_0' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.Xil/Vivado-2045526-localhost.localdomain/realtime/axi_bram_ctrl_0_stub.vhdl:6' bound to instance 'u_bram_ctrl' of component 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:249]
-INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.Xil/Vivado-2045526-localhost.localdomain/realtime/axi_bram_ctrl_0_stub.vhdl:62]
-WARNING: [Synth 8-5640] Port 'rsta_busy' is missing in component declaration [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:159]
-INFO: [Synth 8-3491] module 'blk_mem_gen_0' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.Xil/Vivado-2045526-localhost.localdomain/realtime/blk_mem_gen_0_stub.vhdl:6' bound to instance 'u_bram' of component 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:303]
-INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.Xil/Vivado-2045526-localhost.localdomain/realtime/blk_mem_gen_0_stub.vhdl:28]
-INFO: [Synth 8-638] synthesizing module 'async_div' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:41]
+INFO: [Synth 8-6155] done synthesizing module 'dbg_bridge_fifo' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge_fifo.v:38]
+WARNING: [Synth 8-693] zero replication count - replication ignored [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge.v:438]
+INFO: [Synth 8-6155] done synthesizing module 'dbg_bridge' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge.v:39]
+INFO: [Synth 8-3491] module 'axi_bram_ctrl_0' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.Xil/Vivado-3335487-localhost.localdomain/realtime/axi_bram_ctrl_0_stub.vhdl:6' bound to instance 'u_bram_ctrl' of component 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:263]
+INFO: [Synth 8-638] synthesizing module 'axi_bram_ctrl_0' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.Xil/Vivado-3335487-localhost.localdomain/realtime/axi_bram_ctrl_0_stub.vhdl:62]
+WARNING: [Synth 8-5640] Port 'rsta_busy' is missing in component declaration [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:160]
+INFO: [Synth 8-3491] module 'blk_mem_gen_0' declared at '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.Xil/Vivado-3335487-localhost.localdomain/realtime/blk_mem_gen_0_stub.vhdl:6' bound to instance 'u_bram' of component 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:317]
+INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.Xil/Vivado-3335487-localhost.localdomain/realtime/blk_mem_gen_0_stub.vhdl:28]
+INFO: [Synth 8-638] synthesizing module 'async_div' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:41]
 	Parameter STAGES bound to: 28 - type: integer 
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:53]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:63]
-INFO: [Synth 8-256] done synthesizing module 'async_div' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/async_div.vhd:41]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:53]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-113] binding component instance 'FDCE_inst' to cell 'FDCE' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:63]
+INFO: [Synth 8-256] done synthesizing module 'async_div' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/async_div.vhd:41]
 	Parameter PROG_USR bound to: FALSE - type: string 
 	Parameter SIM_CCLK_FREQ bound to: 0.000000e+00 - type: double 
-INFO: [Synth 8-113] binding component instance 'STARTUPE2_inst' to cell 'STARTUPE2' [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:327]
-INFO: [Synth 8-256] done synthesizing module 'top' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:40]
+INFO: [Synth 8-113] binding component instance 'STARTUPE2_inst' to cell 'STARTUPE2' [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:341]
+INFO: [Synth 8-256] done synthesizing module 'top' (0#1) [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:40]
 WARNING: [Synth 8-7137] Register ram_q_reg in module dbg_bridge_fifo has both Set and reset with same priority. This may cause simulation mismatches. Consider rewriting code 
-WARNING: [Synth 8-4767] Trying to implement RAM 'ram_q_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons. [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/dbg_bridge_fifo.v:92]
+WARNING: [Synth 8-4767] Trying to implement RAM 'ram_q_reg' in registers. Block RAM or DRAM implementation is not possible; see log for reasons. [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/dbg_bridge_fifo.v:92]
 Reason is one or more of the following :
 	1: RAM is sensitive to asynchronous reset signal. this RTL style is not supported. 
-WARNING: [Synth 8-3848] Net led in module/entity top does not have driver. [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/top.vhd:32]
+WARNING: [Synth 8-3848] Net led in module/entity top does not have driver. [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/top.vhd:32]
 WARNING: [Synth 8-7129] Port mem_bresp_i[1] in module dbg_bridge is either unconnected or has no load
 WARNING: [Synth 8-7129] Port mem_bresp_i[0] in module dbg_bridge is either unconnected or has no load
 WARNING: [Synth 8-7129] Port mem_bid_i[3] in module dbg_bridge is either unconnected or has no load
@@ -5243,46 +5243,45 @@ WARNING: [Synth 8-7129] Port key[1] in module top is either unconnected or has n
 WARNING: [Synth 8-7129] Port key[2] in module top is either unconnected or has no load
 WARNING: [Synth 8-7129] Port key[3] in module top is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13662 ; free virtual = 194884
+Finished RTL Elaboration : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10873 ; free virtual = 193249
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13651 ; free virtual = 194872
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10895 ; free virtual = 193271
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:11 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13651 ; free virtual = 194872
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:10 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10895 ; free virtual = 193271
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13688 ; free virtual = 194910
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 10888 ; free virtual = 193264
 INFO: [Netlist 29-17] Analyzing 2 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0/axi_bram_ctrl_0_in_context.xdc] for cell 'u_bram_ctrl'
-create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13948 ; free virtual = 195170
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0/axi_bram_ctrl_0_in_context.xdc] for cell 'u_bram_ctrl'
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0/blk_mem_gen_0_in_context.xdc] for cell 'u_bram'
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0/blk_mem_gen_0_in_context.xdc] for cell 'u_bram'
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/rk-xcku5p-f.xdc]
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/rk-xcku5p-f.xdc]
-INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/rk-xcku5p-f.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_propImpl.xdc].
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0/axi_bram_ctrl_0_in_context.xdc] for cell 'u_bram_ctrl'
+create_clock: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11147 ; free virtual = 193523
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0/axi_bram_ctrl_0_in_context.xdc] for cell 'u_bram_ctrl'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0/blk_mem_gen_0_in_context.xdc] for cell 'u_bram'
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0/blk_mem_gen_0_in_context.xdc] for cell 'u_bram'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/rk-xcku5p-f.xdc]
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/rk-xcku5p-f.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/rk-xcku5p-f.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_propImpl.xdc].
 Resolution: To avoid this warning, move constraints listed in [.Xil/top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13944 ; free virtual = 195166
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11147 ; free virtual = 193523
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 2 instances were transformed.
   IBUFGDS => IBUFDS (DIFFINBUF, IBUFCTRL): 1 instance 
   STARTUPE2 => STARTUPE3: 1 instance 
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 13935 ; free virtual = 195157
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11147 ; free virtual = 193523
 WARNING: [Timing 38-316] Clock period '20.000' specified during out-of-context synthesis of instance 'u_bram' at clock pin 'clka' is different from the actual clock period '10.000', this can lead to different synthesis results.
-WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'u_bram_ctrl' at clock pin 's_axi_aclk' is different from the actual clock period '5.000', this can lead to different synthesis results.
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14060 ; free virtual = 195282
+Finished Constraint Validation : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11281 ; free virtual = 193658
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
@@ -5290,13 +5289,13 @@ Start Loading Part and Timing Information
 Loading part: xcku5p-ffvb676-2-i
 INFO: [Synth 8-6742] Reading net delay rules and data
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14086 ; free virtual = 195309
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11277 ; free virtual = 193654
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:26 ; elapsed = 00:00:27 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14076 ; free virtual = 195299
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11275 ; free virtual = 193651
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'state_q_reg' in module 'dbg_bridge'
 ---------------------------------------------------------------------------------------------------
@@ -5317,7 +5316,7 @@ INFO: [Synth 8-802] inferred FSM for state register 'state_q_reg' in module 'dbg
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'state_q_reg' using encoding 'one-hot' in module 'dbg_bridge'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:27 ; elapsed = 00:00:28 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14063 ; free virtual = 195287
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11297 ; free virtual = 193674
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
@@ -5358,25 +5357,25 @@ WARNING: [Synth 8-7129] Port key[1] in module top is either unconnected or has n
 WARNING: [Synth 8-7129] Port key[2] in module top is either unconnected or has no load
 WARNING: [Synth 8-7129] Port key[3] in module top is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:33 ; elapsed = 00:00:33 . Memory (MB): peak = 4071.586 ; gain = 0.000 ; free physical = 14140 ; free virtual = 195369
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:30 ; elapsed = 00:00:31 . Memory (MB): peak = 4071.316 ; gain = 0.000 ; free physical = 11354 ; free virtual = 193737
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:43 ; elapsed = 00:00:44 . Memory (MB): peak = 4079.590 ; gain = 8.004 ; free physical = 14140 ; free virtual = 195371
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:39 ; elapsed = 00:00:40 . Memory (MB): peak = 4079.320 ; gain = 8.004 ; free physical = 11439 ; free virtual = 193823
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:46 ; elapsed = 00:00:47 . Memory (MB): peak = 4079.590 ; gain = 8.004 ; free physical = 14156 ; free virtual = 195386
+Finished Timing Optimization : Time (s): cpu = 00:00:42 ; elapsed = 00:00:43 . Memory (MB): peak = 4079.320 ; gain = 8.004 ; free physical = 11455 ; free virtual = 193839
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4079.590 ; gain = 8.004 ; free physical = 14150 ; free virtual = 195381
+Finished Technology Mapping : Time (s): cpu = 00:00:42 ; elapsed = 00:00:43 . Memory (MB): peak = 4079.320 ; gain = 8.004 ; free physical = 11448 ; free virtual = 193832
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -5394,37 +5393,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14161 ; free virtual = 195391
+Finished IO Insertion : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11470 ; free virtual = 193854
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14160 ; free virtual = 195391
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11469 ; free virtual = 193853
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14153 ; free virtual = 195383
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11472 ; free virtual = 193856
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14152 ; free virtual = 195383
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11472 ; free virtual = 193856
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14149 ; free virtual = 195380
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11487 ; free virtual = 193871
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14149 ; free virtual = 195380
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11486 ; free virtual = 193870
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -5444,17 +5443,17 @@ Report Cell Usage:
 +------+---------------------+------+
 |1     |axi_bram_ctrl_0_bbox |     1|
 |2     |blk_mem_gen_0_bbox   |     1|
-|3     |BUFG                 |     1|
+|3     |BUFG                 |     2|
 |4     |CARRY8               |    12|
-|5     |LUT1                 |    99|
+|5     |LUT1                 |   101|
 |6     |LUT2                 |    39|
-|7     |LUT3                 |    42|
-|8     |LUT4                 |    48|
+|7     |LUT3                 |    43|
+|8     |LUT4                 |    47|
 |9     |LUT5                 |    96|
 |10    |LUT6                 |   143|
 |11    |MUXF7                |     8|
 |12    |STARTUPE2            |     1|
-|13    |FDCE                 |   241|
+|13    |FDCE                 |   242|
 |14    |FDPE                 |     4|
 |15    |FDRE                 |   128|
 |16    |IBUF                 |     2|
@@ -5463,53 +5462,53 @@ Report Cell Usage:
 |19    |OBUFT                |     4|
 +------+---------------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:53 ; elapsed = 00:00:54 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14149 ; free virtual = 195380
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:47 ; elapsed = 00:00:48 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11484 ; free virtual = 193868
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 20 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:45 ; elapsed = 00:00:46 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14168 ; free virtual = 195398
-Synthesis Optimization Complete : Time (s): cpu = 00:00:54 ; elapsed = 00:00:55 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14168 ; free virtual = 195398
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:40 ; elapsed = 00:00:40 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11467 ; free virtual = 193851
+Synthesis Optimization Complete : Time (s): cpu = 00:00:48 ; elapsed = 00:00:49 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 11462 ; free virtual = 193846
 INFO: [Project 1-571] Translating synthesized netlist
-INFO: [Project 1-454] Reading design checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0.dcp' for cell 'u_bram_ctrl'
-INFO: [Project 1-454] Reading design checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0.dcp' for cell 'u_bram'
-Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14356 ; free virtual = 195589
-INFO: [Netlist 29-17] Analyzing 125 Unisim elements for replacement
+INFO: [Project 1-454] Reading design checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0.dcp' for cell 'u_bram_ctrl'
+INFO: [Project 1-454] Reading design checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0.dcp' for cell 'u_bram'
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 11578 ; free virtual = 193962
+INFO: [Netlist 29-17] Analyzing 126 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-479] Netlist was created with Vivado 2025.2
 INFO: [Project 1-570] Preparing netlist for logic optimization
-Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/rk-xcku5p-f.xdc]
-create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14345 ; free virtual = 195577
-Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/rk-xcku5p-f.xdc]
-INFO: [Project 1-538] Using original IP XDC constraints instead of the XDC constraints in dcp '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/axi_bram_ctrl_0/axi_bram_ctrl_0.dcp'
-INFO: [Project 1-538] Using original IP XDC constraints instead of the XDC constraints in dcp '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0.dcp'
+Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/rk-xcku5p-f.xdc]
+create_clock: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 9398 ; free virtual = 191638
+Finished Parsing XDC File [/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/rk-xcku5p-f.xdc]
+INFO: [Project 1-538] Using original IP XDC constraints instead of the XDC constraints in dcp '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/axi_bram_ctrl_0_1/axi_bram_ctrl_0.dcp'
+INFO: [Project 1-538] Using original IP XDC constraints instead of the XDC constraints in dcp '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/.gen/sources_1/ip/blk_mem_gen_0_1/blk_mem_gen_0.dcp'
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14330 ; free virtual = 195562
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 9406 ; free virtual = 191646
 INFO: [Project 1-111] Unisim Transformation Summary:
-  A total of 5 instances were transformed.
-  BUFG => BUFGCE: 1 instance 
+  A total of 6 instances were transformed.
+  BUFG => BUFGCE: 2 instances
   IBUF => IBUF (IBUFCTRL, INBUF): 2 instances
   IBUFGDS => IBUFDS (DIFFINBUF, IBUFCTRL): 1 instance 
   STARTUPE2 => STARTUPE3: 1 instance 
 
-Synth Design complete | Checksum: b3103554
+Synth Design complete | Checksum: 9e0834ea
 INFO: [Common 17-83] Releasing license: Synthesis
-67 Infos, 47 Warnings, 0 Critical Warnings and 0 Errors encountered.
+67 Infos, 46 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:12 ; elapsed = 00:01:09 . Memory (MB): peak = 4088.496 ; gain = 16.910 ; free physical = 14320 ; free virtual = 195551
-INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3261.478; main = 3014.400; forked = 291.774
-INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5076.465; main = 4079.594; forked = 996.871
+synth_design: Time (s): cpu = 00:01:05 ; elapsed = 00:01:02 . Memory (MB): peak = 4089.227 ; gain = 17.910 ; free physical = 10692 ; free virtual = 193077
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 3238.140; main = 3013.867; forked = 290.687
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 5076.199; main = 4079.324; forked = 996.875
 # write_checkpoint -force $ODIR/post_synth
 INFO: [Timing 38-480] Writing timing data to binary archive.
-Wrote PlaceDB: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14330 ; free virtual = 195561
-Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14330 ; free virtual = 195561
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10705 ; free virtual = 193089
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10705 ; free virtual = 193089
 Writing XDEF routing.
-Write ShapeDB Complete: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14330 ; free virtual = 195561
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10705 ; free virtual = 193089
 Writing XDEF routing logical nets.
 Writing XDEF routing special nets.
-Wrote RouteStorage: Time (s): cpu = 00:00:00.25 ; elapsed = 00:00:00.07 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14323 ; free virtual = 195557
-Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14323 ; free virtual = 195555
-Wrote Device Cache: Time (s): cpu = 00:00:00.09 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14321 ; free virtual = 195555
-Write Physdb Complete: Time (s): cpu = 00:00:00.45 ; elapsed = 00:00:00.12 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14318 ; free virtual = 195553
-INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/post_synth.dcp' has been generated.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.33 ; elapsed = 00:00:00.09 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10695 ; free virtual = 193080
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10695 ; free virtual = 193080
+Wrote Device Cache: Time (s): cpu = 00:00:00.11 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10692 ; free virtual = 193080
+Write Physdb Complete: Time (s): cpu = 00:00:00.52 ; elapsed = 00:00:00.14 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10691 ; free virtual = 193078
+INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/post_synth.dcp' has been generated.
 # opt_design -propconst -sweep -retarget -remap
 Command: opt_design -propconst -sweep -retarget -remap
 Attempting to get a license for feature 'Implementation' and/or device 'xcku5p'
@@ -5521,105 +5520,105 @@ INFO: [DRC 23-27] Running DRC with 8 threads
 INFO: [Project 1-461] DRC finished with 0 Errors
 INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:00.94 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14448 ; free virtual = 195680
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:00.99 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10746 ; free virtual = 193131
 
 Starting Logic Optimization Task
 
 Phase 1 Initialization
 
 Phase 1.1 Core Generation And Design Setup
-Phase 1.1 Core Generation And Design Setup | Checksum: 291cfe3fa
+Phase 1.1 Core Generation And Design Setup | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14555 ; free virtual = 195788
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10873 ; free virtual = 193257
 
 Phase 1.2 Setup Constraints And Sort Netlist
-Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 291cfe3fa
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14555 ; free virtual = 195788
-Phase 1 Initialization | Checksum: 291cfe3fa
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10873 ; free virtual = 193257
+Phase 1 Initialization | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14555 ; free virtual = 195788
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10873 ; free virtual = 193257
 
 Phase 2 Timer Update And Timing Data Collection
 
 Phase 2.1 Detect if minReqCache needed
-Phase 2.1 Detect if minReqCache needed | Checksum: 291cfe3fa
+Phase 2.1 Detect if minReqCache needed | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4088.496 ; gain = 0.000 ; free physical = 14555 ; free virtual = 195788
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4089.227 ; gain = 0.000 ; free physical = 10873 ; free virtual = 193257
 
 Phase 2.2 Timer Update
 INFO: [Timing 38-35] Done setting XDC timing constraints.
-Phase 2.2 Timer Update | Checksum: 291cfe3fa
+Phase 2.2 Timer Update | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14575 ; free virtual = 195808
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:10 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11271 ; free virtual = 193657
 
 Phase 2.3 Timing Data Collection
-Phase 2.3 Timing Data Collection | Checksum: 291cfe3fa
+Phase 2.3 Timing Data Collection | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14572 ; free virtual = 195806
-Phase 2 Timer Update And Timing Data Collection | Checksum: 291cfe3fa
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:10 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11268 ; free virtual = 193654
+Phase 2 Timer Update And Timing Data Collection | Checksum: 27cc7e390
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14572 ; free virtual = 195806
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:10 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11268 ; free virtual = 193654
 
 Phase 3 Retarget
 INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
 INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
 INFO: [Opt 31-1566] Pulled 10 inverters resulting in an inversion of 30 pins
-INFO: [Opt 31-138] Pushed 3 inverter(s) to 371 load pin(s).
+INFO: [Opt 31-138] Pushed 3 inverter(s) to 372 load pin(s).
 INFO: [Opt 31-49] Retargeted 0 cell(s).
-Phase 3 Retarget | Checksum: 220e6ba2d
+Phase 3 Retarget | Checksum: 2c5b31c0b
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14605 ; free virtual = 195839
-Retarget | Checksum: 220e6ba2d
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11237 ; free virtual = 193623
+Retarget | Checksum: 2c5b31c0b
 INFO: [Opt 31-389] Phase Retarget created 65 cells and removed 81 cells
 
 Phase 4 Constant propagation
 INFO: [Opt 31-138] Pushed 10 inverter(s) to 10 load pin(s).
-Phase 4 Constant propagation | Checksum: 1f5a765f6
+Phase 4 Constant propagation | Checksum: 2e9320812
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14595 ; free virtual = 195828
-Constant propagation | Checksum: 1f5a765f6
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11244 ; free virtual = 193629
+Constant propagation | Checksum: 2e9320812
 INFO: [Opt 31-389] Phase Constant propagation created 36 cells and removed 196 cells
 
 Phase 5 Sweep
 INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
-Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14589 ; free virtual = 195822
+Done building netlist checker database: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11234 ; free virtual = 193620
 INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
-Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14584 ; free virtual = 195818
-Phase 5 Sweep | Checksum: 23a00f545
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11230 ; free virtual = 193615
+Phase 5 Sweep | Checksum: 259c54419
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14584 ; free virtual = 195818
-Sweep | Checksum: 23a00f545
-INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 54 cells
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11226 ; free virtual = 193612
+Sweep | Checksum: 259c54419
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 55 cells
 
 Phase 6 Remap
-Phase 6 Remap | Checksum: 2703e52f6
+Phase 6 Remap | Checksum: 2e659ee61
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14605 ; free virtual = 195841
-Remap | Checksum: 2703e52f6
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11242 ; free virtual = 193628
+Remap | Checksum: 2e659ee61
 INFO: [Opt 31-389] Phase Remap created 19 cells and removed 27 cells
 
 Phase 7 Post Processing Netlist
-Phase 7 Post Processing Netlist | Checksum: 2745df8a4
+Phase 7 Post Processing Netlist | Checksum: 27d7770c4
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14603 ; free virtual = 195837
-Post Processing Netlist | Checksum: 2745df8a4
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11242 ; free virtual = 193628
+Post Processing Netlist | Checksum: 27d7770c4
 INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
 
 Phase 8 Finalization
 
 Phase 8.1 Finalizing Design Cores and Updating Shapes
-Phase 8.1 Finalizing Design Cores and Updating Shapes | Checksum: 1ce7d6ea4
+Phase 8.1 Finalizing Design Cores and Updating Shapes | Checksum: 1a69e102a
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14590 ; free virtual = 195824
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11242 ; free virtual = 193628
 
 Phase 8.2 Verifying Netlist Connectivity
-Phase 8.2 Verifying Netlist Connectivity | Checksum: 1ce7d6ea4
+Phase 8.2 Verifying Netlist Connectivity | Checksum: 1a69e102a
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14590 ; free virtual = 195824
-Phase 8 Finalization | Checksum: 1ce7d6ea4
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11242 ; free virtual = 193628
+Phase 8 Finalization | Checksum: 1a69e102a
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14590 ; free virtual = 195824
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11242 ; free virtual = 193628
 Opt_design Change Summary
 =========================
 
@@ -5629,20 +5628,20 @@ Opt_design Change Summary
 ---------------------------------------------------------------------------------------------------------------------
 |  Retarget                 |              65  |              81  |                                              0  |
 |  Constant propagation     |              36  |             196  |                                              0  |
-|  Sweep                    |               0  |              54  |                                              0  |
+|  Sweep                    |               0  |              55  |                                              0  |
 |  Remap                    |              19  |              27  |                                              0  |
 |  Post Processing Netlist  |               0  |               0  |                                              0  |
 ---------------------------------------------------------------------------------------------------------------------
 
 
-Ending Logic Optimization Task | Checksum: 1ce7d6ea4
+Ending Logic Optimization Task | Checksum: 1a69e102a
 
-Time (s): cpu = 00:00:12 ; elapsed = 00:00:12 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14590 ; free virtual = 195824
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14587 ; free virtual = 195821
+Time (s): cpu = 00:00:12 ; elapsed = 00:00:11 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11242 ; free virtual = 193628
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11237 ; free virtual = 193622
 INFO: [Common 17-83] Releasing license: Implementation
 19 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 opt_design completed successfully
-opt_design: Time (s): cpu = 00:00:20 ; elapsed = 00:00:18 . Memory (MB): peak = 4096.500 ; gain = 8.004 ; free physical = 14587 ; free virtual = 195821
+opt_design: Time (s): cpu = 00:00:19 ; elapsed = 00:00:16 . Memory (MB): peak = 4097.230 ; gain = 8.004 ; free physical = 11237 ; free virtual = 193622
 # place_design -directive Quick
 Command: place_design -directive Quick
 Attempting to get a license for feature 'Implementation' and/or device 'xcku5p'
@@ -5664,31 +5663,31 @@ Starting Placer Task
 Phase 1 Placer Initialization
 
 Phase 1.1 Placer Initialization Netlist Sorting
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14604 ; free virtual = 195838
-Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 198c09bfe
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11296 ; free virtual = 193681
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 13cc1842b
 
-Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14604 ; free virtual = 195838
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11296 ; free virtual = 193681
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14606 ; free virtual = 195840
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11289 ; free virtual = 193675
 
 Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
 INFO: [Timing 38-35] Done setting XDC timing constraints.
-Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 1f0c3addf
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 1cc1cad74
 
-Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.81 . Memory (MB): peak = 4096.500 ; gain = 0.000 ; free physical = 14595 ; free virtual = 195829
+Time (s): cpu = 00:00:02 ; elapsed = 00:00:00.99 . Memory (MB): peak = 4097.230 ; gain = 0.000 ; free physical = 11284 ; free virtual = 193670
 
 Phase 1.3 Build Placer Netlist Model
-Phase 1.3 Build Placer Netlist Model | Checksum: 2e5c1fb17
+Phase 1.3 Build Placer Netlist Model | Checksum: 2a412dddf
 
-Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 4128.516 ; gain = 32.016 ; free physical = 14570 ; free virtual = 195804
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 4129.246 ; gain = 32.016 ; free physical = 11396 ; free virtual = 193782
 
 Phase 1.4 Constrain Clocks/Macros
-Phase 1.4 Constrain Clocks/Macros | Checksum: 2e5c1fb17
+Phase 1.4 Constrain Clocks/Macros | Checksum: 2a412dddf
 
-Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 4128.516 ; gain = 32.016 ; free physical = 14585 ; free virtual = 195819
-Phase 1 Placer Initialization | Checksum: 2e5c1fb17
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 4129.246 ; gain = 32.016 ; free physical = 11396 ; free virtual = 193782
+Phase 1 Placer Initialization | Checksum: 2a412dddf
 
-Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 4128.516 ; gain = 32.016 ; free physical = 14590 ; free virtual = 195825
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4129.246 ; gain = 32.016 ; free physical = 11408 ; free virtual = 193794
 
 Phase 2 Global Placement
 
@@ -5697,113 +5696,113 @@ Phase 2.1 Floorplanning
 Phase 2.1.1 Partition Driven Placement
 
 Phase 2.1.1.1 PBP: Partition Driven Placement
-Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 2558cac12
+Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 292d65d7a
 
-Time (s): cpu = 00:00:09 ; elapsed = 00:00:07 . Memory (MB): peak = 4128.516 ; gain = 32.016 ; free physical = 14574 ; free virtual = 195809
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:07 . Memory (MB): peak = 4129.246 ; gain = 32.016 ; free physical = 11437 ; free virtual = 193823
 
 Phase 2.1.1.2 PBP: Clock Region Placement
 INFO: [Place 30-3162] Check ILP status : ILP-based clock placer completed successfully.
-Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: 2558cac12
+Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:09 ; elapsed = 00:00:07 . Memory (MB): peak = 4128.516 ; gain = 32.016 ; free physical = 14577 ; free virtual = 195812
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:07 . Memory (MB): peak = 4129.246 ; gain = 32.016 ; free physical = 11437 ; free virtual = 193823
 
 Phase 2.1.1.3 PBP: Compute Congestion
-Phase 2.1.1.3 PBP: Compute Congestion | Checksum: 2558cac12
+Phase 2.1.1.3 PBP: Compute Congestion | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:30 ; elapsed = 00:00:13 . Memory (MB): peak = 4330.496 ; gain = 233.996 ; free physical = 14328 ; free virtual = 195563
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:13 . Memory (MB): peak = 4335.227 ; gain = 237.996 ; free physical = 11179 ; free virtual = 193566
 
 Phase 2.1.1.4 PBP: Add part constraints
-Phase 2.1.1.4 PBP: Add part constraints | Checksum: 2558cac12
+Phase 2.1.1.4 PBP: Add part constraints | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:30 ; elapsed = 00:00:13 . Memory (MB): peak = 4330.496 ; gain = 233.996 ; free physical = 14328 ; free virtual = 195563
-Phase 2.1.1 Partition Driven Placement | Checksum: 2558cac12
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:13 . Memory (MB): peak = 4335.227 ; gain = 237.996 ; free physical = 11179 ; free virtual = 193564
+Phase 2.1.1 Partition Driven Placement | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:30 ; elapsed = 00:00:13 . Memory (MB): peak = 4330.496 ; gain = 233.996 ; free physical = 14327 ; free virtual = 195562
-Phase 2.1 Floorplanning | Checksum: 2558cac12
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:13 . Memory (MB): peak = 4335.227 ; gain = 237.996 ; free physical = 11179 ; free virtual = 193564
+Phase 2.1 Floorplanning | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:30 ; elapsed = 00:00:13 . Memory (MB): peak = 4330.496 ; gain = 233.996 ; free physical = 14327 ; free virtual = 195562
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:13 . Memory (MB): peak = 4335.227 ; gain = 237.996 ; free physical = 11179 ; free virtual = 193564
 
 Phase 2.2 Update Timing before SLR Path Opt
-Phase 2.2 Update Timing before SLR Path Opt | Checksum: 2558cac12
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:30 ; elapsed = 00:00:13 . Memory (MB): peak = 4330.496 ; gain = 233.996 ; free physical = 14327 ; free virtual = 195562
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:13 . Memory (MB): peak = 4335.227 ; gain = 237.996 ; free physical = 11179 ; free virtual = 193564
 
 Phase 2.3 Post-Processing in Floorplanning
-Phase 2.3 Post-Processing in Floorplanning | Checksum: 2558cac12
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 2b562885e
 
-Time (s): cpu = 00:00:30 ; elapsed = 00:00:13 . Memory (MB): peak = 4330.496 ; gain = 233.996 ; free physical = 14325 ; free virtual = 195560
+Time (s): cpu = 00:00:29 ; elapsed = 00:00:13 . Memory (MB): peak = 4335.227 ; gain = 237.996 ; free physical = 11179 ; free virtual = 193564
 
 Phase 2.4 Global Place Phase1
-Phase 2.4 Global Place Phase1 | Checksum: 2906eee4b
+Phase 2.4 Global Place Phase1 | Checksum: 1ff61ba5f
 
-Time (s): cpu = 00:01:25 ; elapsed = 00:00:34 . Memory (MB): peak = 4446.543 ; gain = 350.043 ; free physical = 14250 ; free virtual = 195486
+Time (s): cpu = 00:01:24 ; elapsed = 00:00:34 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11088 ; free virtual = 193477
 
 Phase 2.5 Global Place Phase2
 WARNING: [Place 46-29] Timing had been disabled during Placer and, therefore, physical synthesis in Placer will be skipped.
-Phase 2.5 Global Place Phase2 | Checksum: 291d3b4ea
+Phase 2.5 Global Place Phase2 | Checksum: 338c4bc54
 
-Time (s): cpu = 00:01:49 ; elapsed = 00:00:43 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 11718 ; free virtual = 192937
-Phase 2 Global Placement | Checksum: 291d3b4ea
+Time (s): cpu = 00:01:48 ; elapsed = 00:00:43 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11187 ; free virtual = 193576
+Phase 2 Global Placement | Checksum: 338c4bc54
 
-Time (s): cpu = 00:01:49 ; elapsed = 00:00:43 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 11711 ; free virtual = 192936
+Time (s): cpu = 00:01:48 ; elapsed = 00:00:43 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11187 ; free virtual = 193576
 
 Phase 3 Detail Placement
 
 Phase 3.1 Commit Multi Column Macros
-Phase 3.1 Commit Multi Column Macros | Checksum: 291d3b4ea
+Phase 3.1 Commit Multi Column Macros | Checksum: 338c4bc54
 
-Time (s): cpu = 00:02:10 ; elapsed = 00:00:49 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13316 ; free virtual = 194553
+Time (s): cpu = 00:02:08 ; elapsed = 00:00:49 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11183 ; free virtual = 193573
 
 Phase 3.2 Commit Most Macros & LUTRAMs
-Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 34d88d98c
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 2548f1aec
 
-Time (s): cpu = 00:02:10 ; elapsed = 00:00:49 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13341 ; free virtual = 194578
+Time (s): cpu = 00:02:08 ; elapsed = 00:00:49 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11211 ; free virtual = 193600
 
 Phase 3.3 Small Shape DP
 
 Phase 3.3.1 Small Shape Clustering
-Phase 3.3.1 Small Shape Clustering | Checksum: 3284c2a62
+Phase 3.3.1 Small Shape Clustering | Checksum: 2990bdccc
 
-Time (s): cpu = 00:02:31 ; elapsed = 00:00:55 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13547 ; free virtual = 194784
+Time (s): cpu = 00:02:27 ; elapsed = 00:00:54 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11215 ; free virtual = 193604
 
 Phase 3.3.2 Slice Area Swap
 
 Phase 3.3.2.1 Slice Area Swap Initial
-Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 277dc59d4
+Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 1f627776a
 
-Time (s): cpu = 00:02:31 ; elapsed = 00:00:55 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13578 ; free virtual = 194815
-Phase 3.3.2 Slice Area Swap | Checksum: 277dc59d4
+Time (s): cpu = 00:02:27 ; elapsed = 00:00:54 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11208 ; free virtual = 193597
+Phase 3.3.2 Slice Area Swap | Checksum: 1f627776a
 
-Time (s): cpu = 00:02:31 ; elapsed = 00:00:55 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13574 ; free virtual = 194811
-Phase 3.3 Small Shape DP | Checksum: 2ad9b0c1a
+Time (s): cpu = 00:02:28 ; elapsed = 00:00:55 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11206 ; free virtual = 193596
+Phase 3.3 Small Shape DP | Checksum: 1f8bb77b2
 
-Time (s): cpu = 00:02:32 ; elapsed = 00:00:55 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13589 ; free virtual = 194826
+Time (s): cpu = 00:02:28 ; elapsed = 00:00:55 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11202 ; free virtual = 193592
 
 Phase 3.4 Re-assign LUT pins
-Phase 3.4 Re-assign LUT pins | Checksum: 2ad9b0c1a
+Phase 3.4 Re-assign LUT pins | Checksum: 1f8bb77b2
 
-Time (s): cpu = 00:02:34 ; elapsed = 00:00:58 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13719 ; free virtual = 194956
+Time (s): cpu = 00:02:31 ; elapsed = 00:00:57 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11311 ; free virtual = 193696
 
 Phase 3.5 Pipeline Register Optimization
-Phase 3.5 Pipeline Register Optimization | Checksum: 2ad9b0c1a
+Phase 3.5 Pipeline Register Optimization | Checksum: 1f8bb77b2
 
-Time (s): cpu = 00:02:34 ; elapsed = 00:00:58 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13717 ; free virtual = 194955
-Phase 3 Detail Placement | Checksum: 2ad9b0c1a
+Time (s): cpu = 00:02:31 ; elapsed = 00:00:57 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11311 ; free virtual = 193696
+Phase 3 Detail Placement | Checksum: 1f8bb77b2
 
-Time (s): cpu = 00:02:34 ; elapsed = 00:00:58 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13738 ; free virtual = 194975
+Time (s): cpu = 00:02:31 ; elapsed = 00:00:57 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11330 ; free virtual = 193714
 
 Phase 4 Post Placement Optimization and Clean-Up
 
 Phase 4.1 Post Commit Optimization
-Phase 4.1 Post Commit Optimization | Checksum: 2ad9b0c1a
+Phase 4.1 Post Commit Optimization | Checksum: 1f8bb77b2
 
-Time (s): cpu = 00:02:55 ; elapsed = 00:01:04 . Memory (MB): peak = 4447.543 ; gain = 351.043 ; free physical = 13910 ; free virtual = 195148
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4451.543 ; gain = 0.000 ; free physical = 14705 ; free virtual = 195944
+Time (s): cpu = 00:02:51 ; elapsed = 00:01:03 . Memory (MB): peak = 4451.273 ; gain = 354.043 ; free physical = 11494 ; free virtual = 193879
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4455.273 ; gain = 0.000 ; free physical = 11487 ; free virtual = 193873
 
 Phase 4.2 Post Placement Cleanup
-Phase 4.2 Post Placement Cleanup | Checksum: 209b5c5fa
+Phase 4.2 Post Placement Cleanup | Checksum: 1a8886301
 
-Time (s): cpu = 00:03:29 ; elapsed = 00:01:23 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14712 ; free virtual = 195951
+Time (s): cpu = 00:03:24 ; elapsed = 00:01:22 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11482 ; free virtual = 193868
 
 Phase 4.3 Placer Reporting
 
@@ -5822,26 +5821,26 @@ INFO: [Place 30-612] Post-Placement Estimated Congestion
 |       West|                1x1|                1x1|                1x1|
 |___________|___________________|___________________|___________________|
 
-Phase 4.3.1 Print Estimated Congestion | Checksum: 209b5c5fa
+Phase 4.3.1 Print Estimated Congestion | Checksum: 1a8886301
 
-Time (s): cpu = 00:03:29 ; elapsed = 00:01:23 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14724 ; free virtual = 195963
-Phase 4.3 Placer Reporting | Checksum: 209b5c5fa
+Time (s): cpu = 00:03:24 ; elapsed = 00:01:22 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11496 ; free virtual = 193882
+Phase 4.3 Placer Reporting | Checksum: 1a8886301
 
-Time (s): cpu = 00:03:29 ; elapsed = 00:01:23 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14723 ; free virtual = 195962
+Time (s): cpu = 00:03:24 ; elapsed = 00:01:22 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11495 ; free virtual = 193881
 
 Phase 4.4 Final Placement Cleanup
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4451.543 ; gain = 0.000 ; free physical = 14721 ; free virtual = 195960
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4455.273 ; gain = 0.000 ; free physical = 11495 ; free virtual = 193881
 
-Time (s): cpu = 00:03:29 ; elapsed = 00:01:23 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14721 ; free virtual = 195960
-Phase 4 Post Placement Optimization and Clean-Up | Checksum: 202ad93eb
+Time (s): cpu = 00:03:24 ; elapsed = 00:01:22 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11495 ; free virtual = 193881
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 19d2f8057
 
-Time (s): cpu = 00:03:29 ; elapsed = 00:01:23 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14721 ; free virtual = 195960
-Ending Placer Task | Checksum: 1a2e02d85
+Time (s): cpu = 00:03:25 ; elapsed = 00:01:22 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11493 ; free virtual = 193879
+Ending Placer Task | Checksum: 11ef1a951
 
-Time (s): cpu = 00:03:29 ; elapsed = 00:01:23 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14719 ; free virtual = 195958
+Time (s): cpu = 00:03:25 ; elapsed = 00:01:22 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11491 ; free virtual = 193877
 15 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
 place_design completed successfully
-place_design: Time (s): cpu = 00:03:38 ; elapsed = 00:01:25 . Memory (MB): peak = 4451.543 ; gain = 355.043 ; free physical = 14717 ; free virtual = 195956
+place_design: Time (s): cpu = 00:03:33 ; elapsed = 00:01:24 . Memory (MB): peak = 4455.273 ; gain = 358.043 ; free physical = 11489 ; free virtual = 193875
 # phys_opt_design -critical_cell_opt -critical_pin_opt -placement_opt -hold_fix -restruct_opt -retime
 Command: phys_opt_design -critical_cell_opt -critical_pin_opt -placement_opt -hold_fix -restruct_opt -retime
 Attempting to get a license for feature 'Implementation' and/or device 'xcku5p'
@@ -5849,8 +5848,8 @@ INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xc
 
 Starting Initial Update Timing Task
 
-Time (s): cpu = 00:00:22 ; elapsed = 00:00:20 . Memory (MB): peak = 4879.504 ; gain = 427.961 ; free physical = 14203 ; free virtual = 195445
-INFO: [Vivado_Tcl 4-2280] Estimated Timing Summary | WNS= 2.768 | TNS= 0.000 | WHS= -0.005 |
+Time (s): cpu = 00:00:20 ; elapsed = 00:00:20 . Memory (MB): peak = 4914.234 ; gain = 458.961 ; free physical = 11049 ; free virtual = 193436
+INFO: [Vivado_Tcl 4-2280] Estimated Timing Summary | WNS= 4.682 | TNS= 0.000 | WHS= 0.083 |
 INFO: [Vivado_Tcl 4-383] Design worst setup slack (WNS) is greater than or equal to 0.250 ns. All physical synthesis setup optimizations will be skipped.
 INFO: [Vivado_Tcl 4-2291] Design worst hold slack (WHS) is greater than or equal to -0.250 ns. Hold fix optimization will be skipped.
  
@@ -5858,35 +5857,35 @@ INFO: [Vivado_Tcl 4-232] No setup violation found. The netlist was not modified.
 INFO: [Common 17-83] Releasing license: Implementation
 6 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 phys_opt_design completed successfully
-phys_opt_design: Time (s): cpu = 00:00:22 ; elapsed = 00:00:20 . Memory (MB): peak = 4879.504 ; gain = 427.961 ; free physical = 14193 ; free virtual = 195433
+phys_opt_design: Time (s): cpu = 00:00:20 ; elapsed = 00:00:20 . Memory (MB): peak = 4914.234 ; gain = 458.961 ; free physical = 11049 ; free virtual = 193436
 # power_opt_design
 Command: power_opt_design
 Attempting to get a license for feature 'Implementation' and/or device 'xcku5p'
 INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcku5p'
-Begin power optimizations | Checksum: 1d89d002b
+Begin power optimizations | Checksum: 188ce3550
 INFO: [Pwropt 34-50] Optimizing power for module top ...
 INFO: [Pwropt 34-207] Design is in post-place state. Running in post-place mode.
 INFO: [Place 30-3162] Check ILP status : ILP-based clock placer completed successfully.
-INFO: [Physopt 32-619] Estimated Timing Summary | WNS=2.768 | TNS=0.000 |
-PSMgr Creation: Time (s): cpu = 00:00:04 ; elapsed = 00:00:02 . Memory (MB): peak = 4975.551 ; gain = 96.047 ; free physical = 12184 ; free virtual = 193425
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=4.682 | TNS=0.000 |
+PSMgr Creation: Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 5010.281 ; gain = 96.047 ; free physical = 11069 ; free virtual = 193456
 INFO: [Power 33-23] Power model is not available for STARTUPE2_inst
 Running Vector-less Activity Propagation...
-Found 4800 new always-off flops by back propagation
-Pre-processing: Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 5039.582 ; gain = 160.078 ; free physical = 11989 ; free virtual = 193230
 
 Finished Running Vector-less Activity Propagation
+Found 4800 new always-off flops by back propagation
+Pre-processing: Time (s): cpu = 00:00:05 ; elapsed = 00:00:02 . Memory (MB): peak = 5074.312 ; gain = 160.078 ; free physical = 11048 ; free virtual = 193435
 INFO: [Pwropt 34-9] Applying IDT optimizations ...
-IDT: Time (s): cpu = 00:00:00.51 ; elapsed = 00:00:00.26 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 11751 ; free virtual = 192847
+IDT: Time (s): cpu = 00:00:00.59 ; elapsed = 00:00:00.3 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11038 ; free virtual = 193425
 INFO: [Pwropt 34-10] Applying ODC optimizations ...
 INFO: [Pwropt 34-215] Skipped ODC enables for 512 nets in BRAM flops in bus-based analysis.
 INFO: [Pwropt 34-214] Skipped ODC enables for 0 nets in BRAM address flops in bus-based analysis.
-ODC: Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13326 ; free virtual = 194567
-Power optimization passes: Time (s): cpu = 00:00:09 ; elapsed = 00:00:05 . Memory (MB): peak = 5039.582 ; gain = 160.078 ; free physical = 13324 ; free virtual = 194565
+ODC: Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10990 ; free virtual = 193377
+Power optimization passes: Time (s): cpu = 00:00:09 ; elapsed = 00:00:05 . Memory (MB): peak = 5074.312 ; gain = 160.078 ; free physical = 10990 ; free virtual = 193377
 
 INFO: [Pwropt 34-77] Creating clock enable groups ...
 INFO: [Pwropt 34-96] Including small groups for filtering based on enable probabilities.
  Done
-Grouping enables: Time (s): cpu = 00:00:00.65 ; elapsed = 00:00:00.72 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13350 ; free virtual = 194600
+Grouping enables: Time (s): cpu = 00:00:00.76 ; elapsed = 00:00:00.8 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10981 ; free virtual = 193368
 
 
 Starting PowerOpt Patch Enables Task
@@ -5895,7 +5894,7 @@ INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 64 has
 INFO: [Pwropt 34-201] Structural ODC has moved 0 WE to EN ports
 INFO: [Pwropt 34-100] Patcher adaptive clustering : original flop clusters 27 accepted clusters 0
 
-Number of Slice Registers augmented: 0 newly gated: 0 Total: 568
+Number of Slice Registers augmented: 0 newly gated: 0 Total: 569
 Number of SRLs augmented: 0  newly gated: 0 Total: 1
 Number of BRAM Ports augmented: 0 newly gated: 0 Total Ports: 128
 Number of Flops added for Enable Generation: 0
@@ -5911,37 +5910,37 @@ Number of LUTs created for enable logic :
     LUT6 : 0
 
 Patching clock gating enables finished successfully.
-Ending PowerOpt Patch Enables Task | Checksum: 19c460b3b
+Ending PowerOpt Patch Enables Task | Checksum: 15433d892
 
-Time (s): cpu = 00:00:00.12 ; elapsed = 00:00:00.05 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13373 ; free virtual = 194614
+Time (s): cpu = 00:00:00.11 ; elapsed = 00:00:00.05 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10981 ; free virtual = 193368
 INFO: [Pwropt 34-30] Power optimization finished successfully.
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13373 ; free virtual = 194614
-End power optimizations | Checksum: 1b3ecf48a
-Power optimization: Time (s): cpu = 00:00:12 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 160.078 ; free physical = 13370 ; free virtual = 194611
-INFO: [Pwropt 34-198] Malloced memory gain at end of power optimization: -23167376 bytes
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10981 ; free virtual = 193368
+End power optimizations | Checksum: 16a54386c
+Power optimization: Time (s): cpu = 00:00:12 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 160.078 ; free physical = 10981 ; free virtual = 193368
+INFO: [Pwropt 34-198] Malloced memory gain at end of power optimization: -22772320 bytes
 
 Starting Netlist Obfuscation Task
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13370 ; free virtual = 194611
-Ending Netlist Obfuscation Task | Checksum: 1b3ecf48a
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10981 ; free virtual = 193368
+Ending Netlist Obfuscation Task | Checksum: 16a54386c
 
-Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:00.02 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13370 ; free virtual = 194611
+Time (s): cpu = 00:00:00.07 ; elapsed = 00:00:00.02 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10981 ; free virtual = 193368
 INFO: [Common 17-83] Releasing license: Implementation
 19 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 power_opt_design completed successfully
-power_opt_design: Time (s): cpu = 00:00:13 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 160.078 ; free physical = 13370 ; free virtual = 194611
+power_opt_design: Time (s): cpu = 00:00:12 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 160.078 ; free physical = 10981 ; free virtual = 193368
 # write_checkpoint -force $ODIR/post_place
 INFO: [Timing 38-480] Writing timing data to binary archive.
-Write ShapeDB Complete: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.01 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13401 ; free virtual = 194642
-Wrote PlaceDB: Time (s): cpu = 00:00:00.59 ; elapsed = 00:00:00.16 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13400 ; free virtual = 194643
-Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13400 ; free virtual = 194643
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.01 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10984 ; free virtual = 193371
+Wrote PlaceDB: Time (s): cpu = 00:00:00.72 ; elapsed = 00:00:00.19 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11051 ; free virtual = 193441
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11051 ; free virtual = 193441
 Writing XDEF routing.
 Writing XDEF routing logical nets.
 Writing XDEF routing special nets.
-Wrote RouteStorage: Time (s): cpu = 00:00:00.14 ; elapsed = 00:00:00.06 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13400 ; free virtual = 194643
-Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13400 ; free virtual = 194644
-Wrote Device Cache: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13400 ; free virtual = 194646
-Write Physdb Complete: Time (s): cpu = 00:00:00.77 ; elapsed = 00:00:00.27 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13399 ; free virtual = 194646
-INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/post_place.dcp' has been generated.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.2 ; elapsed = 00:00:00.07 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11037 ; free virtual = 193428
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11036 ; free virtual = 193426
+Wrote Device Cache: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.03 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11019 ; free virtual = 193412
+Write Physdb Complete: Time (s): cpu = 00:00:00.99 ; elapsed = 00:00:00.32 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11018 ; free virtual = 193411
+INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/post_place.dcp' has been generated.
 # route_design -directive Quick
 Command: route_design -directive Quick
 Attempting to get a license for feature 'Implementation' and/or device 'xcku5p'
@@ -5953,30 +5952,30 @@ INFO: [Route 35-270] Using Router directive 'Quick'.
 INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
 
 Phase 1 Build RT Design
-Checksum: PlaceDB: b3c45233 ConstDB: 0 ShapeSum: b7aa2275 RouteDB: 12c1ad3c
-Nodegraph reading from file.  Time (s): cpu = 00:00:00.63 ; elapsed = 00:00:00.68 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13456 ; free virtual = 194698
-Post Restoration Checksum: NetGraph: 400ff22 | NumContArr: 1a0c5ce7 | Constraints: 8c8a5f9c | Timing: c2a8fa9d
-Phase 1 Build RT Design | Checksum: 16d40b642
+Checksum: PlaceDB: 92d7cbf ConstDB: 0 ShapeSum: 90d65103 RouteDB: 6673deab
+Nodegraph reading from file.  Time (s): cpu = 00:00:00.78 ; elapsed = 00:00:00.83 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11006 ; free virtual = 193395
+Post Restoration Checksum: NetGraph: 6059106f | NumContArr: b2c73a3f | Constraints: 6abd5308 | Timing: c2a8fa9d
+Phase 1 Build RT Design | Checksum: 240869853
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13483 ; free virtual = 194725
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11012 ; free virtual = 193401
 
 Phase 2 Router Initialization
 
 Phase 2.1 Fix Topology Constraints
-Phase 2.1 Fix Topology Constraints | Checksum: 16d40b642
+Phase 2.1 Fix Topology Constraints | Checksum: 240869853
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13469 ; free virtual = 194711
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11012 ; free virtual = 193401
 
 Phase 2.2 Pre Route Cleanup
-Phase 2.2 Pre Route Cleanup | Checksum: 16d40b642
+Phase 2.2 Pre Route Cleanup | Checksum: 240869853
 
-Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13465 ; free virtual = 194707
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11012 ; free virtual = 193401
 
 Phase 2.3 Global Clock Net Routing
  Number of Nodes with overlaps = 0
-Phase 2.3 Global Clock Net Routing | Checksum: 1c1ffadbd
+Phase 2.3 Global Clock Net Routing | Checksum: 2bf0f5933
 
-Time (s): cpu = 00:00:06 ; elapsed = 00:00:04 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13521 ; free virtual = 194764
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:04 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11012 ; free virtual = 193401
 
 Router Utilization Summary
   Global Vertical Routing Utilization    = 0 %
@@ -5986,62 +5985,62 @@ Router Utilization Summary
   Run report_route_status for detailed report.
   Number of Failed Nets               = 1499
     (Failed Nets is the sum of unrouted and partially routed nets)
-  Number of Unrouted Nets             = 1311
-  Number of Partially Routed Nets     = 188
+  Number of Unrouted Nets             = 1310
+  Number of Partially Routed Nets     = 189
   Number of Node Overlaps             = 0
 
-Phase 2 Router Initialization | Checksum: 21828aa2c
+Phase 2 Router Initialization | Checksum: 2e0e1d75d
 
-Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13542 ; free virtual = 194784
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11013 ; free virtual = 193402
 
 Phase 3 Global Routing
-Phase 3 Global Routing | Checksum: 21828aa2c
+Phase 3 Global Routing | Checksum: 2e0e1d75d
 
-Time (s): cpu = 00:00:09 ; elapsed = 00:00:04 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13545 ; free virtual = 194787
+Time (s): cpu = 00:00:09 ; elapsed = 00:00:05 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11014 ; free virtual = 193402
 
 Phase 4 Initial Routing
 
 Phase 4.1 Initial Net Routing Pass
-Phase 4.1 Initial Net Routing Pass | Checksum: 24ee053c0
+Phase 4.1 Initial Net Routing Pass | Checksum: 2800fbb8c
 
-Time (s): cpu = 00:00:13 ; elapsed = 00:00:05 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13542 ; free virtual = 194785
-Phase 4 Initial Routing | Checksum: 24ee053c0
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:06 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11033 ; free virtual = 193421
+Phase 4 Initial Routing | Checksum: 2800fbb8c
 
-Time (s): cpu = 00:00:13 ; elapsed = 00:00:05 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13542 ; free virtual = 194785
+Time (s): cpu = 00:00:13 ; elapsed = 00:00:06 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11032 ; free virtual = 193421
 
 Phase 5 Rip-up And Reroute
 
 Phase 5.1 Global Iteration 0
- Number of Nodes with overlaps = 171
+ Number of Nodes with overlaps = 204
  Number of Nodes with overlaps = 3
  Number of Nodes with overlaps = 0
-Phase 5.1 Global Iteration 0 | Checksum: 1c0a4edb5
+Phase 5.1 Global Iteration 0 | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13640 ; free virtual = 194882
-Phase 5 Rip-up And Reroute | Checksum: 1c0a4edb5
+Time (s): cpu = 00:00:17 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193432
+Phase 5 Rip-up And Reroute | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13640 ; free virtual = 194882
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193432
 
 Phase 6 Delay and Skew Optimization
-Phase 6 Delay and Skew Optimization | Checksum: 1c0a4edb5
+Phase 6 Delay and Skew Optimization | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13640 ; free virtual = 194882
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193432
 
 Phase 7 Post Hold Fix
 
 Phase 7.1 Hold Fix Iter
-Phase 7.1 Hold Fix Iter | Checksum: 1c0a4edb5
+Phase 7.1 Hold Fix Iter | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13640 ; free virtual = 194882
-Phase 7 Post Hold Fix | Checksum: 1c0a4edb5
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193432
+Phase 7 Post Hold Fix | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13640 ; free virtual = 194882
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193432
 
 Phase 8 Route finalize
 
 Router Utilization Summary
-  Global Vertical Routing Utilization    = 0.214395 %
-  Global Horizontal Routing Utilization  = 0.196482 %
+  Global Vertical Routing Utilization    = 0.212429 %
+  Global Horizontal Routing Utilization  = 0.195541 %
   Routable Net Status*
   *Does not include unroutable nets such as driverless and loadless.
   Run report_route_status for detailed report.
@@ -6055,10 +6054,10 @@ Router Utilization Summary
 --GLOBAL Congestion:
 Utilization threshold used for congestion level computation: 0.85
 Congestion Report
-North Dir 1x1 Area, Max Cong = 32.3944%, No Congested Regions.
-South Dir 1x1 Area, Max Cong = 35.0711%, No Congested Regions.
-East Dir 1x1 Area, Max Cong = 42.3077%, No Congested Regions.
-West Dir 1x1 Area, Max Cong = 30.7692%, No Congested Regions.
+North Dir 1x1 Area, Max Cong = 34.7418%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 36.4929%, No Congested Regions.
+East Dir 1x1 Area, Max Cong = 34.6154%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 28.8462%, No Congested Regions.
 
 ------------------------------
 Reporting congestion hotspots
@@ -6080,62 +6079,62 @@ Direction: West
 Congested clusters found at Level 0
 Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
 
-Phase 8 Route finalize | Checksum: 1c0a4edb5
+Phase 8 Route finalize | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:17 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13624 ; free virtual = 194867
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11068 ; free virtual = 193457
 
 Phase 9 Verifying routed nets
 
  Verification completed successfully
-Phase 9 Verifying routed nets | Checksum: 1c0a4edb5
+Phase 9 Verifying routed nets | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:17 ; elapsed = 00:00:07 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13624 ; free virtual = 194867
+Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11060 ; free virtual = 193449
 
 Phase 10 Depositing Routes
-Phase 10 Depositing Routes | Checksum: 1c0a4edb5
+Phase 10 Depositing Routes | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13618 ; free virtual = 194861
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11048 ; free virtual = 193437
 
 Phase 11 Resolve XTalk
 
 Skipping xtalk assignment for non timing driven mode.
-Phase 11 Resolve XTalk | Checksum: 1c0a4edb5
+Phase 11 Resolve XTalk | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13618 ; free virtual = 194861
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11048 ; free virtual = 193437
 
 Phase 12 Post Process Routing
-Phase 12 Post Process Routing | Checksum: 1c0a4edb5
+Phase 12 Post Process Routing | Checksum: 2bb09adc5
 
-Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13618 ; free virtual = 194861
-Total Elapsed time in route_design: 7.52 secs
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11048 ; free virtual = 193437
+Total Elapsed time in route_design: 8.17 secs
 
 Phase 13 Post-Route Event Processing
-Phase 13 Post-Route Event Processing | Checksum: 122d0175c
+Phase 13 Post-Route Event Processing | Checksum: 1b8b815ac
 
-Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13613 ; free virtual = 194856
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11047 ; free virtual = 193436
 INFO: [Route 35-16] Router Completed Successfully
-Ending Routing Task | Checksum: 122d0175c
+Ending Routing Task | Checksum: 1b8b815ac
 
-Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13620 ; free virtual = 194863
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11045 ; free virtual = 193434
 
 Routing Is Done.
 INFO: [Common 17-83] Releasing license: Implementation
 5 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 route_design completed successfully
-route_design: Time (s): cpu = 00:00:18 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13630 ; free virtual = 194873
+route_design: Time (s): cpu = 00:00:19 ; elapsed = 00:00:08 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11039 ; free virtual = 193428
 # write_checkpoint -force $ODIR/post_route
 INFO: [Timing 38-480] Writing timing data to binary archive.
-Write ShapeDB Complete: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13630 ; free virtual = 194873
-Wrote PlaceDB: Time (s): cpu = 00:00:00.55 ; elapsed = 00:00:00.16 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13657 ; free virtual = 194902
-Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13657 ; free virtual = 194902
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.01 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11047 ; free virtual = 193436
+Wrote PlaceDB: Time (s): cpu = 00:00:00.7 ; elapsed = 00:00:00.18 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11049 ; free virtual = 193440
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11049 ; free virtual = 193440
 Writing XDEF routing.
 Writing XDEF routing logical nets.
 Writing XDEF routing special nets.
-Wrote RouteStorage: Time (s): cpu = 00:00:00.2 ; elapsed = 00:00:00.12 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13663 ; free virtual = 194909
-Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13663 ; free virtual = 194909
-Wrote Device Cache: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.02 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13675 ; free virtual = 194924
-Write Physdb Complete: Time (s): cpu = 00:00:00.79 ; elapsed = 00:00:00.32 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 13674 ; free virtual = 194923
-INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/dbg_bridge_mixed/build/post_route.dcp' has been generated.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.23 ; elapsed = 00:00:00.12 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193435
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11043 ; free virtual = 193435
+Wrote Device Cache: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11041 ; free virtual = 193436
+Write Physdb Complete: Time (s): cpu = 00:00:00.98 ; elapsed = 00:00:00.35 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 11041 ; free virtual = 193436
+INFO: [Common 17-1381] The checkpoint '/nvme/safe/FPGA/XILINX/XCKU5P/core_dbg_bridge.git/example_xcku5p/build/post_route.dcp' has been generated.
 # report_timing -no_header -path_type summary -max_paths 1000 -slack_lesser_than 0 -setup
 INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: max.
 INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
@@ -6148,12 +6147,8 @@ No timing paths found.
 INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min.
 INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
 INFO: [Timing 38-78] ReportTimingParams: -max_paths 1000 -nworst 1 -delay_type min -sort_by slack.
-Startpoint                     Endpoint                       Slack(ns)     
-----------------------------------------------------------------------------
-u_bram_ctrl/U0/gext_inst.abcv4_0_ext_inst/GEN_AXI4.I_FULL_AXI/I_WR_CHNL/GEN_WRDATA[6].bram_wrdata_int_reg[6]/C
-                               u_bram/U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram/DINADIN[6]
-                                                              -0.005        
-
+INFO: [Timing 38-72] No paths found.
+No timing paths found.
 
 
 # set_property BITSTREAM.CONFIG.USERID "DEADC0DE" [current_design]
@@ -6173,8 +6168,8 @@ Loading data files...
 Loading site data...
 Loading route data...
 Processing options...
-Overwriting "TIMESTAMP" with "8A34FC90" for option USR_ACCESS
-TIMESTAMP = Fri Apr 17 15:50:16 2026
+Overwriting "TIMESTAMP" with "8A354237" for option USR_ACCESS
+TIMESTAMP = Fri Apr 17 20:08:55 2026
 
 Creating bitmap...
 Creating bitstream...
@@ -6185,12 +6180,12 @@ INFO: [Vivado 12-1842] Bitgen Completed Successfully.
 INFO: [Common 17-83] Releasing license: Implementation
 8 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
 write_bitstream completed successfully
-write_bitstream: Time (s): cpu = 00:00:56 ; elapsed = 00:00:26 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 14260 ; free virtual = 195695
+write_bitstream: Time (s): cpu = 00:00:54 ; elapsed = 00:00:25 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10880 ; free virtual = 193446
 # report_clocks
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date              : Fri Apr 17 15:50:37 2026
+| Date              : Fri Apr 17 20:09:13 2026
 | Host              : localhost.localdomain running 64-bit Mageia 9
 | Command           : report_clocks
 | Design            : top
@@ -6242,7 +6237,7 @@ INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum o
 INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min_max.
 INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
 # report_operating_conditions -file conditions.rpt
-report_operating_conditions: Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 5039.582 ; gain = 0.000 ; free physical = 14238 ; free virtual = 195674
+report_operating_conditions: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 5074.312 ; gain = 0.000 ; free physical = 10848 ; free virtual = 193415
 # report_power -file power.rpt
 Command: report_power -file power.rpt
 Running Vector-less Activity Propagation...
@@ -6262,13 +6257,9 @@ No timing paths found.
 INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2, Temperature grade: I, Delay Type: min.
 INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
 INFO: [Timing 38-78] ReportTimingParams: -max_paths 1000 -nworst 1 -delay_type min -sort_by slack.
-Startpoint                     Endpoint                       Slack(ns)     
-----------------------------------------------------------------------------
-u_bram_ctrl/U0/gext_inst.abcv4_0_ext_inst/GEN_AXI4.I_FULL_AXI/I_WR_CHNL/GEN_WRDATA[6].bram_wrdata_int_reg[6]/C
-                               u_bram/U0/inst_blk_mem_gen/gnbram.gnativebmg.native_blk_mem_gen/valid.cstr/ramloop[10].ram.r/prim_noinit.ram/DEVICE_8SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram/DINADIN[6]
-                                                              -0.005        
-
+INFO: [Timing 38-72] No paths found.
+No timing paths found.
 
 
 # exit
-INFO: [Common 17-206] Exiting Vivado at Fri Apr 17 15:50:53 2026...
+INFO: [Common 17-206] Exiting Vivado at Fri Apr 17 20:09:28 2026...
