@@ -331,7 +331,7 @@ begin
             s_axi_awlen   => mem_awlen,
             s_axi_awsize  => "010", -- 4 bytes (32-bit)
             s_axi_awburst => mem_awburst,
-            s_axi_awlock  => '0',
+            s_axi_awlock  => "0",
             s_axi_awcache => "0011",
             s_axi_awprot  => "000",
             s_axi_awregion => "0000",
@@ -352,7 +352,7 @@ begin
             s_axi_arlen   => mem_arlen,
             s_axi_arsize  => "010", -- 4 bytes (32-bit)
             s_axi_arburst => mem_arburst,
-            s_axi_arlock  => '0',
+            s_axi_arlock  => "0",
             s_axi_arcache => "0011",
             s_axi_arprot  => "000",
             s_axi_arregion => "0000",
@@ -418,7 +418,7 @@ begin
             s_axi_awlen   => dwc_awlen,
             s_axi_awsize  => "101", -- 32 bytes (256-bit)
             s_axi_awburst => dwc_awburst,
-            s_axi_awlock  => '0',
+            s_axi_awlock  => "0",
             s_axi_awcache => "0011",
             s_axi_awprot  => "000",
             s_axi_awregion => "0000",
@@ -439,7 +439,7 @@ begin
             s_axi_arlen   => dwc_arlen,
             s_axi_arsize  => "101", -- 32 bytes (256-bit)
             s_axi_arburst => dwc_arburst,
-            s_axi_arlock  => '0',
+            s_axi_arlock  => "0",
             s_axi_arcache => "0011",
             s_axi_arprot  => "000",
             s_axi_arregion => "0000",
