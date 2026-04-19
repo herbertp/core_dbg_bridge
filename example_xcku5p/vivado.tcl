@@ -10,6 +10,8 @@ set_param messaging.defaultLimit 10000
 set_param place.sliceLegEffortLimit 2000
 # set_param board.repoPaths [list /opt/Xilinx/XilinxBoardStore/2025.2/boards]
 
+source ../helper.tcl
+
 # STEP#1: setup design sources and constraints
 
 read_vhdl -vhdl2008 ../vivado_pkg.vhd
@@ -31,8 +33,7 @@ set_property TARGET_LANGUAGE VHDL [current_project]
 # STEP#2: configure IPs
 
 # Create DDR4 IP
-create_ip -name ddr4 -vendor xilinx.com -library ip -version 2.2 -module_name ddr4_0
-set_property -dict [list \
+generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_MemoryPart {MT40A512M16LY-075} \
   CONFIG.C0.DDR4_DataWidth {32} \
   CONFIG.C0.DDR4_InputClockPeriod {5000} \
@@ -43,33 +44,22 @@ set_property -dict [list \
   CONFIG.C0.DDR4_Ordering {Normal} \
   CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
-] [get_ips ddr4_0]
-
-generate_target all [get_ips ddr4_0]
-synth_ip [get_ips ddr4_0]
+]
 
 # Create AXI Clock Converter
-create_ip -name axi_clock_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_clock_converter_0
-set_property -dict [list \
+generate_ip axi_clock_converter xilinx.com ip 2.1 axi_clock_converter_0 [list \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.DATA_WIDTH {256} \
   CONFIG.ID_WIDTH {4} \
-] [get_ips axi_clock_converter_0]
-
-generate_target all [get_ips axi_clock_converter_0]
-synth_ip [get_ips axi_clock_converter_0]
+]
 
 # Create AXI Data Width Converter
-create_ip -name axi_dwidth_converter -vendor xilinx.com -library ip -version 2.1 -module_name axi_dwidth_converter_0
-set_property -dict [list \
+generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.SI_DATA_WIDTH {32} \
   CONFIG.MI_DATA_WIDTH {256} \
   CONFIG.SI_ID_WIDTH {4} \
-] [get_ips axi_dwidth_converter_0]
-
-generate_target all [get_ips axi_dwidth_converter_0]
-synth_ip [get_ips axi_dwidth_converter_0]
+]
 
 # STEP#3: run synthesis, write checkpoint design
 
