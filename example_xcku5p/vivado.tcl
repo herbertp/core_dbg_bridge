@@ -16,9 +16,9 @@ source ../helper.tcl
 
 read_vhdl -vhdl2008 ../vivado_pkg.vhd
 
-read_verilog ../dbg_bridge_fifo.v
-read_verilog ../dbg_bridge_uart.v
-read_verilog ../dbg_bridge.v
+read_vhdl -vhdl2008 ../dbg_bridge_fifo.vhd
+read_vhdl -vhdl2008 ../dbg_bridge_uart.vhd
+read_vhdl -vhdl2008 ../dbg_bridge.vhd
 
 read_vhdl -vhdl2008 ../async_div.vhd
 read_vhdl -vhdl2008 ../top.vhd
