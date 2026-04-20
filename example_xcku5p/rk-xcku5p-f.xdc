@@ -101,3 +101,8 @@ set_property PACKAGE_PIN P26 [ get_ports "c0_ddr4_ba[1]" ]
 set_property PACKAGE_PIN P24 [ get_ports "c0_ddr4_act_n" ]
 
 set_property PACKAGE_PIN P19  [ get_ports "c0_ddr4_reset_n" ]
+
+# Clock Domain Crossing (CDC) Constraints
+# The 100MHz peripheral clock and the DDR4 UI clock are treated as asynchronous
+# as they are bridged by an asynchronous AXI clock converter.
+set_clock_groups -asynchronous -group [get_clocks mmcm_clkout1] -group [get_clocks mmcm_clkout0]

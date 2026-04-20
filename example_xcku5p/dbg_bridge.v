@@ -187,8 +187,8 @@ wire uart_tx_pop_w = ~uart_wr_busy_w;
 dbg_bridge_fifo
 #(
     .WIDTH(8),
-    .DEPTH(8),
-    .ADDR_W(3)
+    .DEPTH(64),
+    .ADDR_W(6)
 )
 u_fifo_tx
 (
@@ -212,8 +212,8 @@ u_fifo_tx
 dbg_bridge_fifo
 #(
     .WIDTH(8),
-    .DEPTH(8),
-    .ADDR_W(3)
+    .DEPTH(64),
+    .ADDR_W(6)
 )
 u_fifo_rx
 (
@@ -435,7 +435,7 @@ end
 // Read from GPIO Input?
 else if (state_q == STATE_READ && mem_addr_q == GPIO_ADDRESS)
 begin
-    data_q <= {{(32-32){1'b0}}, gpio_inputs_i};
+    data_q <= gpio_inputs_i;
 end
 // Read from status register?
 else if (state_q == STATE_READ && mem_addr_q == STS_ADDRESS)

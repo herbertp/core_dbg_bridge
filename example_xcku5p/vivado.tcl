@@ -43,6 +43,7 @@ generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_AxiIDWidth {4} \
   CONFIG.C0.DDR4_Ordering {Normal} \
   CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
+  CONFIG.C0.DDR4_Ecc {false} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
 ]
 
@@ -51,6 +52,7 @@ generate_ip axi_clock_converter xilinx.com ip 2.1 axi_clock_converter_0 [list \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.DATA_WIDTH {256} \
   CONFIG.ID_WIDTH {4} \
+  CONFIG.ACLK_ASYNC {1} \
 ]
 
 # Create AXI Data Width Converter
