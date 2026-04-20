@@ -53,8 +53,6 @@ generate_ip axi_clock_converter xilinx.com ip 2.1 axi_clock_converter_0 [list \
   CONFIG.DATA_WIDTH {256} \
   CONFIG.ID_WIDTH {4} \
   CONFIG.ACLK_ASYNC {1} \
-  CONFIG.S_AXI_ACLK_PERIOD {10000} \
-  CONFIG.M_AXI_ACLK_PERIOD {3000} \
 ]
 
 # Create AXI Data Width Converter
@@ -63,7 +61,6 @@ generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list 
   CONFIG.SI_DATA_WIDTH {32} \
   CONFIG.MI_DATA_WIDTH {256} \
   CONFIG.SI_ID_WIDTH {4} \
-  CONFIG.ACLK_PERIOD {10000} \
 ]
 
 # STEP#3: run synthesis, write checkpoint design
