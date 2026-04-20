@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
-| Date              : Fri Apr 17 15:50:42 2026
+| Date              : Mon Apr 20 02:47:55 2026
 | Host              : localhost.localdomain running 64-bit Mageia 9
 | Command           : report_datasheet -file datasheet.rpt
 | Design            : top
@@ -15,50 +15,86 @@ Data Sheet Report
 
 Input Ports Setup/Hold
 
-----------+------------+----------+-------+---------------+---------+---------------+---------+----------+
-Reference | Input      | IO Reg   | Delay |     Setup(ns) | Process |      Hold(ns) | Process | Internal |
-Clock     | Port       | Type     | Type  | to Clk (Edge) | Corner  | to Clk (Edge) | Corner  | Clock    |
-----------+------------+----------+-------+---------------+---------+---------------+---------+----------+
-sys_clk   | key[0]     | RAMB36E2 | -     |     2.718 (r) | SLOW    |     1.079 (r) | SLOW    |          |
-sys_clk   | uart_rxd_i | FDPE     | -     |     0.162 (r) | FAST    |     1.415 (r) | SLOW    |          |
-----------+------------+----------+-------+---------------+---------+---------------+---------+----------+
+----------+------------+-----------+-------+---------------+---------+---------------+---------+--------------+
+Reference | Input      | IO Reg    | Delay |     Setup(ns) | Process |      Hold(ns) | Process | Internal     |
+Clock     | Port       | Type      | Type  | to Clk (Edge) | Corner  | to Clk (Edge) | Corner  | Clock        |
+----------+------------+-----------+-------+---------------+---------+---------------+---------+--------------+
+sys_clk_p | key[1]     | FDPE      | -     |     0.878 (r) | FAST    |     0.635 (r) | SLOW    |              |
+sys_clk_p | key[0]     | FDPE      | -     |     1.025 (r) | FAST    |     1.044 (r) | SLOW    | mmcm_clkout0 |
+sys_clk_p | key[0]     | FDPE (IO) | -     |     1.680 (r) | FAST    |     2.277 (r) | SLOW    | mmcm_clkout1 |
+sys_clk_p | uart_rxd_i | FDPE      | -     |    -0.459 (r) | FAST    |     2.465 (r) | SLOW    | mmcm_clkout1 |
+----------+------------+-----------+-------+---------------+---------+---------------+---------+--------------+
 
 
 Output Ports Clock-to-out
 
-----------+------------+-----------+-------+----------------+---------+----------------+---------+----------+
-Reference | Output     | IO Reg    | Delay | Max Clk (Edge) | Process | Min Clk (Edge) | Process | Internal |
-Clock     | Port       | Type      | Type  |    to port(ns) | Corner  |    to port(ns) | Corner  | Clock    |
-----------+------------+-----------+-------+----------------+---------+----------------+---------+----------+
-sys_clk   | uart_txd_o | FDPE (IO) | -     |      5.929 (r) | SLOW    |      3.085 (r) | FAST    |          |
-----------+------------+-----------+-------+----------------+---------+----------------+---------+----------+
+----------+-----------------+-----------+-------+----------------+---------+----------------+---------+--------------+
+Reference | Output          | IO Reg    | Delay | Max Clk (Edge) | Process | Min Clk (Edge) | Process | Internal     |
+Clock     | Port            | Type      | Type  |    to port(ns) | Corner  |    to port(ns) | Corner  | Clock        |
+----------+-----------------+-----------+-------+----------------+---------+----------------+---------+--------------+
+sys_clk_p | c0_ddr4_reset_n | FDRE      | -     |      6.249 (r) | SLOW    |      3.292 (r) | FAST    | mmcm_clkout0 |
+sys_clk_p | led[1]          | FDRE      | -     |      8.661 (r) | SLOW    |      4.690 (r) | FAST    | mmcm_clkout0 |
+sys_clk_p | uart_txd_o      | FDPE (IO) | -     |      7.204 (r) | SLOW    |      3.907 (r) | FAST    | mmcm_clkout1 |
+----------+-----------------+-----------+-------+----------------+---------+----------------+---------+--------------+
+
+
+Combinational Delays
+
+-------+--------+-----------+---------+-----------+---------+
+From   | To     |   Max     | Process |   Min     | Process |
+Port   | Port   | Delay(ns) | Corner  | Delay(ns) | Corner  |
+-------+--------+-----------+---------+-----------+---------+
+key[0] | led[0] |     5.464 | SLOW    |     2.917 | FAST    |
+key[2] | led[2] |     5.322 | SLOW    |     2.847 | FAST    |
+key[3] | led[3] |     5.375 | SLOW    |     2.936 | FAST    |
+-------+--------+-----------+---------+-----------+---------+
 
 
 Setup between Clocks
 
---------+-------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
-Source  | Destination |  Src:Rise     | Process |  Src:Rise     | Process |  Src:Fall     | Process |  Src:Fall     | Process |
-Clock   | Clock       | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  |
---------+-------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
-sys_clk | sys_clk     |         4.992 | SLOW    |               |         |               |         |               |         |
---------+-------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
+----------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
+Source                                                                                              | Destination                                                                                         |  Src:Rise     | Process |  Src:Rise     | Process |  Src:Fall     | Process |  Src:Fall     | Process |
+Clock                                                                                               | Clock                                                                                               | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  | Dest:Rise(ns) | Corner  | Dest:Fall(ns) | Corner  |
+----------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
+dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK | dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK |         3.289 | SLOW    |        12.452 | SLOW    |         3.997 | FAST    |         7.283 | SLOW    |
+sys_clk_p                                                                                           | dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK |         0.467 | SLOW    |               |         |               |         |               |         |
+dbg_hub/inst/BSCANID.u_xsdbm_id/SWITCH_N_EXT_BSCAN.bscan_inst/SERIES7_BSCAN.bscan_inst/INTERNAL_TCK | sys_clk_p                                                                                           |         6.446 | SLOW    |               |         |               |         |               |         |
+sys_clk_p                                                                                           | sys_clk_p                                                                                           |         4.229 | SLOW    |               |         |               |         |               |         |
+----------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+---------------+---------+---------------+---------+---------------+---------+---------------+---------+
 
 
 Setup / Hold times for input bus
-Clocked by: sys_clk
-Worst Case Data Window: 3.797 ns
-Ideal Clock Offset to Actual Clock: -0.820 ns
+Clocked by: sys_clk_p
+Worst Case Data Window: 3.957 ns
+Ideal Clock Offset to Actual Clock: 0.298 ns
 -------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
                    |             | Process |             | Process | Setup     |  Hold     | Source Offset |
 Source             |   Setup(ns) | Corner  |    Hold(ns) | Corner  | Slack(ns) | Slack(ns) | to Center(ns) |
 -------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
-key[0]             |   2.718 (r) | SLOW    |   1.079 (r) | SLOW    |       inf |       inf |             - |
-key[1]             |           - | -       |           - | -       |       inf |       inf |             - |
+key[0]             |   1.680 (r) | FAST    |   2.277 (r) | SLOW    |       inf |       inf |             - |
+key[1]             |   0.878 (r) | FAST    |   0.635 (r) | SLOW    |       inf |       inf |             - |
 key[2]             |           - | -       |           - | -       |       inf |       inf |             - |
 key[3]             |           - | -       |           - | -       |       inf |       inf |             - |
 -------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
-Worst Case Summary |   2.718 (r) | SLOW    |   1.079 (r) | SLOW    |       inf |       inf |             - |
+Worst Case Summary |   1.680 (r) | FAST    |   2.277 (r) | SLOW    |       inf |       inf |             - |
 -------------------+-------------+---------+-------------+---------+-----------+-----------+---------------+
+
+
+
+Max / Min delays for output bus
+Clocked by: sys_clk_p
+Bus Skew: 0.000 ns
+-------------------+-------------+---------+-------------+---------+----------+
+                   |     Max     | Process |     Min     | Process | Edge     |
+Pad                |   Delay(ns) | Corner  |   Delay(ns) | Corner  | Skew(ns) |
+-------------------+-------------+---------+-------------+---------+----------+
+led[0]             |           - | -       |           - | -       |        - |
+led[1]             |   8.661 (r) | SLOW    |   4.690 (r) | FAST    |    0.000 |
+led[2]             |           - | -       |           - | -       |        - |
+led[3]             |           - | -       |           - | -       |        - |
+-------------------+-------------+---------+-------------+---------+----------+
+Worst Case Summary |   8.661 (r) | SLOW    |   4.690 (r) | FAST    |    0.000 |
+-------------------+-------------+---------+-------------+---------+----------+
 
 
 
