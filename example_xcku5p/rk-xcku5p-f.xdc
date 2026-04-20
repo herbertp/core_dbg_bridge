@@ -23,6 +23,49 @@ set_property PACKAGE_PIN J10 [get_ports {key[2]}] ;# KEY3
 set_property PACKAGE_PIN J11 [get_ports {key[3]}] ;# KEY4
 set_property IOSTANDARD LVCMOS33 [get_ports {key}]
 
+# 40 Pin Connector IOs (Bank 86)
+set_property PACKAGE_PIN D10 [get_ports {io_n[0]}] ;# IO1_N
+set_property PACKAGE_PIN D11 [get_ports {io_p[0]}] ;# IO1_P
+set_property PACKAGE_PIN E10 [get_ports {io_n[1]}] ;# IO2_N
+set_property PACKAGE_PIN E11 [get_ports {io_p[1]}] ;# IO2_P
+set_property PACKAGE_PIN B11 [get_ports {io_n[2]}] ;# IO3_N
+set_property PACKAGE_PIN C11 [get_ports {io_p[2]}] ;# IO3_P
+set_property PACKAGE_PIN C9  [get_ports {io_n[3]}] ;# IO4_N
+set_property PACKAGE_PIN D9  [get_ports {io_p[3]}] ;# IO4_P
+set_property PACKAGE_PIN A9  [get_ports {io_n[4]}] ;# IO5_N
+set_property PACKAGE_PIN B9  [get_ports {io_p[4]}] ;# IO5_P
+set_property PACKAGE_PIN A10 [get_ports {io_n[5]}] ;# IO6_N
+set_property PACKAGE_PIN B10 [get_ports {io_p[5]}] ;# IO6_P
+
+# 40 Pin Connector IOs (Bank 87)
+set_property PACKAGE_PIN A12 [get_ports {io_n[6]}]  ;# IO7_N
+set_property PACKAGE_PIN A13 [get_ports {io_p[6]}]  ;# IO7_P
+set_property PACKAGE_PIN A14 [get_ports {io_n[7]}]  ;# IO8_N
+set_property PACKAGE_PIN B14 [get_ports {io_p[7]}]  ;# IO8_P
+set_property PACKAGE_PIN C13 [get_ports {io_n[8]}]  ;# IO9_N
+set_property PACKAGE_PIN C14 [get_ports {io_p[8]}]  ;# IO9_P
+set_property PACKAGE_PIN B12 [get_ports {io_n[9]}]  ;# IO10_N
+set_property PACKAGE_PIN C12 [get_ports {io_p[9]}]  ;# IO10_P
+set_property PACKAGE_PIN D13 [get_ports {io_n[10]}] ;# IO11_N
+set_property PACKAGE_PIN D14 [get_ports {io_p[10]}] ;# IO11_P
+set_property PACKAGE_PIN E12 [get_ports {io_n[11]}] ;# IO12_N
+set_property PACKAGE_PIN E13 [get_ports {io_p[11]}] ;# IO12_P
+set_property PACKAGE_PIN F13 [get_ports {io_n[12]}] ;# IO13_N
+set_property PACKAGE_PIN F14 [get_ports {io_p[12]}] ;# IO13_P
+set_property PACKAGE_PIN F12 [get_ports {io_n[13]}] ;# IO14_N
+set_property PACKAGE_PIN G12 [get_ports {io_p[13]}] ;# IO14_P
+set_property PACKAGE_PIN G14 [get_ports {io_n[14]}] ;# IO15_N
+set_property PACKAGE_PIN H14 [get_ports {io_p[14]}] ;# IO15_P
+set_property PACKAGE_PIN J14 [get_ports {io_n[15]}] ;# IO16_N
+set_property PACKAGE_PIN J15 [get_ports {io_p[15]}] ;# IO16_P
+set_property PACKAGE_PIN H13 [get_ports {io_n[16]}] ;# IO17_N
+set_property PACKAGE_PIN J13 [get_ports {io_p[16]}] ;# IO17_P
+
+# I/O Standard Configuration
+set_property IOSTANDARD LVCMOS33 [get_ports {io_p}]
+set_property IOSTANDARD LVCMOS33 [get_ports {io_n}]
+
+
 # DDR4 Memory Constraints
 set_property PACKAGE_PIN AE25 [ get_ports "c0_ddr4_dm_dbi_n[0]" ]
 set_property PACKAGE_PIN AE22 [ get_ports "c0_ddr4_dm_dbi_n[1]" ]
