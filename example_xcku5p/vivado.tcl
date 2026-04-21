@@ -59,6 +59,7 @@ generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list 
   CONFIG.ADDR_WIDTH {32} \
   CONFIG.SI_DATA_WIDTH {32} \
   CONFIG.MI_DATA_WIDTH {256} \
+  CONFIG.SI_ID_WIDTH {4} \
 ]
 
 # Create AXI Data Width Converter (Down: 256 -> 32)
@@ -78,6 +79,8 @@ generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_0 [list \
   CONFIG.M00_A00_ADDR_WIDTH {31} \
   CONFIG.M01_A00_BASE_ADDR {0x0000000080000000} \
   CONFIG.M01_A00_ADDR_WIDTH {16} \
+  CONFIG.S00_SINGLE_THREAD {1} \
+  CONFIG.S01_SINGLE_THREAD {1} \
 ]
 
 # STEP#3: run synthesis, write checkpoint design
