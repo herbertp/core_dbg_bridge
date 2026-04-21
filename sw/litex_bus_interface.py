@@ -1,0 +1,93 @@
+from typing import Callable, Optional
+from litex.tools.remote import RemoteClient
+
+##################################################################
+# LiteXBusInterface: LiteX UART -> Bus master interface
+##################################################################
+class LiteXBusInterface:
+    """
+    LiteXBusInterface provides a bus master interface over a serial port
+    using the LiteX/Etherbone protocol.
+    """
+    def __init__(self, iface: str = '/dev/ttyUSB1', baud: int = 115200, csr_csv: str = "csr.csv"):
+        self.interface = iface
+        self.baud = baud
+        self.csr_csv = csr_csv
+        self.client: Optional[RemoteClient] = None
+        self.prog_cb: Optional[Callable[[int, int], None]] = None
+
+    def set_progress_cb(self, prog_cb: Callable[[int, int], None]):
+        """Set progress callback."""
+        self.prog_cb = prog_cb
+
+    def connect(self):
+        """Open connection."""
+        self.client = RemoteClient(
+            port=self.interface,
+            baudrate=self.baud,
+            csr_csv=self.csr_csv,
+            debug=False
+        )
+        self.client.open()
+
+    def read32(self, addr: int) -> int:
+        """Read a 32-bit word from a specified address."""
+        if self.client is None:
+            self.connect()
+        return self.client.read(addr)
+
+    def write32(self, addr: int, value: int):
+        """Write a 32-bit word to a specified address."""
+        if self.client is None:
+            self.connect()
+        self.client.write(addr, value)
+
+    def write(self, addr: int, data: bytes | bytearray, length: int, addr_incr: bool = True, max_block_size: int = -1):
+        """Write a block of data to a specified address."""
+        if self.client is None:
+            self.connect()
+
+        # LiteX RemoteClient handles block transfers efficiently
+        # but doesn't have a direct 'write block' to raw address easily exposed
+        # that handles addr_incr=False. We'll loop for now to match interface.
+
+        for i in range(0, length, 4):
+            val = int.from_bytes(data[i:i+4], 'little')
+            self.client.write(addr, val)
+            if addr_incr:
+                addr += 4
+            if self.prog_cb:
+                self.prog_cb(i + 4, length)
+
+    def read(self, addr: int, length: int, addr_incr: bool = True, max_block_size: int = -1) -> bytearray:
+        """Read a block of data from a specified address."""
+        if self.client is None:
+            self.connect()
+
+        data = bytearray()
+        for i in range(0, length, 4):
+            val = self.client.read(addr)
+            data.extend(val.to_bytes(4, 'little'))
+            if addr_incr:
+                addr += 4
+            if self.prog_cb:
+                self.prog_cb(i + 4, length)
+        return data[:length]
+
+    def read_gpio(self) -> int:
+        """Read GPIO bus (mapping to leds.out for example, or common CSR)."""
+        if self.client is None:
+            self.connect()
+        try:
+            return self.client.regs.leds_out.read()
+        except:
+            return 0
+
+    def write_gpio(self, value: int):
+        """Write a value to GPIO."""
+        if self.client is None:
+            self.connect()
+        try:
+            self.client.regs.leds_out.write(value)
+        except:
+            pass
