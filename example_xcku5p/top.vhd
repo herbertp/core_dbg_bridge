@@ -9,6 +9,10 @@
 --	modify it under the terms of the GNU General Public License
 --	as published by the Free Software Foundation, either version
 --	2 of the License, or (at your option) any later version.
+--
+--  Vivado 2025.2:
+--    mkdir -p build
+--    (cd build && vivado -mode tcl -source ../vivado.tcl)
 ----------------------------------------------------------------------------
 
 
@@ -177,7 +181,7 @@ architecture RTL of top is
     signal calib_complete : std_logic;
     signal dma_busy : std_logic;
 
-    -- Connectivity Signals
+    -- Bridge signals in UI domain (after Clock Converter)
     signal bridge_ui_awid    : std_logic_vector(3 downto 0);
     signal bridge_ui_awaddr  : std_logic_vector(31 downto 0);
     signal bridge_ui_awlen   : std_logic_vector(7 downto 0);
@@ -206,7 +210,7 @@ architecture RTL of top is
     signal bridge_ui_rvalid  : std_logic;
     signal bridge_ui_rready  : std_logic;
 
-    signal bridge_dwc_awid    : std_logic_vector(3 downto 0);
+    -- Bridge signals in 256-bit domain (after DWIDTH Converter)
     signal bridge_dwc_awaddr  : std_logic_vector(31 downto 0);
     signal bridge_dwc_awlen   : std_logic_vector(7 downto 0);
     signal bridge_dwc_awburst : std_logic_vector(1 downto 0);
@@ -217,24 +221,21 @@ architecture RTL of top is
     signal bridge_dwc_wlast   : std_logic;
     signal bridge_dwc_wvalid  : std_logic;
     signal bridge_dwc_wready  : std_logic;
-    signal bridge_dwc_bid     : std_logic_vector(3 downto 0);
     signal bridge_dwc_bresp   : std_logic_vector(1 downto 0);
     signal bridge_dwc_bvalid  : std_logic;
     signal bridge_dwc_bready  : std_logic;
-    signal bridge_dwc_arid    : std_logic_vector(3 downto 0);
     signal bridge_dwc_araddr  : std_logic_vector(31 downto 0);
     signal bridge_dwc_arlen   : std_logic_vector(7 downto 0);
     signal bridge_dwc_arburst : std_logic_vector(1 downto 0);
     signal bridge_dwc_arvalid : std_logic;
     signal bridge_dwc_arready : std_logic;
-    signal bridge_dwc_rid     : std_logic_vector(3 downto 0);
     signal bridge_dwc_rdata   : std_logic_vector(255 downto 0);
     signal bridge_dwc_rresp   : std_logic_vector(1 downto 0);
     signal bridge_dwc_rlast   : std_logic;
     signal bridge_dwc_rvalid  : std_logic;
     signal bridge_dwc_rready  : std_logic;
 
-    signal xbar_s_awid    : std_logic_vector(7 downto 0);
+    -- Crossbar signals (SI/MI)
     signal xbar_s_awaddr  : std_logic_vector(63 downto 0);
     signal xbar_s_awlen   : std_logic_vector(15 downto 0);
     signal xbar_s_awsize  : std_logic_vector(5 downto 0);
@@ -250,11 +251,9 @@ architecture RTL of top is
     signal xbar_s_wlast   : std_logic_vector(1 downto 0);
     signal xbar_s_wvalid  : std_logic_vector(1 downto 0);
     signal xbar_s_wready  : std_logic_vector(1 downto 0);
-    signal xbar_s_bid     : std_logic_vector(7 downto 0);
     signal xbar_s_bresp   : std_logic_vector(3 downto 0);
     signal xbar_s_bvalid  : std_logic_vector(1 downto 0);
     signal xbar_s_bready  : std_logic_vector(1 downto 0);
-    signal xbar_s_arid    : std_logic_vector(7 downto 0);
     signal xbar_s_araddr  : std_logic_vector(63 downto 0);
     signal xbar_s_arlen   : std_logic_vector(15 downto 0);
     signal xbar_s_arsize  : std_logic_vector(5 downto 0);
@@ -265,14 +264,12 @@ architecture RTL of top is
     signal xbar_s_arqos   : std_logic_vector(7 downto 0);
     signal xbar_s_arvalid : std_logic_vector(1 downto 0);
     signal xbar_s_arready : std_logic_vector(1 downto 0);
-    signal xbar_s_rid     : std_logic_vector(7 downto 0);
     signal xbar_s_rdata   : std_logic_vector(511 downto 0);
     signal xbar_s_rresp   : std_logic_vector(3 downto 0);
     signal xbar_s_rlast   : std_logic_vector(1 downto 0);
     signal xbar_s_rvalid  : std_logic_vector(1 downto 0);
     signal xbar_s_rready  : std_logic_vector(1 downto 0);
 
-    signal xbar_m_awid    : std_logic_vector(7 downto 0);
     signal xbar_m_awaddr  : std_logic_vector(63 downto 0);
     signal xbar_m_awlen   : std_logic_vector(15 downto 0);
     signal xbar_m_awsize  : std_logic_vector(5 downto 0);
@@ -289,11 +286,9 @@ architecture RTL of top is
     signal xbar_m_wlast   : std_logic_vector(1 downto 0);
     signal xbar_m_wvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_wready  : std_logic_vector(1 downto 0);
-    signal xbar_m_bid     : std_logic_vector(7 downto 0);
     signal xbar_m_bresp   : std_logic_vector(3 downto 0);
     signal xbar_m_bvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_bready  : std_logic_vector(1 downto 0);
-    signal xbar_m_arid    : std_logic_vector(7 downto 0);
     signal xbar_m_araddr  : std_logic_vector(63 downto 0);
     signal xbar_m_arlen   : std_logic_vector(15 downto 0);
     signal xbar_m_arsize  : std_logic_vector(5 downto 0);
@@ -305,12 +300,35 @@ architecture RTL of top is
     signal xbar_m_arqos   : std_logic_vector(7 downto 0);
     signal xbar_m_arvalid : std_logic_vector(1 downto 0);
     signal xbar_m_arready : std_logic_vector(1 downto 0);
-    signal xbar_m_rid     : std_logic_vector(7 downto 0);
     signal xbar_m_rdata   : std_logic_vector(511 downto 0);
     signal xbar_m_rresp   : std_logic_vector(3 downto 0);
     signal xbar_m_rlast   : std_logic_vector(1 downto 0);
     signal xbar_m_rvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_rready  : std_logic_vector(1 downto 0);
+
+    signal xbar_m01_awaddr  : std_logic_vector(31 downto 0);
+    signal xbar_m01_awlen   : std_logic_vector(7 downto 0);
+    signal xbar_m01_awburst : std_logic_vector(1 downto 0);
+    signal xbar_m01_awvalid : std_logic;
+    signal xbar_m01_awready : std_logic;
+    signal xbar_m01_wdata   : std_logic_vector(255 downto 0);
+    signal xbar_m01_wstrb   : std_logic_vector(31 downto 0);
+    signal xbar_m01_wlast   : std_logic;
+    signal xbar_m01_wvalid  : std_logic;
+    signal xbar_m01_wready  : std_logic;
+    signal xbar_m01_bresp   : std_logic_vector(1 downto 0);
+    signal xbar_m01_bvalid  : std_logic;
+    signal xbar_m01_bready  : std_logic;
+    signal xbar_m01_araddr  : std_logic_vector(31 downto 0);
+    signal xbar_m01_arlen   : std_logic_vector(7 downto 0);
+    signal xbar_m01_arburst : std_logic_vector(1 downto 0);
+    signal xbar_m01_arvalid : std_logic;
+    signal xbar_m01_arready : std_logic;
+    signal xbar_m01_rdata   : std_logic_vector(255 downto 0);
+    signal xbar_m01_rresp   : std_logic_vector(1 downto 0);
+    signal xbar_m01_rlast   : std_logic;
+    signal xbar_m01_rvalid  : std_logic;
+    signal xbar_m01_rready  : std_logic;
 
     signal bridge_awaddr_dma : std_logic_vector(31 downto 0);
     signal bridge_araddr_dma : std_logic_vector(31 downto 0);
@@ -471,18 +489,18 @@ begin
             s_axi_arburst => bridge_ui_arburst, s_axi_arlock => "0", s_axi_arcache => "0011", s_axi_arprot => "000",
             s_axi_arregion => "0000", s_axi_arqos => "0000", s_axi_arvalid => bridge_ui_arvalid, s_axi_arready => bridge_ui_arready,
             s_axi_rid => bridge_ui_rid, s_axi_rdata => bridge_ui_rdata, s_axi_rresp => bridge_ui_rresp, s_axi_rlast => bridge_ui_rlast, s_axi_rvalid => bridge_ui_rvalid, s_axi_rready => bridge_ui_rready,
-            m_axi_awid => bridge_dwc_awid, m_axi_awaddr => bridge_dwc_awaddr, m_axi_awlen => bridge_dwc_awlen, m_axi_awsize => open,
+            m_axi_awaddr => bridge_dwc_awaddr, m_axi_awlen => bridge_dwc_awlen, m_axi_awsize => open,
             m_axi_awburst => bridge_dwc_awburst, m_axi_awlock => open, m_axi_awcache => open, m_axi_awprot => open,
             m_axi_awregion => open, m_axi_awqos => open, m_axi_awvalid => bridge_dwc_awvalid, m_axi_awready => bridge_dwc_awready,
             m_axi_wdata => bridge_dwc_wdata, m_axi_wstrb => bridge_dwc_wstrb, m_axi_wlast => bridge_dwc_wlast, m_axi_wvalid => bridge_dwc_wvalid, m_axi_wready => bridge_dwc_wready,
-            m_axi_bid => bridge_dwc_bid, m_axi_bresp => bridge_dwc_bresp, m_axi_bvalid => bridge_dwc_bvalid, m_axi_bready => bridge_dwc_bready,
-            m_axi_arid => bridge_dwc_arid, m_axi_araddr => bridge_dwc_araddr, m_axi_arlen => bridge_dwc_arlen, m_axi_arsize => open,
+            m_axi_bresp => bridge_dwc_bresp, m_axi_bvalid => bridge_dwc_bvalid, m_axi_bready => bridge_dwc_bready,
+            m_axi_araddr => bridge_dwc_araddr, m_axi_arlen => bridge_dwc_arlen, m_axi_arsize => open,
             m_axi_arburst => bridge_dwc_arburst, m_axi_arlock => open, m_axi_arcache => open, m_axi_arprot => open,
             m_axi_arregion => open, m_axi_arqos => open, m_axi_arvalid => bridge_dwc_arvalid, m_axi_arready => bridge_dwc_arready,
-            m_axi_rid => bridge_dwc_rid, m_axi_rdata => bridge_dwc_rdata, m_axi_rresp => bridge_dwc_rresp, m_axi_rlast => bridge_dwc_rlast, m_axi_rvalid => bridge_dwc_rvalid, m_axi_rready => bridge_dwc_rready
+            m_axi_rdata => bridge_dwc_rdata, m_axi_rresp => bridge_dwc_rresp, m_axi_rlast => bridge_dwc_rlast, m_axi_rvalid => bridge_dwc_rvalid, m_axi_rready => bridge_dwc_rready
         );
 
-    xbar_s_awid    <= "0000" & bridge_dwc_awid;
+    xbar_s_awid    <= "0000" & "0000"; -- No IDs passed to crossbar
     xbar_s_awaddr  <= dma_m_awaddr & bridge_dwc_awaddr;
     xbar_s_awlen   <= dma_m_awlen & bridge_dwc_awlen;
     xbar_s_awsize  <= "101" & "101";
@@ -500,13 +518,12 @@ begin
     xbar_s_wvalid  <= dma_m_wvalid & bridge_dwc_wvalid;
     bridge_dwc_wready  <= xbar_s_wready(0);
     dma_m_wready       <= xbar_s_wready(1);
-    bridge_dwc_bid     <= xbar_s_bid(3 downto 0);
     bridge_dwc_bresp   <= xbar_s_bresp(1 downto 0);
     dma_m_bresp        <= xbar_s_bresp(3 downto 2);
     bridge_dwc_bvalid  <= xbar_s_bvalid(0);
     dma_m_bvalid       <= xbar_s_bvalid(1);
     xbar_s_bready      <= dma_m_bready & bridge_dwc_bready;
-    xbar_s_arid    <= "0000" & bridge_dwc_arid;
+    xbar_s_arid    <= "0000" & "0000";
     xbar_s_araddr  <= dma_m_araddr & bridge_dwc_araddr;
     xbar_s_arlen   <= dma_m_arlen & bridge_dwc_arlen;
     xbar_s_arsize  <= "101" & "101";
@@ -518,7 +535,6 @@ begin
     xbar_s_arvalid <= dma_m_arvalid & bridge_dwc_arvalid;
     bridge_dwc_arready <= xbar_s_arready(0);
     dma_m_arready      <= xbar_s_arready(1);
-    bridge_dwc_rid     <= xbar_s_rid(3 downto 0);
     bridge_dwc_rdata   <= xbar_s_rdata(255 downto 0);
     dma_m_rdata        <= xbar_s_rdata(511 downto 256);
     bridge_dwc_rresp   <= xbar_s_rresp(1 downto 0);
@@ -552,11 +568,12 @@ begin
             m_axi_rid => xbar_m_rid, m_axi_rdata => xbar_m_rdata, m_axi_rresp => xbar_m_rresp, m_axi_rlast => xbar_m_rlast, m_axi_rvalid => xbar_m_rvalid, m_axi_rready => xbar_m_rready
         );
 
-    ddr_awid <= xbar_m_awid(3 downto 0); ddr_awaddr <= xbar_m_awaddr(30 downto 0); ddr_awlen <= xbar_m_awlen(7 downto 0); ddr_awburst <= xbar_m_awburst(1 downto 0); ddr_awvalid <= xbar_m_awvalid(0);
+    ddr_awaddr <= xbar_m_awaddr(30 downto 0); ddr_awlen <= xbar_m_awlen(7 downto 0); ddr_awburst <= xbar_m_awburst(1 downto 0); ddr_awvalid <= xbar_m_awvalid(0);
     xbar_m_awready(0) <= ddr_awready; ddr_wdata <= xbar_m_wdata(255 downto 0); ddr_wstrb <= xbar_m_wstrb(31 downto 0); ddr_wlast <= xbar_m_wlast(0); ddr_wvalid <= xbar_m_wvalid(0);
-    xbar_m_wready(0) <= ddr_wready; ddr_bid <= xbar_m_bid(3 downto 0); ddr_bresp <= xbar_m_bresp(1 downto 0); ddr_bvalid <= xbar_m_bvalid(0); xbar_m_bready(0) <= ddr_bready;
-    ddr_arid <= xbar_m_arid(3 downto 0); ddr_araddr <= xbar_m_araddr(30 downto 0); ddr_arlen <= xbar_m_arlen(7 downto 0); ddr_arburst <= xbar_m_arburst(1 downto 0); ddr_arvalid <= xbar_m_arvalid(0);
-    xbar_m_arready(0) <= ddr_arready; xbar_m_rid(3 downto 0) <= ddr_rid; xbar_m_rdata(255 downto 0) <= ddr_rdata; xbar_m_rresp(1 downto 0) <= ddr_rresp; xbar_m_rlast(0) <= ddr_rlast; xbar_m_rvalid(0) <= ddr_rvalid; ddr_rready <= xbar_m_rready(0);
+    xbar_m_wready(0) <= ddr_wready; ddr_bresp <= xbar_m_bresp(1 downto 0); ddr_bvalid <= xbar_m_bvalid(0); xbar_m_bready(0) <= ddr_bready;
+    ddr_araddr <= xbar_m_araddr(30 downto 0); ddr_arlen <= xbar_m_arlen(7 downto 0); ddr_arburst <= xbar_m_arburst(1 downto 0); ddr_arvalid <= xbar_m_arvalid(0);
+    xbar_m_arready(0) <= ddr_arready; xbar_m_rdata(255 downto 0) <= ddr_rdata; xbar_m_rresp(1 downto 0) <= ddr_rresp; xbar_m_rlast(0) <= ddr_rlast; xbar_m_rvalid(0) <= ddr_rvalid; ddr_rready <= xbar_m_rready(0);
+    ddr_awid <= (others => '0'); ddr_bid <= (others => '0'); ddr_arid <= (others => '0'); ddr_rid <= (others => '0');
 
     u_dwidth_down : entity work.axi_dwidth_converter_1
         port map (
