@@ -146,7 +146,7 @@ architecture RTL of top is
     signal ddr_awvalid : std_logic;
     signal ddr_awready : std_logic;
     signal ddr_awaddr  : std_logic_vector(30 downto 0);
-    signal ddr_awid    : std_logic_vector(3 downto 0);
+    signal ddr_awid    : std_logic_vector(0 downto 0);
     signal ddr_awlen   : std_logic_vector(7 downto 0);
     signal ddr_awburst : std_logic_vector(1 downto 0);
     signal ddr_wvalid  : std_logic;
@@ -157,18 +157,18 @@ architecture RTL of top is
     signal ddr_bvalid  : std_logic;
     signal ddr_bready  : std_logic;
     signal ddr_bresp   : std_logic_vector(1 downto 0);
-    signal ddr_bid     : std_logic_vector(3 downto 0);
+    signal ddr_bid     : std_logic_vector(0 downto 0);
     signal ddr_arvalid : std_logic;
     signal ddr_arready : std_logic;
     signal ddr_araddr  : std_logic_vector(30 downto 0);
-    signal ddr_arid    : std_logic_vector(3 downto 0);
+    signal ddr_arid    : std_logic_vector(0 downto 0);
     signal ddr_arlen   : std_logic_vector(7 downto 0);
     signal ddr_arburst : std_logic_vector(1 downto 0);
     signal ddr_rvalid  : std_logic;
     signal ddr_rready  : std_logic;
     signal ddr_rdata   : std_logic_vector(255 downto 0);
     signal ddr_rresp   : std_logic_vector(1 downto 0);
-    signal ddr_rid     : std_logic_vector(3 downto 0);
+    signal ddr_rid     : std_logic_vector(0 downto 0);
     signal ddr_rlast   : std_logic;
 
     signal rst_i : std_logic;
@@ -267,9 +267,10 @@ architecture RTL of top is
     signal xbar_s_rdata   : std_logic_vector(511 downto 0);
     signal xbar_s_rresp   : std_logic_vector(3 downto 0);
     signal xbar_s_rlast   : std_logic_vector(1 downto 0);
-    signal xbar_s_rvalid  : std_logic_vector(1 downto 0);
-    signal xbar_s_rready  : std_logic_vector(1 downto 0);
+    signal xbar_s_rvalid : std_logic_vector(1 downto 0);
+    signal xbar_s_rready : std_logic_vector(1 downto 0);
 
+    signal xbar_m_awid    : std_logic_vector(1 downto 0);
     signal xbar_m_awaddr  : std_logic_vector(63 downto 0);
     signal xbar_m_awlen   : std_logic_vector(15 downto 0);
     signal xbar_m_awsize  : std_logic_vector(5 downto 0);
@@ -286,9 +287,11 @@ architecture RTL of top is
     signal xbar_m_wlast   : std_logic_vector(1 downto 0);
     signal xbar_m_wvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_wready  : std_logic_vector(1 downto 0);
+    signal xbar_m_bid     : std_logic_vector(1 downto 0);
     signal xbar_m_bresp   : std_logic_vector(3 downto 0);
     signal xbar_m_bvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_bready  : std_logic_vector(1 downto 0);
+    signal xbar_m_arid    : std_logic_vector(1 downto 0);
     signal xbar_m_araddr  : std_logic_vector(63 downto 0);
     signal xbar_m_arlen   : std_logic_vector(15 downto 0);
     signal xbar_m_arsize  : std_logic_vector(5 downto 0);
@@ -300,35 +303,12 @@ architecture RTL of top is
     signal xbar_m_arqos   : std_logic_vector(7 downto 0);
     signal xbar_m_arvalid : std_logic_vector(1 downto 0);
     signal xbar_m_arready : std_logic_vector(1 downto 0);
+    signal xbar_m_rid     : std_logic_vector(1 downto 0);
     signal xbar_m_rdata   : std_logic_vector(511 downto 0);
     signal xbar_m_rresp   : std_logic_vector(3 downto 0);
     signal xbar_m_rlast   : std_logic_vector(1 downto 0);
     signal xbar_m_rvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_rready  : std_logic_vector(1 downto 0);
-
-    signal xbar_m01_awaddr  : std_logic_vector(31 downto 0);
-    signal xbar_m01_awlen   : std_logic_vector(7 downto 0);
-    signal xbar_m01_awburst : std_logic_vector(1 downto 0);
-    signal xbar_m01_awvalid : std_logic;
-    signal xbar_m01_awready : std_logic;
-    signal xbar_m01_wdata   : std_logic_vector(255 downto 0);
-    signal xbar_m01_wstrb   : std_logic_vector(31 downto 0);
-    signal xbar_m01_wlast   : std_logic;
-    signal xbar_m01_wvalid  : std_logic;
-    signal xbar_m01_wready  : std_logic;
-    signal xbar_m01_bresp   : std_logic_vector(1 downto 0);
-    signal xbar_m01_bvalid  : std_logic;
-    signal xbar_m01_bready  : std_logic;
-    signal xbar_m01_araddr  : std_logic_vector(31 downto 0);
-    signal xbar_m01_arlen   : std_logic_vector(7 downto 0);
-    signal xbar_m01_arburst : std_logic_vector(1 downto 0);
-    signal xbar_m01_arvalid : std_logic;
-    signal xbar_m01_arready : std_logic;
-    signal xbar_m01_rdata   : std_logic_vector(255 downto 0);
-    signal xbar_m01_rresp   : std_logic_vector(1 downto 0);
-    signal xbar_m01_rlast   : std_logic;
-    signal xbar_m01_rvalid  : std_logic;
-    signal xbar_m01_rready  : std_logic;
 
     signal bridge_awaddr_dma : std_logic_vector(31 downto 0);
     signal bridge_araddr_dma : std_logic_vector(31 downto 0);
@@ -457,12 +437,12 @@ begin
         port map (
             s_axi_aclk => clk_100, s_axi_aresetn => rst_100_n,
             s_axi_awid => bridge_awid, s_axi_awaddr => bridge_awaddr, s_axi_awlen => bridge_awlen, s_axi_awsize => "010",
-            s_axi_awburst => bridge_awburst, s_axi_awlock => "0", s_axi_awcache => "0011", s_axi_awprot => "000",
+            s_axi_awburst => bridge_awburst, s_axi_awlock => '0', s_axi_awcache => "0011", s_axi_awprot => "000",
             s_axi_awregion => "0000", s_axi_awqos => "0000", s_axi_awvalid => bridge_awvalid, s_axi_awready => bridge_awready,
             s_axi_wdata => bridge_wdata, s_axi_wstrb => bridge_wstrb, s_axi_wlast => bridge_wlast, s_axi_wvalid => bridge_wvalid, s_axi_wready => bridge_wready,
             s_axi_bid => bridge_bid, s_axi_bresp => bridge_bresp, s_axi_bvalid => bridge_bvalid, s_axi_bready => bridge_bready,
             s_axi_arid => bridge_arid, s_axi_araddr => bridge_araddr, s_axi_arlen => bridge_arlen, s_axi_arsize => "010",
-            s_axi_arburst => bridge_arburst, s_axi_arlock => "0", s_axi_arcache => "0011", s_axi_arprot => "000",
+            s_axi_arburst => bridge_arburst, s_axi_arlock => '0', s_axi_arcache => "0011", s_axi_arprot => "000",
             s_axi_arregion => "0000", s_axi_arqos => "0000", s_axi_arvalid => bridge_arvalid, s_axi_arready => bridge_arready,
             s_axi_rid => bridge_rid, s_axi_rdata => bridge_rdata, s_axi_rresp => bridge_rresp, s_axi_rlast => bridge_rlast, s_axi_rvalid => bridge_rvalid, s_axi_rready => bridge_rready,
             m_axi_aclk => ui_clk, m_axi_aresetn => ui_rst_n,
@@ -481,12 +461,12 @@ begin
         port map (
             s_axi_aclk => ui_clk, s_axi_aresetn => ui_rst_n,
             s_axi_awid => bridge_ui_awid, s_axi_awaddr => bridge_ui_awaddr, s_axi_awlen => bridge_ui_awlen, s_axi_awsize => "010",
-            s_axi_awburst => bridge_ui_awburst, s_axi_awlock => "0", s_axi_awcache => "0011", s_axi_awprot => "000",
+            s_axi_awburst => bridge_ui_awburst, s_axi_awlock => '0', s_axi_awcache => "0011", s_axi_awprot => "000",
             s_axi_awregion => "0000", s_axi_awqos => "0000", s_axi_awvalid => bridge_ui_awvalid, s_axi_awready => bridge_ui_awready,
             s_axi_wdata => bridge_ui_wdata, s_axi_wstrb => bridge_ui_wstrb, s_axi_wlast => bridge_ui_wlast, s_axi_wvalid => bridge_ui_wvalid, s_axi_wready => bridge_ui_wready,
             s_axi_bid => bridge_ui_bid, s_axi_bresp => bridge_ui_bresp, s_axi_bvalid => bridge_ui_bvalid, s_axi_bready => bridge_ui_bready,
             s_axi_arid => bridge_ui_arid, s_axi_araddr => bridge_ui_araddr, s_axi_arlen => bridge_ui_arlen, s_axi_arsize => "010",
-            s_axi_arburst => bridge_ui_arburst, s_axi_arlock => "0", s_axi_arcache => "0011", s_axi_arprot => "000",
+            s_axi_arburst => bridge_ui_arburst, s_axi_arlock => '0', s_axi_arcache => "0011", s_axi_arprot => "000",
             s_axi_arregion => "0000", s_axi_arqos => "0000", s_axi_arvalid => bridge_ui_arvalid, s_axi_arready => bridge_ui_arready,
             s_axi_rid => bridge_ui_rid, s_axi_rdata => bridge_ui_rdata, s_axi_rresp => bridge_ui_rresp, s_axi_rlast => bridge_ui_rlast, s_axi_rvalid => bridge_ui_rvalid, s_axi_rready => bridge_ui_rready,
             m_axi_awaddr => bridge_dwc_awaddr, m_axi_awlen => bridge_dwc_awlen, m_axi_awsize => open,
@@ -546,24 +526,24 @@ begin
     u_crossbar : entity work.axi_crossbar_0
         port map (
             aclk => ui_clk, aresetn => ui_rst_n,
-            s_axi_awaddr => xbar_s_awaddr, s_axi_awlen => xbar_s_awlen, s_axi_awsize => xbar_s_awsize,
+            s_axi_awid => (others => '0'), s_axi_awaddr => xbar_s_awaddr, s_axi_awlen => xbar_s_awlen, s_axi_awsize => xbar_s_awsize,
             s_axi_awburst => xbar_s_awburst, s_axi_awlock => xbar_s_awlock, s_axi_awcache => xbar_s_awcache, s_axi_awprot => xbar_s_awprot,
             s_axi_awqos => xbar_s_awqos, s_axi_awvalid => xbar_s_awvalid, s_axi_awready => xbar_s_awready,
             s_axi_wdata => xbar_s_wdata, s_axi_wstrb => xbar_s_wstrb, s_axi_wlast => xbar_s_wlast, s_axi_wvalid => xbar_s_wvalid, s_axi_wready => xbar_s_wready,
             s_axi_bresp => xbar_s_bresp, s_axi_bvalid => xbar_s_bvalid, s_axi_bready => xbar_s_bready,
-            s_axi_araddr => xbar_s_araddr, s_axi_arlen => xbar_s_arlen, s_axi_arsize => xbar_s_arsize,
+            s_axi_arid => (others => '0'), s_axi_araddr => xbar_s_araddr, s_axi_arlen => xbar_s_arlen, s_axi_arsize => xbar_s_arsize,
             s_axi_arburst => xbar_s_arburst, s_axi_arlock => xbar_s_arlock, s_axi_arcache => xbar_s_arcache, s_axi_arprot => xbar_s_arprot,
             s_axi_arqos => xbar_s_arqos, s_axi_arvalid => xbar_s_arvalid, s_axi_arready => xbar_s_arready,
             s_axi_rdata => xbar_s_rdata, s_axi_rresp => xbar_s_rresp, s_axi_rlast => xbar_s_rlast, s_axi_rvalid => xbar_s_rvalid, s_axi_rready => xbar_s_rready,
-            m_axi_awaddr => xbar_m_awaddr, m_axi_awlen => xbar_m_awlen, m_axi_awsize => xbar_m_awsize,
+            m_axi_awid => xbar_m_awid, m_axi_awaddr => xbar_m_awaddr, m_axi_awlen => xbar_m_awlen, m_axi_awsize => xbar_m_awsize,
             m_axi_awburst => xbar_m_awburst, m_axi_awlock => xbar_m_awlock, m_axi_awcache => xbar_m_awcache, m_axi_awprot => xbar_m_awprot,
             m_axi_awregion => xbar_m_awregion, m_axi_awqos => xbar_m_awqos, m_axi_awvalid => xbar_m_awvalid, m_axi_awready => xbar_m_awready,
             m_axi_wdata => xbar_m_wdata, m_axi_wstrb => xbar_m_wstrb, m_axi_wlast => xbar_m_wlast, m_axi_wvalid => xbar_m_wvalid, m_axi_wready => xbar_m_wready,
-            m_axi_bresp => xbar_m_bresp, m_axi_bvalid => xbar_m_bvalid, m_axi_bready => xbar_m_bready,
-            m_axi_araddr => xbar_m_araddr, m_axi_arlen => xbar_m_arlen, m_axi_arsize => xbar_m_arsize,
+            m_axi_bid => xbar_m_bid, m_axi_bresp => xbar_m_bresp, m_axi_bvalid => xbar_m_bvalid, m_axi_bready => xbar_m_bready,
+            m_axi_arid => xbar_m_arid, m_axi_araddr => xbar_m_araddr, m_axi_arlen => xbar_m_arlen, m_axi_arsize => xbar_m_arsize,
             m_axi_arburst => xbar_m_arburst, m_axi_arlock => xbar_m_arlock, m_axi_arcache => xbar_m_arcache, m_axi_arprot => xbar_m_arprot,
             m_axi_arregion => xbar_m_arregion, m_axi_arqos => xbar_m_arqos, m_axi_arvalid => xbar_m_arvalid, m_axi_arready => xbar_m_arready,
-            m_axi_rdata => xbar_m_rdata, m_axi_rresp => xbar_m_rresp, m_axi_rlast => xbar_m_rlast, m_axi_rvalid => xbar_m_rvalid, m_axi_rready => xbar_m_rready
+            m_axi_rid => xbar_m_rid, m_axi_rdata => xbar_m_rdata, m_axi_rresp => xbar_m_rresp, m_axi_rlast => xbar_m_rlast, m_axi_rvalid => xbar_m_rvalid, m_axi_rready => xbar_m_rready
         );
 
     ddr_awaddr <= xbar_m_awaddr(30 downto 0); ddr_awlen <= xbar_m_awlen(7 downto 0); ddr_awburst <= xbar_m_awburst(1 downto 0); ddr_awvalid <= xbar_m_awvalid(0);
@@ -571,20 +551,20 @@ begin
     xbar_m_wready(0) <= ddr_wready; ddr_bresp <= xbar_m_bresp(1 downto 0); ddr_bvalid <= xbar_m_bvalid(0); xbar_m_bready(0) <= ddr_bready;
     ddr_araddr <= xbar_m_araddr(30 downto 0); ddr_arlen <= xbar_m_arlen(7 downto 0); ddr_arburst <= xbar_m_arburst(1 downto 0); ddr_arvalid <= xbar_m_arvalid(0);
     xbar_m_arready(0) <= ddr_arready; xbar_m_rdata(255 downto 0) <= ddr_rdata; xbar_m_rresp(1 downto 0) <= ddr_rresp; xbar_m_rlast(0) <= ddr_rlast; xbar_m_rvalid(0) <= ddr_rvalid; ddr_rready <= xbar_m_rready(0);
-    ddr_awid <= (others => '0'); ddr_bid <= (others => '0'); ddr_arid <= (others => '0'); ddr_rid <= (others => '0');
+    ddr_awid <= xbar_m_awid(0 downto 0); ddr_bid <= xbar_m_bid(0 downto 0); ddr_arid <= xbar_m_arid(0 downto 0); ddr_rid <= xbar_m_rid(0 downto 0);
 
     u_dwidth_down : entity work.axi_dwidth_converter_1
         port map (
             s_axi_aclk => ui_clk, s_axi_aresetn => ui_rst_n,
-            s_axi_awaddr => xbar_m_awaddr(63 downto 32), s_axi_awlen => xbar_m_awlen(15 downto 8), s_axi_awsize => "101",
-            s_axi_awburst => xbar_m_awburst(3 downto 2), s_axi_awlock => "0", s_axi_awcache => "0011", s_axi_awprot => "000",
+            s_axi_awid => xbar_m_awid(1 downto 1), s_axi_awaddr => xbar_m_awaddr(63 downto 32), s_axi_awlen => xbar_m_awlen(15 downto 8), s_axi_awsize => "101",
+            s_axi_awburst => xbar_m_awburst(3 downto 2), s_axi_awlock => '0', s_axi_awcache => "0011", s_axi_awprot => "000",
             s_axi_awregion => "0000", s_axi_awqos => "0000", s_axi_awvalid => xbar_m_awvalid(1), s_axi_awready => xbar_m_awready(1),
             s_axi_wdata => xbar_m_wdata(511 downto 256), s_axi_wstrb => xbar_m_wstrb(63 downto 32), s_axi_wlast => xbar_m_wlast(1), s_axi_wvalid => xbar_m_wvalid(1), s_axi_wready => xbar_m_wready(1),
-            s_axi_bresp => xbar_m_bresp(3 downto 2), s_axi_bvalid => xbar_m_bvalid(1), s_axi_bready => xbar_m_bready(1),
-            s_axi_araddr => xbar_m_araddr(63 downto 32), s_axi_arlen => xbar_m_arlen(15 downto 8), s_axi_arsize => "101",
-            s_axi_arburst => xbar_m_arburst(3 downto 2), s_axi_arlock => "0", s_axi_arcache => "0011", s_axi_arprot => "000",
+            s_axi_bid => xbar_m_bid(1 downto 1), s_axi_bresp => xbar_m_bresp(3 downto 2), s_axi_bvalid => xbar_m_bvalid(1), s_axi_bready => xbar_m_bready(1),
+            s_axi_arid => xbar_m_arid(1 downto 1), s_axi_araddr => xbar_m_araddr(63 downto 32), s_axi_arlen => xbar_m_arlen(15 downto 8), s_axi_arsize => "101",
+            s_axi_arburst => xbar_m_arburst(3 downto 2), s_axi_arlock => '0', s_axi_arcache => "0011", s_axi_arprot => "000",
             s_axi_arregion => "0000", s_axi_arqos => "0000", s_axi_arvalid => xbar_m_arvalid(1), s_axi_arready => xbar_m_arready(1),
-            s_axi_rdata => xbar_m_rdata(511 downto 256), s_axi_rresp => xbar_m_rresp(3 downto 2), s_axi_rlast => xbar_m_rlast(1), s_axi_rvalid => xbar_m_rvalid(1), s_axi_rready => xbar_m_rready(1),
+            s_axi_rid => xbar_m_rid(1 downto 1), s_axi_rdata => xbar_m_rdata(511 downto 256), s_axi_rresp => xbar_m_rresp(3 downto 2), s_axi_rlast => xbar_m_rlast(1), s_axi_rvalid => xbar_m_rvalid(1), s_axi_rready => xbar_m_rready(1),
             m_axi_awaddr => bridge_awaddr_dma, m_axi_awvalid => dma_s_awvalid, m_axi_awready => dma_s_awready, m_axi_wdata => dma_s_wdata,
             m_axi_wstrb => dma_s_wstrb, m_axi_wvalid => dma_s_wvalid, m_axi_wready => dma_s_wready, m_axi_bresp => dma_s_bresp, m_axi_bvalid => dma_s_bvalid,
             m_axi_bready => dma_s_bready, m_axi_araddr => bridge_araddr_dma, m_axi_arvalid => dma_s_arvalid, m_axi_arready => dma_s_arready,
