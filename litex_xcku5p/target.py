@@ -4,7 +4,10 @@ from migen.genlib.resetsync import AsyncResetSynchronizer
 
 from litex.gen import *
 
-from litex_xcku5p import platform
+try:
+    from litex_xcku5p import platform
+except ImportError:
+    import platform
 
 from litex.soc.cores.clock import *
 from litex.soc.integration.soc import *
