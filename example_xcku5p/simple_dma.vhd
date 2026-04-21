@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 --  simple_dma.vhd
 --	Simple AXI4 DMA for DDR4 Copy
---	Version 1.0
+--	Version 1.1 - Fixed naming collisions
 --
 --  Copyright (C) 2026 H.Poetzl
 --
@@ -111,14 +111,14 @@ architecture RTL of simple_dma is
     signal state : state_t := IDLE;
 
     -- Read Master signals
-    type rstate_t is (R_IDLE, R_ADDR, R_DATA);
-    signal rstate : rstate_t := R_IDLE;
+    type rstate_t is (SR_IDLE, SR_ADDR, SR_DATA);
+    signal rstate : rstate_t := SR_IDLE;
     signal r_addr : unsigned(31 downto 0);
     signal r_len  : unsigned(31 downto 0);
 
     -- Write Master signals
-    type wstate_t is (W_IDLE, W_ADDR, W_DATA, W_RESP);
-    signal wstate : wstate_t := W_IDLE;
+    type wstate_t is (SW_IDLE, SW_ADDR, SW_DATA, SW_RESP);
+    signal wstate : wstate_t := SW_IDLE;
     signal w_addr : unsigned(31 downto 0);
     signal w_len  : unsigned(31 downto 0);
     signal w_beats : unsigned(7 downto 0);
@@ -241,7 +241,7 @@ begin
                             reg_busy <= '1';
                         end if;
                     when RUNNING =>
-                        if rstate = R_IDLE and wstate = W_IDLE and r_len = 0 and w_len = 0 and fifo_empty = '1' then
+                        if rstate = SR_IDLE and wstate = SW_IDLE and r_len = 0 and w_len = 0 and fifo_empty = '1' then
                             state <= DONE;
                         end if;
                     when DONE =>
@@ -267,20 +267,20 @@ begin
     begin
         if rising_edge(clk_i) then
             if rst_i = '1' then
-                rstate <= R_IDLE;
+                rstate <= SR_IDLE;
                 m_axi_arvalid <= '0';
                 m_axi_rready  <= '0';
                 r_len <= (others => '0');
             else
                 case rstate is
-                    when R_IDLE =>
+                    when SR_IDLE =>
                         if state = IDLE and reg_start = '1' then
                             r_addr <= unsigned(reg_src_addr);
                             r_len  <= unsigned(reg_length);
-                            rstate <= R_ADDR;
+                            rstate <= SR_ADDR;
                         end if;
 
-                    when R_ADDR =>
+                    when SR_ADDR =>
                         if r_len > 0 then
                             m_axi_araddr <= std_logic_vector(r_addr);
                             -- Max burst 16 beats to avoid overrunning FIFO (FIFO_DEPTH=512 is plenty, but let's be safe)
@@ -291,12 +291,12 @@ begin
                             end if;
                             m_axi_arlen <= std_logic_vector(burst_len);
                             m_axi_arvalid <= '1';
-                            rstate <= R_DATA;
+                            rstate <= SR_DATA;
                         else
-                            rstate <= R_IDLE;
+                            rstate <= SR_IDLE;
                         end if;
 
-                    when R_DATA =>
+                    when SR_DATA =>
                         if m_axi_arready = '1' then
                             m_axi_arvalid <= '0';
                         end if;
@@ -306,7 +306,7 @@ begin
                             r_len  <= r_len - 32;
                             if m_axi_rlast = '1' then
                                 m_axi_rready <= '0';
-                                rstate <= R_ADDR;
+                                rstate <= SR_ADDR;
                             end if;
                         end if;
                 end case;
@@ -332,21 +332,21 @@ begin
     begin
         if rising_edge(clk_i) then
             if rst_i = '1' then
-                wstate <= W_IDLE;
+                wstate <= SW_IDLE;
                 m_axi_awvalid <= '0';
                 m_axi_wvalid  <= '0';
                 m_axi_bready  <= '0';
                 w_len <= (others => '0');
             else
                 case wstate is
-                    when W_IDLE =>
+                    when SW_IDLE =>
                         if state = IDLE and reg_start = '1' then
                             w_addr <= unsigned(reg_dst_addr);
                             w_len  <= unsigned(reg_length);
-                            wstate <= W_ADDR;
+                            wstate <= SW_ADDR;
                         end if;
 
-                    when W_ADDR =>
+                    when SW_ADDR =>
                         if w_len > 0 then
                             -- Wait for enough data in FIFO or end of transfer
                             if fifo_count >= 16 or (r_len = 0 and fifo_count >= shift_right(w_len, 5)) then
@@ -359,13 +359,13 @@ begin
                                 w_beats <= burst_len;
                                 m_axi_awlen <= std_logic_vector(burst_len);
                                 m_axi_awvalid <= '1';
-                                wstate <= W_DATA;
+                                wstate <= SW_DATA;
                             end if;
                         else
-                            wstate <= W_IDLE;
+                            wstate <= SW_IDLE;
                         end if;
 
-                    when W_DATA =>
+                    when SW_DATA =>
                         if m_axi_awready = '1' then
                             m_axi_awvalid <= '0';
                         end if;
@@ -389,16 +389,16 @@ begin
                                 m_axi_wvalid <= '0';
                                 m_axi_wlast  <= '0';
                                 m_axi_bready <= '1';
-                                wstate <= W_RESP;
+                                wstate <= SW_RESP;
                             else
                                 w_beats <= w_beats - 1;
                             end if;
                         end if;
 
-                    when W_RESP =>
+                    when SW_RESP =>
                         if m_axi_bvalid = '1' then
                             m_axi_bready <= '0';
-                            wstate <= W_ADDR;
+                            wstate <= SW_ADDR;
                         end if;
                 end case;
             end if;
