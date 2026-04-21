@@ -15,14 +15,12 @@
 --    (cd build && vivado -mode tcl -source ../vivado.tcl)
 ----------------------------------------------------------------------------
 
-
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.ALL;
 
 library unisim;
 use unisim.VCOMPONENTS.ALL;
-
 
 entity top is
     port (
@@ -50,7 +48,6 @@ entity top is
         c0_ddr4_dq             : inout std_logic_vector(31 downto 0);
         c0_ddr4_dqs_t          : inout std_logic_vector(3 downto 0);
         c0_ddr4_dqs_c          : inout std_logic_vector(3 downto 0) );
-
 end entity top;
 
 architecture RTL of top is
@@ -99,7 +96,11 @@ architecture RTL of top is
     signal dma_m_awready : std_logic;
     signal dma_m_awaddr  : std_logic_vector(31 downto 0);
     signal dma_m_awlen   : std_logic_vector(7 downto 0);
+    signal dma_m_awsize  : std_logic_vector(2 downto 0);
     signal dma_m_awburst : std_logic_vector(1 downto 0);
+    signal dma_m_awlock  : std_logic;
+    signal dma_m_awcache : std_logic_vector(3 downto 0);
+    signal dma_m_awprot  : std_logic_vector(2 downto 0);
     signal dma_m_wvalid  : std_logic;
     signal dma_m_wready  : std_logic;
     signal dma_m_wdata   : std_logic_vector(255 downto 0);
@@ -112,7 +113,11 @@ architecture RTL of top is
     signal dma_m_arready : std_logic;
     signal dma_m_araddr  : std_logic_vector(31 downto 0);
     signal dma_m_arlen   : std_logic_vector(7 downto 0);
+    signal dma_m_arsize  : std_logic_vector(2 downto 0);
     signal dma_m_arburst : std_logic_vector(1 downto 0);
+    signal dma_m_arlock  : std_logic;
+    signal dma_m_arcache : std_logic_vector(3 downto 0);
+    signal dma_m_arprot  : std_logic_vector(2 downto 0);
     signal dma_m_rvalid  : std_logic;
     signal dma_m_rready  : std_logic;
     signal dma_m_rdata   : std_logic_vector(255 downto 0);
@@ -239,7 +244,7 @@ architecture RTL of top is
     signal bridge_dwc_rvalid  : std_logic;
     signal bridge_dwc_rready  : std_logic;
 
-    -- Aggregate signals for Crossbar
+    -- Crossbar signals (SI/MI aggregation)
     signal xbar_s_awid    : std_logic_vector(7 downto 0);
     signal xbar_s_awaddr  : std_logic_vector(63 downto 0);
     signal xbar_s_awlen   : std_logic_vector(15 downto 0);
@@ -255,7 +260,7 @@ architecture RTL of top is
     signal xbar_s_wstrb   : std_logic_vector(63 downto 0);
     signal xbar_s_wlast   : std_logic_vector(1 downto 0);
     signal xbar_s_wvalid  : std_logic_vector(1 downto 0);
-    signal xbar_s_wready : std_logic_vector(1 downto 0);
+    signal xbar_s_wready  : std_logic_vector(1 downto 0);
     signal xbar_s_bid     : std_logic_vector(7 downto 0);
     signal xbar_s_bresp   : std_logic_vector(3 downto 0);
     signal xbar_s_bvalid  : std_logic_vector(1 downto 0);
@@ -318,6 +323,30 @@ architecture RTL of top is
     signal xbar_m_rvalid  : std_logic_vector(1 downto 0);
     signal xbar_m_rready  : std_logic_vector(1 downto 0);
 
+    signal xbar_m01_awaddr  : std_logic_vector(31 downto 0);
+    signal xbar_m01_awlen   : std_logic_vector(7 downto 0);
+    signal xbar_m01_awburst : std_logic_vector(1 downto 0);
+    signal xbar_m01_awvalid : std_logic;
+    signal xbar_m01_awready : std_logic;
+    signal xbar_m01_wdata   : std_logic_vector(255 downto 0);
+    signal xbar_m01_wstrb   : std_logic_vector(31 downto 0);
+    signal xbar_m01_wlast   : std_logic;
+    signal xbar_m01_wvalid  : std_logic;
+    signal xbar_m01_wready  : std_logic;
+    signal xbar_m01_bresp   : std_logic_vector(1 downto 0);
+    signal xbar_m01_bvalid  : std_logic;
+    signal xbar_m01_bready  : std_logic;
+    signal xbar_m01_araddr  : std_logic_vector(31 downto 0);
+    signal xbar_m01_arlen   : std_logic_vector(7 downto 0);
+    signal xbar_m01_arburst : std_logic_vector(1 downto 0);
+    signal xbar_m01_arvalid : std_logic;
+    signal xbar_m01_arready : std_logic;
+    signal xbar_m01_rdata   : std_logic_vector(255 downto 0);
+    signal xbar_m01_rresp   : std_logic_vector(1 downto 0);
+    signal xbar_m01_rlast   : std_logic;
+    signal xbar_m01_rvalid  : std_logic;
+    signal xbar_m01_rready  : std_logic;
+
     signal bridge_awaddr_dma : std_logic_vector(31 downto 0);
     signal bridge_araddr_dma : std_logic_vector(31 downto 0);
 
@@ -329,69 +358,6 @@ begin
     ddr_rst <= not key(1);
 
     u_ddr4 : entity work.ddr4_0
-        port map (
-            sys_rst                => ddr_rst,
-            c0_sys_clk_p           => sys_clk_p,
-            c0_sys_clk_n           => sys_clk_n,
-            c0_init_calib_complete => calib_complete,
-            c0_ddr4_act_n          => c0_ddr4_act_n,
-            c0_ddr4_adr            => c0_ddr4_adr,
-            c0_ddr4_ba             => c0_ddr4_ba,
-            c0_ddr4_bg             => c0_ddr4_bg,
-            c0_ddr4_cke            => c0_ddr4_cke,
-            c0_ddr4_odt            => c0_ddr4_odt,
-            c0_ddr4_cs_n           => c0_ddr4_cs_n,
-            c0_ddr4_ck_t           => c0_ddr4_ck_t,
-            c0_ddr4_ck_c           => c0_ddr4_ck_c,
-            c0_ddr4_reset_n        => c0_ddr4_reset_n,
-            c0_ddr4_dm_dbi_n       => c0_ddr4_dm_dbi_n,
-            c0_ddr4_dq             => c0_ddr4_dq,
-            c0_ddr4_dqs_t          => c0_ddr4_dqs_t,
-            c0_ddr4_dqs_c          => c0_ddr4_dm_dbi_n, -- typo in prev, fixed to map to dqs_c
-            c0_ddr4_ui_clk         => ui_clk,
-            c0_ddr4_ui_clk_sync_rst => ui_rst,
-            addn_ui_clkout1        => clk_100,
-            c0_ddr4_aresetn        => ui_rst_n,
-            c0_ddr4_s_axi_awid     => ddr_awid,
-            c0_ddr4_s_axi_awaddr   => ddr_awaddr,
-            c0_ddr4_s_axi_awlen    => ddr_awlen,
-            c0_ddr4_s_axi_awsize   => "101",
-            c0_ddr4_s_axi_awburst  => ddr_awburst,
-            c0_ddr4_s_axi_awlock   => "0",
-            c0_ddr4_s_axi_awcache  => "0011",
-            c0_ddr4_s_axi_awprot   => "000",
-            c0_ddr4_s_axi_awqos    => "0000",
-            c0_ddr4_s_axi_awvalid  => ddr_awvalid,
-            c0_ddr4_s_axi_awready  => ddr_awready,
-            c0_ddr4_s_axi_wdata    => ddr_wdata,
-            c0_ddr4_s_axi_wstrb    => ddr_wstrb,
-            c0_ddr4_s_axi_wlast    => ddr_wlast,
-            c0_ddr4_s_axi_wvalid   => ddr_wvalid,
-            c0_ddr4_s_axi_wready   => ddr_wready,
-            c0_ddr4_s_axi_bid      => ddr_bid,
-            c0_ddr4_s_axi_bresp    => ddr_bresp,
-            c0_ddr4_s_axi_bvalid   => ddr_bvalid,
-            c0_ddr4_s_axi_bready   => ddr_bready,
-            c0_ddr4_s_axi_arid     => ddr_arid,
-            c0_ddr4_s_axi_araddr   => ddr_araddr,
-            c0_ddr4_s_axi_arlen    => ddr_arlen,
-            c0_ddr4_s_axi_arsize   => "101",
-            c0_ddr4_s_axi_arburst  => ddr_arburst,
-            c0_ddr4_s_axi_arlock   => "0",
-            c0_ddr4_s_axi_arcache  => "0011",
-            c0_ddr4_s_axi_arprot   => "000",
-            c0_ddr4_s_axi_arqos    => "0000",
-            c0_ddr4_s_axi_arvalid  => ddr_arvalid,
-            c0_ddr4_s_axi_arready  => ddr_arready,
-            c0_ddr4_s_axi_rid      => ddr_rid,
-            c0_ddr4_s_axi_rdata    => ddr_rdata,
-            c0_ddr4_s_axi_rresp    => ddr_rresp,
-            c0_ddr4_s_axi_rlast    => ddr_rlast,
-            c0_ddr4_s_axi_rvalid   => ddr_rvalid,
-            c0_ddr4_s_axi_rready   => ddr_rready
-        );
-    -- Fix ddr4 port map typo
-    u_ddr4_fix : entity work.ddr4_0
         port map (
             sys_rst                => ddr_rst,
             c0_sys_clk_p           => sys_clk_p,
@@ -461,19 +427,43 @@ begin
     -- Debug Bridge
     --------------------------------------------------------------------
     rst_i <= not key(0);
-    u_bridge : entity work.dbg_bridge generic map ( CLK_FREQ => 100000000, UART_SPEED => 115200 )
+
+    u_bridge : entity work.dbg_bridge
+        generic map ( CLK_FREQ => 100000000, UART_SPEED => 115200 )
         port map (
-            clk_i => clk_100, rst_i => rst_i, uart_rxd_i => uart_rxd_i, uart_txd_o => uart_txd_o,
-            mem_awvalid_o => bridge_awvalid, mem_awready_i => bridge_awready, mem_awaddr_o => bridge_awaddr,
-            mem_awid_o => bridge_awid, mem_awlen_o => bridge_awlen, mem_awburst_o => bridge_awburst,
-            mem_wvalid_o => bridge_wvalid, mem_wready_i => bridge_wready, mem_wdata_o => bridge_wdata,
-            mem_wstrb_o => bridge_wstrb, mem_wlast_o => bridge_wlast,
-            mem_bvalid_i => bridge_bvalid, mem_bready_o => bridge_bready, mem_bresp_i => bridge_bresp, mem_bid_i => bridge_bid,
-            mem_arvalid_o => bridge_arvalid, mem_arready_i => bridge_arready, mem_araddr_o => bridge_araddr,
-            mem_arid_o => bridge_arid, mem_arlen_o => bridge_arlen, mem_arburst_o => bridge_arburst,
-            mem_rvalid_i => bridge_rvalid, mem_rready_o => bridge_rready, mem_rdata_i => bridge_rdata,
-            mem_rresp_i => bridge_rresp, mem_rid_i => bridge_rid, mem_rlast_i => bridge_rlast,
-            gpio_inputs_i => (others => '0'), gpio_outputs_o => open
+            clk_i          => clk_100,
+            rst_i          => rst_i,
+            uart_rxd_i     => uart_rxd_i,
+            uart_txd_o     => uart_txd_o,
+            mem_awvalid_o  => bridge_awvalid,
+            mem_awready_i  => bridge_awready,
+            mem_awaddr_o   => bridge_awaddr,
+            mem_awid_o     => bridge_awid,
+            mem_awlen_o    => bridge_awlen,
+            mem_awburst_o  => bridge_awburst,
+            mem_wvalid_o   => bridge_wvalid,
+            mem_wready_i   => bridge_wready,
+            mem_wdata_o    => bridge_wdata,
+            mem_wstrb_o    => bridge_wstrb,
+            mem_wlast_o    => bridge_wlast,
+            mem_bvalid_i   => bridge_bvalid,
+            mem_bready_o   => bridge_bready,
+            mem_bresp_i    => bridge_bresp,
+            mem_bid_i      => bridge_bid,
+            mem_arvalid_o  => bridge_arvalid,
+            mem_arready_i  => bridge_arready,
+            mem_araddr_o   => bridge_araddr,
+            mem_arid_o     => bridge_arid,
+            mem_arlen_o    => bridge_arlen,
+            mem_arburst_o  => bridge_arburst,
+            mem_rvalid_i   => bridge_rvalid,
+            mem_rready_o   => bridge_rready,
+            mem_rdata_i    => bridge_rdata,
+            mem_rresp_i    => bridge_rresp,
+            mem_rid_i      => bridge_rid,
+            mem_rlast_i    => bridge_rlast,
+            gpio_inputs_i  => (others => '0'),
+            gpio_outputs_o => open
         );
 
     --------------------------------------------------------------------
@@ -487,12 +477,12 @@ begin
             s_axi_bresp => dma_s_bresp, s_axi_bvalid => dma_s_bvalid, s_axi_bready => dma_s_bready,
             s_axi_araddr => dma_s_araddr, s_axi_arvalid => dma_s_arvalid, s_axi_arready => dma_s_arready,
             s_axi_rdata => dma_s_rdata, s_axi_rresp => dma_s_rresp, s_axi_rvalid => dma_s_rvalid, s_axi_rready => dma_s_rready,
-            m_axi_awaddr => dma_m_awaddr, m_axi_awlen => dma_m_awlen, m_axi_awsize => "101", m_axi_awburst => dma_m_awburst,
-            m_axi_awlock => '0', m_axi_awcache => "0011", m_axi_awprot => "000", m_axi_awvalid => dma_m_awvalid, m_axi_awready => dma_m_awready,
+            m_axi_awaddr => dma_m_awaddr, m_axi_awlen => dma_m_awlen, m_axi_awsize => dma_m_awsize, m_axi_awburst => dma_m_awburst,
+            m_axi_awlock => dma_m_awlock, m_axi_awcache => dma_m_awcache, m_axi_awprot => dma_m_awprot, m_axi_awvalid => dma_m_awvalid, m_axi_awready => dma_m_awready,
             m_axi_wdata => dma_m_wdata, m_axi_wstrb => dma_m_wstrb, m_axi_wlast => dma_m_wlast, m_axi_wvalid => dma_m_wvalid, m_axi_wready => dma_m_wready,
             m_axi_bresp => dma_m_bresp, m_axi_bvalid => dma_m_bvalid, m_axi_bready => dma_m_bready,
-            m_axi_araddr => dma_m_araddr, m_axi_arlen => dma_m_arlen, m_axi_arsize => "101", m_axi_arburst => dma_m_arburst,
-            m_axi_arlock => '0', m_axi_arcache => "0011", m_axi_arprot => "000", m_axi_arvalid => dma_m_arvalid, m_axi_arready => dma_m_arready,
+            m_axi_araddr => dma_m_araddr, m_axi_arlen => dma_m_arlen, m_axi_arsize => dma_m_arsize, m_axi_arburst => dma_m_arburst,
+            m_axi_arlock => dma_m_arlock, m_axi_arcache => dma_m_arcache, m_axi_arprot => dma_m_arprot, m_axi_arvalid => dma_m_arvalid, m_axi_arready => dma_m_arready,
             m_axi_rdata => dma_m_rdata, m_axi_rresp => dma_m_rresp, m_axi_rlast => dma_m_rlast, m_axi_rvalid => dma_m_rvalid, m_axi_rready => dma_m_rready,
             busy_o => dma_busy
         );
@@ -552,11 +542,11 @@ begin
     xbar_s_awid    <= "0000" & bridge_dwc_awid;
     xbar_s_awaddr  <= dma_m_awaddr & bridge_dwc_awaddr;
     xbar_s_awlen   <= dma_m_awlen & bridge_dwc_awlen;
-    xbar_s_awsize  <= "101" & "101";
+    xbar_s_awsize  <= dma_m_awsize & "101";
     xbar_s_awburst <= dma_m_awburst & bridge_dwc_awburst;
-    xbar_s_awlock  <= "00";
-    xbar_s_awcache <= "0011" & "0011";
-    xbar_s_awprot  <= "000" & "000";
+    xbar_s_awlock  <= dma_m_awlock & '0';
+    xbar_s_awcache <= dma_m_awcache & "0011";
+    xbar_s_awprot  <= dma_m_awprot & "000";
     xbar_s_awqos   <= "0000" & "0000";
     xbar_s_awvalid <= dma_m_awvalid & bridge_dwc_awvalid;
     bridge_dwc_awready <= xbar_s_awready(0);
@@ -576,11 +566,11 @@ begin
     xbar_s_arid    <= "0000" & bridge_dwc_arid;
     xbar_s_araddr  <= dma_m_araddr & bridge_dwc_araddr;
     xbar_s_arlen   <= dma_m_arlen & bridge_dwc_arlen;
-    xbar_s_arsize  <= "101" & "101";
+    xbar_s_arsize  <= dma_m_arsize & "101";
     xbar_s_arburst <= dma_m_arburst & bridge_dwc_arburst;
-    xbar_s_arlock  <= "00";
-    xbar_s_arcache <= "0011" & "0011";
-    xbar_s_arprot  <= "000" & "000";
+    xbar_s_arlock  <= dma_m_arlock & '0';
+    xbar_s_arcache <= dma_m_arcache & "0011";
+    xbar_s_arprot  <= dma_m_arprot & "000";
     xbar_s_arqos   <= "0000" & "0000";
     xbar_s_arvalid <= dma_m_arvalid & bridge_dwc_arvalid;
     bridge_dwc_arready <= xbar_s_arready(0);
