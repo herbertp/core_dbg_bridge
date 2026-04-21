@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 --  top.vhd
 --	XCKU5P simple VHDL example
---	Version 1.1 - DDR4 Support
+--	Version 1.2 - DDR4 Support with CDMA
 --
 --  Copyright (C) 2026 H.Poetzl
 --
@@ -65,40 +65,168 @@ architecture RTL of top is
 
 
     --------------------------------------------------------------------
-    -- AXI Bus Signals (Bridge 32-bit)
+    -- AXI Bus Signals (Bridge 32-bit, 100MHz)
     --------------------------------------------------------------------
 
-    signal mem_awvalid : std_logic;
-    signal mem_awready : std_logic;
-    signal mem_awaddr  : std_logic_vector(30 downto 0);
-    signal mem_awid    : std_logic_vector(3 downto 0);
-    signal mem_awlen   : std_logic_vector(7 downto 0);
-    signal mem_awburst : std_logic_vector(1 downto 0);
+    signal bridge_awaddr  : std_logic_vector(31 downto 0);
+    signal bridge_awvalid : std_logic;
+    signal bridge_awready : std_logic;
+    signal bridge_awid    : std_logic_vector(3 downto 0);
+    signal bridge_awlen   : std_logic_vector(7 downto 0);
+    signal bridge_awburst : std_logic_vector(1 downto 0);
 
-    signal mem_wvalid  : std_logic;
-    signal mem_wready  : std_logic;
-    signal mem_wdata   : std_logic_vector(31 downto 0);
-    signal mem_wstrb   : std_logic_vector(3 downto 0);
-    signal mem_wlast   : std_logic;
+    signal bridge_wvalid  : std_logic;
+    signal bridge_wready  : std_logic;
+    signal bridge_wdata   : std_logic_vector(31 downto 0);
+    signal bridge_wstrb   : std_logic_vector(3 downto 0);
+    signal bridge_wlast   : std_logic;
 
-    signal mem_bvalid  : std_logic;
-    signal mem_bready  : std_logic;
-    signal mem_bresp   : std_logic_vector(1 downto 0);
-    signal mem_bid     : std_logic_vector(3 downto 0);
+    signal bridge_bvalid  : std_logic;
+    signal bridge_bready  : std_logic;
+    signal bridge_bresp   : std_logic_vector(1 downto 0);
+    signal bridge_bid     : std_logic_vector(3 downto 0);
 
-    signal mem_arvalid : std_logic;
-    signal mem_arready : std_logic;
-    signal mem_araddr  : std_logic_vector(30 downto 0);
-    signal mem_arid    : std_logic_vector(3 downto 0);
-    signal mem_arlen   : std_logic_vector(7 downto 0);
-    signal mem_arburst : std_logic_vector(1 downto 0);
+    signal bridge_araddr  : std_logic_vector(31 downto 0);
+    signal bridge_arvalid : std_logic;
+    signal bridge_arready : std_logic;
+    signal bridge_arid    : std_logic_vector(3 downto 0);
+    signal bridge_arlen   : std_logic_vector(7 downto 0);
+    signal bridge_arburst : std_logic_vector(1 downto 0);
 
-    signal mem_rvalid  : std_logic;
-    signal mem_rready  : std_logic;
-    signal mem_rdata   : std_logic_vector(31 downto 0);
-    signal mem_rresp   : std_logic_vector(1 downto 0);
-    signal mem_rid     : std_logic_vector(3 downto 0);
-    signal mem_rlast   : std_logic;
+    signal bridge_rvalid  : std_logic;
+    signal bridge_rready  : std_logic;
+    signal bridge_rdata   : std_logic_vector(31 downto 0);
+    signal bridge_rresp   : std_logic_vector(1 downto 0);
+    signal bridge_rid     : std_logic_vector(3 downto 0);
+    signal bridge_rlast   : std_logic;
+
+    --------------------------------------------------------------------
+    -- AXI Clock Converter (100 -> UI, 32-bit)
+    --------------------------------------------------------------------
+
+    signal cc_awaddr  : std_logic_vector(31 downto 0);
+    signal cc_awvalid : std_logic;
+    signal cc_awready : std_logic;
+    signal cc_awid    : std_logic_vector(3 downto 0);
+    signal cc_awlen   : std_logic_vector(7 downto 0);
+    signal cc_awburst : std_logic_vector(1 downto 0);
+
+    signal cc_wvalid  : std_logic;
+    signal cc_wready  : std_logic;
+    signal cc_wdata   : std_logic_vector(31 downto 0);
+    signal cc_wstrb   : std_logic_vector(3 downto 0);
+    signal cc_wlast   : std_logic;
+
+    signal cc_bvalid  : std_logic;
+    signal cc_bready  : std_logic;
+    signal cc_bresp   : std_logic_vector(1 downto 0);
+    signal cc_bid     : std_logic_vector(3 downto 0);
+
+    signal cc_araddr  : std_logic_vector(31 downto 0);
+    signal cc_arvalid : std_logic;
+    signal cc_arready : std_logic;
+    signal cc_arid    : std_logic_vector(3 downto 0);
+    signal cc_arlen   : std_logic_vector(7 downto 0);
+    signal cc_arburst : std_logic_vector(1 downto 0);
+
+    signal cc_rvalid  : std_logic;
+    signal cc_rready  : std_logic;
+    signal cc_rdata   : std_logic_vector(31 downto 0);
+    signal cc_rresp   : std_logic_vector(1 downto 0);
+    signal cc_rid     : std_logic_vector(3 downto 0);
+    signal cc_rlast   : std_logic;
+
+    --------------------------------------------------------------------
+    -- AXI Crossbar 0 (Splitter: Bridge -> DDR4 or CDMA)
+    --------------------------------------------------------------------
+
+    -- M00: to DDR4 Path (32-bit, UI)
+    signal x0_m00_awaddr  : std_logic_vector(31 downto 0);
+    signal x0_m00_awvalid : std_logic;
+    signal x0_m00_awready : std_logic;
+    signal x0_m00_awid    : std_logic_vector(3 downto 0);
+    signal x0_m00_awlen   : std_logic_vector(7 downto 0);
+    signal x0_m00_awburst : std_logic_vector(1 downto 0);
+
+    signal x0_m00_wvalid  : std_logic;
+    signal x0_m00_wready  : std_logic;
+    signal x0_m00_wdata   : std_logic_vector(31 downto 0);
+    signal x0_m00_wstrb   : std_logic_vector(3 downto 0);
+    signal x0_m00_wlast   : std_logic;
+
+    signal x0_m00_bvalid  : std_logic;
+    signal x0_m00_bready  : std_logic;
+    signal x0_m00_bresp   : std_logic_vector(1 downto 0);
+    signal x0_m00_bid     : std_logic_vector(3 downto 0);
+
+    signal x0_m00_araddr  : std_logic_vector(31 downto 0);
+    signal x0_m00_arvalid : std_logic;
+    signal x0_m00_arready : std_logic;
+    signal x0_m00_arid    : std_logic_vector(3 downto 0);
+    signal x0_m00_arlen   : std_logic_vector(7 downto 0);
+    signal x0_m00_arburst : std_logic_vector(1 downto 0);
+
+    signal x0_m00_rvalid  : std_logic;
+    signal x0_m00_rready : std_logic;
+    signal x0_m00_rdata   : std_logic_vector(31 downto 0);
+    signal x0_m00_rresp   : std_logic_vector(1 downto 0);
+    signal x0_m00_rid     : std_logic_vector(3 downto 0);
+    signal x0_m00_rlast   : std_logic;
+
+    -- M01: to CDMA Path (32-bit, UI)
+    signal x0_m01_awaddr  : std_logic_vector(31 downto 0);
+    signal x0_m01_awvalid : std_logic;
+    signal x0_m01_awready : std_logic;
+    signal x0_m01_awid    : std_logic_vector(3 downto 0);
+    signal x0_m01_awlen   : std_logic_vector(7 downto 0);
+    signal x0_m01_awburst : std_logic_vector(1 downto 0);
+
+    signal x0_m01_wvalid  : std_logic;
+    signal x0_m01_wready  : std_logic;
+    signal x0_m01_wdata   : std_logic_vector(31 downto 0);
+    signal x0_m01_wstrb   : std_logic_vector(3 downto 0);
+    signal x0_m01_wlast   : std_logic;
+
+    signal x0_m01_bvalid  : std_logic;
+    signal x0_m01_bready  : std_logic;
+    signal x0_m01_bresp   : std_logic_vector(1 downto 0);
+    signal x0_m01_bid     : std_logic_vector(3 downto 0);
+
+    signal x0_m01_araddr  : std_logic_vector(31 downto 0);
+    signal x0_m01_arvalid : std_logic;
+    signal x0_m01_arready : std_logic;
+    signal x0_m01_arid    : std_logic_vector(3 downto 0);
+    signal x0_m01_arlen   : std_logic_vector(7 downto 0);
+    signal x0_m01_arburst : std_logic_vector(1 downto 0);
+
+    signal x0_m01_rvalid  : std_logic;
+    signal x0_m01_rready  : std_logic;
+    signal x0_m01_rdata   : std_logic_vector(31 downto 0);
+    signal x0_m01_rresp   : std_logic_vector(1 downto 0);
+    signal x0_m01_rid     : std_logic_vector(3 downto 0);
+    signal x0_m01_rlast   : std_logic;
+
+    --------------------------------------------------------------------
+    -- AXI Protocol Converter (AXI4 -> AXI4Lite)
+    --------------------------------------------------------------------
+
+    signal prot_awaddr  : std_logic_vector(31 downto 0);
+    signal prot_awvalid : std_logic;
+    signal prot_awready : std_logic;
+    signal prot_wvalid  : std_logic;
+    signal prot_wready  : std_logic;
+    signal prot_wdata   : std_logic_vector(31 downto 0);
+    signal prot_wstrb   : std_logic_vector(3 downto 0);
+    signal prot_bvalid  : std_logic;
+    signal prot_bready  : std_logic;
+    signal prot_bresp   : std_logic_vector(1 downto 0);
+    signal prot_araddr  : std_logic_vector(31 downto 0);
+    signal prot_arvalid : std_logic;
+    signal prot_arready : std_logic;
+    signal prot_rvalid  : std_logic;
+    signal prot_rready  : std_logic;
+    signal prot_rdata   : std_logic_vector(31 downto 0);
+    signal prot_rresp   : std_logic_vector(1 downto 0);
 
     --------------------------------------------------------------------
     -- AXI Data Width Conversion (32 -> 256)
@@ -137,13 +265,53 @@ architecture RTL of top is
     signal dwc_rlast   : std_logic;
 
     --------------------------------------------------------------------
-    -- AXI Clock Conversion (100 -> UI)
+    -- AXI CDMA Master (256-bit, UI)
+    --------------------------------------------------------------------
+
+    signal cdma_awaddr  : std_logic_vector(31 downto 0);
+    signal cdma_awvalid : std_logic;
+    signal cdma_awready : std_logic;
+    signal cdma_awlen   : std_logic_vector(7 downto 0);
+    signal cdma_awsize  : std_logic_vector(2 downto 0);
+    signal cdma_awburst : std_logic_vector(1 downto 0);
+    signal cdma_awprot  : std_logic_vector(2 downto 0);
+    signal cdma_awcache : std_logic_vector(3 downto 0);
+
+    signal cdma_wvalid  : std_logic;
+    signal cdma_wready  : std_logic;
+    signal cdma_wdata   : std_logic_vector(255 downto 0);
+    signal cdma_wstrb   : std_logic_vector(31 downto 0);
+    signal cdma_wlast   : std_logic;
+
+    signal cdma_bvalid  : std_logic;
+    signal cdma_bready  : std_logic;
+    signal cdma_bresp   : std_logic_vector(1 downto 0);
+
+    signal cdma_araddr  : std_logic_vector(31 downto 0);
+    signal cdma_arvalid : std_logic;
+    signal cdma_arready : std_logic;
+    signal cdma_arlen   : std_logic_vector(7 downto 0);
+    signal cdma_arsize  : std_logic_vector(2 downto 0);
+    signal cdma_arburst : std_logic_vector(1 downto 0);
+    signal cdma_arprot  : std_logic_vector(2 downto 0);
+    signal cdma_arcache : std_logic_vector(3 downto 0);
+
+    signal cdma_rvalid  : std_logic;
+    signal cdma_rready  : std_logic;
+    signal cdma_rdata   : std_logic_vector(255 downto 0);
+    signal cdma_rresp   : std_logic_vector(1 downto 0);
+    signal cdma_rlast   : std_logic;
+
+    signal cdma_idle    : std_logic;
+
+    --------------------------------------------------------------------
+    -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
 
     signal m_awvalid : std_logic;
     signal m_awready : std_logic;
     signal m_awaddr  : std_logic_vector(30 downto 0);
-    signal m_awid    : std_logic_vector(3 downto 0);
+    signal m_awid    : std_logic_vector(4 downto 0);
     signal m_awlen   : std_logic_vector(7 downto 0);
     signal m_awburst : std_logic_vector(1 downto 0);
 
@@ -156,12 +324,12 @@ architecture RTL of top is
     signal m_bvalid  : std_logic;
     signal m_bready  : std_logic;
     signal m_bresp   : std_logic_vector(1 downto 0);
-    signal m_bid     : std_logic_vector(3 downto 0);
+    signal m_bid     : std_logic_vector(4 downto 0);
 
     signal m_arvalid : std_logic;
     signal m_arready : std_logic;
     signal m_araddr  : std_logic_vector(30 downto 0);
-    signal m_arid    : std_logic_vector(3 downto 0);
+    signal m_arid    : std_logic_vector(4 downto 0);
     signal m_arlen   : std_logic_vector(7 downto 0);
     signal m_arburst : std_logic_vector(1 downto 0);
 
@@ -169,7 +337,7 @@ architecture RTL of top is
     signal m_rready  : std_logic;
     signal m_rdata   : std_logic_vector(255 downto 0);
     signal m_rresp   : std_logic_vector(1 downto 0);
-    signal m_rid     : std_logic_vector(3 downto 0);
+    signal m_rid     : std_logic_vector(4 downto 0);
     signal m_rlast   : std_logic;
 
 
@@ -181,9 +349,6 @@ architecture RTL of top is
     signal rst_100_n : std_logic;
 
     signal calib_complete : std_logic;
-
-    signal bridge_awaddr : std_logic_vector(31 downto 0);
-    signal bridge_araddr : std_logic_vector(31 downto 0);
 
 begin
 
@@ -277,94 +442,422 @@ begin
             uart_rxd_i     => uart_rxd_i,
             uart_txd_o     => uart_txd_o,
 
-            mem_awvalid_o  => mem_awvalid,
-            mem_awready_i  => mem_awready,
+            mem_awvalid_o  => bridge_awvalid,
+            mem_awready_i  => bridge_awready,
             mem_awaddr_o   => bridge_awaddr,
-            mem_awid_o     => mem_awid,
-            mem_awlen_o    => mem_awlen,
-            mem_awburst_o  => mem_awburst,
+            mem_awid_o     => bridge_awid,
+            mem_awlen_o    => bridge_awlen,
+            mem_awburst_o  => bridge_awburst,
 
-            mem_wvalid_o   => mem_wvalid,
-            mem_wready_i   => mem_wready,
-            mem_wdata_o    => mem_wdata,
-            mem_wstrb_o    => mem_wstrb,
-            mem_wlast_o    => mem_wlast,
+            mem_wvalid_o   => bridge_wvalid,
+            mem_wready_i   => bridge_wready,
+            mem_wdata_o    => bridge_wdata,
+            mem_wstrb_o    => bridge_wstrb,
+            mem_wlast_o    => bridge_wlast,
 
-            mem_bvalid_i   => mem_bvalid,
-            mem_bready_o   => mem_bready,
-            mem_bresp_i    => mem_bresp,
-            mem_bid_i      => mem_bid,
+            mem_bvalid_i   => bridge_bvalid,
+            mem_bready_o   => bridge_bready,
+            mem_bresp_i    => bridge_bresp,
+            mem_bid_i      => bridge_bid,
 
-            mem_arvalid_o  => mem_arvalid,
-            mem_arready_i  => mem_arready,
+            mem_arvalid_o  => bridge_arvalid,
+            mem_arready_i  => bridge_arready,
             mem_araddr_o   => bridge_araddr,
-            mem_arid_o     => mem_arid,
-            mem_arlen_o    => mem_arlen,
-            mem_arburst_o  => mem_arburst,
+            mem_arid_o     => bridge_arid,
+            mem_arlen_o    => bridge_arlen,
+            mem_arburst_o  => bridge_arburst,
 
-            mem_rvalid_i   => mem_rvalid,
-            mem_rready_o   => mem_rready,
-            mem_rdata_i    => mem_rdata,
-            mem_rresp_i    => mem_rresp,
-            mem_rid_i      => mem_rid,
-            mem_rlast_i    => mem_rlast,
+            mem_rvalid_i   => bridge_rvalid,
+            mem_rready_o   => bridge_rready,
+            mem_rdata_i    => bridge_rdata,
+            mem_rresp_i    => bridge_rresp,
+            mem_rid_i      => bridge_rid,
+            mem_rlast_i    => bridge_rlast,
 
             gpio_inputs_i  => (others => '0'),
             gpio_outputs_o => open
         );
 
-    mem_awaddr <= bridge_awaddr(30 downto 0);
-    mem_araddr <= bridge_araddr(30 downto 0);
-
     --------------------------------------------------------------------
-    -- AXI Data Width Converter (32 -> 256)
+    -- AXI Clock Converter (Bridge 100M -> UI, 32-bit)
     --------------------------------------------------------------------
 
     rst_100_n <= not rst_i;
 
-    u_dwidth_conv : entity work.axi_dwidth_converter_0
+    u_clk_conv : entity work.axi_clock_converter_0
         port map (
             s_axi_aclk    => clk_100,
             s_axi_aresetn => rst_100_n,
-            s_axi_awid    => mem_awid,
-            s_axi_awaddr  => mem_awaddr,
-            s_axi_awlen   => mem_awlen,
+            s_axi_awid    => bridge_awid,
+            s_axi_awaddr  => bridge_awaddr,
+            s_axi_awlen   => bridge_awlen,
             s_axi_awsize  => "010", -- 4 bytes (32-bit)
-            s_axi_awburst => mem_awburst,
+            s_axi_awburst => bridge_awburst,
             s_axi_awlock  => "0",
             s_axi_awcache => "0011",
             s_axi_awprot  => "000",
             s_axi_awregion => "0000",
             s_axi_awqos    => "0000",
-            s_axi_awvalid => mem_awvalid,
-            s_axi_awready => mem_awready,
-            s_axi_wdata   => mem_wdata,
-            s_axi_wstrb   => mem_wstrb,
-            s_axi_wlast   => mem_wlast,
-            s_axi_wvalid  => mem_wvalid,
-            s_axi_wready  => mem_wready,
-            s_axi_bid     => mem_bid,
-            s_axi_bresp   => mem_bresp,
-            s_axi_bvalid  => mem_bvalid,
-            s_axi_bready  => mem_bready,
-            s_axi_arid    => mem_arid,
-            s_axi_araddr  => mem_araddr,
-            s_axi_arlen   => mem_arlen,
+            s_axi_awvalid => bridge_awvalid,
+            s_axi_awready => bridge_awready,
+            s_axi_wdata   => bridge_wdata,
+            s_axi_wstrb   => bridge_wstrb,
+            s_axi_wlast   => bridge_wlast,
+            s_axi_wvalid  => bridge_wvalid,
+            s_axi_wready  => bridge_wready,
+            s_axi_bid     => bridge_bid,
+            s_axi_bresp   => bridge_bresp,
+            s_axi_bvalid  => bridge_bvalid,
+            s_axi_bready  => bridge_bready,
+            s_axi_arid    => bridge_arid,
+            s_axi_araddr  => bridge_araddr,
+            s_axi_arlen   => bridge_arlen,
             s_axi_arsize  => "010", -- 4 bytes (32-bit)
-            s_axi_arburst => mem_arburst,
+            s_axi_arburst => bridge_arburst,
             s_axi_arlock  => "0",
             s_axi_arcache => "0011",
             s_axi_arprot  => "000",
             s_axi_arregion => "0000",
             s_axi_arqos    => "0000",
-            s_axi_arvalid => mem_arvalid,
-            s_axi_arready => mem_arready,
-            s_axi_rid     => mem_rid,
-            s_axi_rdata   => mem_rdata,
-            s_axi_rresp   => mem_rresp,
-            s_axi_rlast   => mem_rlast,
-            s_axi_rvalid  => mem_rvalid,
-            s_axi_rready  => mem_rready,
+            s_axi_arvalid => bridge_arvalid,
+            s_axi_arready => bridge_arready,
+            s_axi_rid     => bridge_rid,
+            s_axi_rdata   => bridge_rdata,
+            s_axi_rresp   => bridge_rresp,
+            s_axi_rlast   => bridge_rlast,
+            s_axi_rvalid  => bridge_rvalid,
+            s_axi_rready  => bridge_rready,
+
+            m_axi_aclk    => ui_clk,
+            m_axi_aresetn => ui_rst_n,
+            m_axi_awid    => cc_awid,
+            m_axi_awaddr  => cc_awaddr,
+            m_axi_awlen   => cc_awlen,
+            m_axi_awsize  => open,
+            m_axi_awburst => cc_awburst,
+            m_axi_awlock  => open,
+            m_axi_awcache => open,
+            m_axi_awprot  => open,
+            m_axi_awregion => open,
+            m_axi_awqos    => open,
+            m_axi_awvalid => cc_awvalid,
+            m_axi_awready => cc_awready,
+            m_axi_wdata   => cc_wdata,
+            m_axi_wstrb   => cc_wstrb,
+            m_axi_wlast   => cc_wlast,
+            m_axi_wvalid  => cc_wvalid,
+            m_axi_wready  => cc_wready,
+            m_axi_bid     => cc_bid,
+            m_axi_bresp   => cc_bresp,
+            m_axi_bvalid  => cc_bvalid,
+            m_axi_bready  => cc_bready,
+            m_axi_arid    => cc_arid,
+            m_axi_araddr  => cc_araddr,
+            m_axi_arlen   => cc_arlen,
+            m_axi_arsize  => open,
+            m_axi_arburst => cc_arburst,
+            m_axi_arlock  => open,
+            m_axi_arcache => open,
+            m_axi_arprot  => open,
+            m_axi_arregion => open,
+            m_axi_arqos    => open,
+            m_axi_arvalid => cc_arvalid,
+            m_axi_arready => cc_arready,
+            m_axi_rid     => cc_rid,
+            m_axi_rdata   => cc_rdata,
+            m_axi_rresp   => cc_rresp,
+            m_axi_rlast   => cc_rlast,
+            m_axi_rvalid  => cc_rvalid,
+            m_axi_rready  => cc_rready
+        );
+
+    --------------------------------------------------------------------
+    -- AXI Crossbar 0 (Splitter: Bridge -> DDR4 or CDMA)
+    --------------------------------------------------------------------
+
+    u_xbar_splitter : entity work.axi_crossbar_0
+        port map (
+            aclk          => ui_clk,
+            aresetn       => ui_rst_n,
+
+            s_axi_awid    => cc_awid,
+            s_axi_awaddr  => cc_awaddr,
+            s_axi_awlen   => cc_awlen,
+            s_axi_awsize  => "010",
+            s_axi_awburst => cc_awburst,
+            s_axi_awlock  => "0",
+            s_axi_awcache => "0011",
+            s_axi_awprot  => "000",
+            s_axi_awqos   => "0000",
+            s_axi_awvalid => cc_awvalid,
+            s_axi_awready => cc_awready,
+            s_axi_wdata   => cc_wdata,
+            s_axi_wstrb   => cc_wstrb,
+            s_axi_wlast   => cc_wlast,
+            s_axi_wvalid  => cc_wvalid,
+            s_axi_wready  => cc_wready,
+            s_axi_bid     => cc_bid,
+            s_axi_bresp   => cc_bresp,
+            s_axi_bvalid  => cc_bvalid,
+            s_axi_bready  => cc_bready,
+            s_axi_arid    => cc_arid,
+            s_axi_araddr  => cc_araddr,
+            s_axi_arlen   => cc_arlen,
+            s_axi_arsize  => "010",
+            s_axi_arburst => cc_arburst,
+            s_axi_arlock  => "0",
+            s_axi_arcache => "0011",
+            s_axi_arqos   => "0000",
+            s_axi_arprot  => "000",
+            s_axi_arvalid => cc_arvalid,
+            s_axi_arready => cc_arready,
+            s_axi_rid     => cc_rid,
+            s_axi_rdata   => cc_rdata,
+            s_axi_rresp   => cc_rresp,
+            s_axi_rlast   => cc_rlast,
+            s_axi_rvalid  => cc_rvalid,
+            s_axi_rready  => cc_rready,
+
+            m_axi_awaddr(63 downto 32) => x0_m01_awaddr,
+            m_axi_awaddr(31 downto 0)  => x0_m00_awaddr,
+            m_axi_awlen(15 downto 8)   => x0_m01_awlen,
+            m_axi_awlen(7 downto 0)    => x0_m00_awlen,
+            m_axi_awsize  => open,
+            m_axi_awburst(3 downto 2)  => x0_m01_awburst,
+            m_axi_awburst(1 downto 0)  => x0_m00_awburst,
+            m_axi_awlock  => open,
+            m_axi_awcache => open,
+            m_axi_awprot  => open,
+            m_axi_awregion => open,
+            m_axi_awqos    => open,
+            m_axi_awvalid(1) => x0_m01_awvalid,
+            m_axi_awvalid(0) => x0_m00_awvalid,
+            m_axi_awready(1) => x0_m01_awready,
+            m_axi_awready(0) => x0_m00_awready,
+            m_axi_wdata(63 downto 32)  => x0_m01_wdata,
+            m_axi_wdata(31 downto 0)   => x0_m00_wdata,
+            m_axi_wstrb(7 downto 4)    => x0_m01_wstrb,
+            m_axi_wstrb(3 downto 0)    => x0_m00_wstrb,
+            m_axi_wlast(1) => x0_m01_wlast,
+            m_axi_wlast(0) => x0_m00_wlast,
+            m_axi_wvalid(1) => x0_m01_wvalid,
+            m_axi_wvalid(0) => x0_m00_wvalid,
+            m_axi_wready(1) => x0_m01_wready,
+            m_axi_wready(0) => x0_m00_wready,
+            m_axi_bid(7 downto 4)      => x0_m01_bid,
+            m_axi_bid(3 downto 0)      => x0_m00_bid,
+            m_axi_bresp(3 downto 2)    => x0_m01_bresp,
+            m_axi_bresp(1 downto 0)    => x0_m00_bresp,
+            m_axi_bvalid(1) => x0_m01_bvalid,
+            m_axi_bvalid(0) => x0_m00_bvalid,
+            m_axi_bready(1) => x0_m01_bready,
+            m_axi_bready(0) => x0_m00_bready,
+            m_axi_araddr(63 downto 32) => x0_m01_araddr,
+            m_axi_araddr(31 downto 0)  => x0_m00_araddr,
+            m_axi_arlen(15 downto 8)   => x0_m01_arlen,
+            m_axi_arlen(7 downto 0)    => x0_m00_arlen,
+            m_axi_arsize  => open,
+            m_axi_arburst(3 downto 2)  => x0_m01_arburst,
+            m_axi_arburst(1 downto 0)  => x0_m00_arburst,
+            m_axi_arlock  => open,
+            m_axi_arcache => open,
+            m_axi_arprot  => open,
+            m_axi_arregion => open,
+            m_axi_arqos    => open,
+            m_axi_arvalid(1) => x0_m01_arvalid,
+            m_axi_arvalid(0) => x0_m00_arvalid,
+            m_axi_arready(1) => x0_m01_arready,
+            m_axi_arready(0) => x0_m00_arready,
+            m_axi_rid(7 downto 4)      => x0_m01_rid,
+            m_axi_rid(3 downto 0)      => x0_m00_rid,
+            m_axi_rdata(63 downto 32)  => x0_m01_rdata,
+            m_axi_rdata(31 downto 0)   => x0_m00_rdata,
+            m_axi_rresp(3 downto 2)    => x0_m01_rresp,
+            m_axi_rresp(1 downto 0)    => x0_m00_rresp,
+            m_axi_rlast(1) => x0_m01_rlast,
+            m_axi_rlast(0) => x0_m00_rlast,
+            m_axi_rvalid(1) => x0_m01_rvalid,
+            m_axi_rvalid(0) => x0_m00_rvalid,
+            m_axi_rready(1) => x0_m01_rready,
+            m_axi_rready(0) => x0_m00_rready
+        );
+
+    --------------------------------------------------------------------
+    -- AXI Protocol Converter (AXI4 -> AXI4Lite for CDMA Control)
+    --------------------------------------------------------------------
+
+    u_prot_conv : entity work.axi_protocol_converter_0
+        port map (
+            aclk          => ui_clk,
+            aresetn       => ui_rst_n,
+            s_axi_awaddr  => x0_m01_awaddr,
+            s_axi_awlen   => x0_m01_awlen,
+            s_axi_awsize  => "010",
+            s_axi_awburst => x0_m01_awburst,
+            s_axi_awlock  => "0",
+            s_axi_awcache => "0011",
+            s_axi_awprot  => "000",
+            s_axi_awregion => "0000",
+            s_axi_awqos   => "0000",
+            s_axi_awvalid => x0_m01_awvalid,
+            s_axi_awready => x0_m01_awready,
+            s_axi_wdata   => x0_m01_wdata,
+            s_axi_wstrb   => x0_m01_wstrb,
+            s_axi_wlast   => x0_m01_wlast,
+            s_axi_wvalid  => x0_m01_wvalid,
+            s_axi_wready  => x0_m01_wready,
+            s_axi_bresp   => x0_m01_bresp,
+            s_axi_bvalid  => x0_m01_bvalid,
+            s_axi_bready  => x0_m01_bready,
+            s_axi_araddr  => x0_m01_araddr,
+            s_axi_arlen   => x0_m01_arlen,
+            s_axi_arsize  => "010",
+            s_axi_arburst => x0_m01_arburst,
+            s_axi_arlock  => "0",
+            s_axi_arcache => "0011",
+            s_axi_arregion => "0000",
+            s_axi_arqos   => "0000",
+            s_axi_arprot  => "000",
+            s_axi_arvalid => x0_m01_arvalid,
+            s_axi_arready => x0_m01_arready,
+            s_axi_rdata   => x0_m01_rdata,
+            s_axi_rresp   => x0_m01_rresp,
+            s_axi_rlast   => x0_m01_rlast,
+            s_axi_rvalid  => x0_m01_rvalid,
+            s_axi_rready  => x0_m01_rready,
+
+            m_axi_awaddr  => prot_awaddr,
+            m_axi_awprot  => open,
+            m_axi_awvalid => prot_awvalid,
+            m_axi_awready => prot_awready,
+            m_axi_wdata   => prot_wdata,
+            m_axi_wstrb   => prot_wstrb,
+            m_axi_wvalid  => prot_wvalid,
+            m_axi_wready  => prot_wready,
+            m_axi_bresp   => prot_bresp,
+            m_axi_bvalid  => prot_bvalid,
+            m_axi_bready  => prot_bready,
+            m_axi_araddr  => prot_araddr,
+            m_axi_arprot  => open,
+            m_axi_arvalid => prot_arvalid,
+            m_axi_arready => prot_arready,
+            m_axi_rdata   => prot_rdata,
+            m_axi_rresp   => prot_rresp,
+            m_axi_rvalid  => prot_rvalid,
+            m_axi_rready  => prot_rready
+        );
+
+    --------------------------------------------------------------------
+    -- AXI Central DMA IP Instance
+    --------------------------------------------------------------------
+
+    u_cdma : entity work.axi_cdma_0
+        port map (
+            m_axi_aclk    => ui_clk,
+            s_axi_lite_aclk => ui_clk,
+            s_axi_lite_aresetn => ui_rst_n,
+            cdma_tms      => '0', -- Not used without SG
+            cdma_introut  => open,
+
+            -- Slave Interface (AXI Lite Control)
+            s_axi_lite_awvalid => prot_awvalid,
+            s_axi_lite_awready => prot_awready,
+            s_axi_lite_awaddr  => prot_awaddr(5 downto 0),
+            s_axi_lite_wvalid  => prot_wvalid,
+            s_axi_lite_wready  => prot_wready,
+            s_axi_lite_wdata   => prot_wdata,
+            s_axi_lite_bvalid  => prot_bvalid,
+            s_axi_lite_bready  => prot_bready,
+            s_axi_lite_bresp   => prot_bresp,
+            s_axi_lite_arvalid => prot_arvalid,
+            s_axi_lite_arready => prot_arready,
+            s_axi_lite_araddr  => prot_araddr(5 downto 0),
+            s_axi_lite_rvalid  => prot_rvalid,
+            s_axi_lite_rready  => prot_rready,
+            s_axi_lite_rdata   => prot_rdata,
+            s_axi_lite_rresp   => prot_rresp,
+
+            -- Master Interface (AXI4 256-bit)
+            m_axi_arready => cdma_arready,
+            m_axi_arvalid => cdma_arvalid,
+            m_axi_araddr  => cdma_araddr,
+            m_axi_arlen   => cdma_arlen,
+            m_axi_arsize  => cdma_arsize,
+            m_axi_arburst => cdma_arburst,
+            m_axi_arprot  => cdma_arprot,
+            m_axi_arcache => cdma_arcache,
+            m_axi_rready  => cdma_rready,
+            m_axi_rvalid  => cdma_rvalid,
+            m_axi_rdata   => cdma_rdata,
+            m_axi_rresp   => cdma_rresp,
+            m_axi_rlast   => cdma_rlast,
+            m_axi_awready => cdma_awready,
+            m_axi_awvalid => cdma_awvalid,
+            m_axi_awaddr  => cdma_awaddr,
+            m_axi_awlen   => cdma_awlen,
+            m_axi_awsize  => cdma_awsize,
+            m_axi_awburst => cdma_awburst,
+            m_axi_awprot  => cdma_awprot,
+            m_axi_awcache => cdma_awcache,
+            m_axi_wready  => cdma_wready,
+            m_axi_wvalid  => cdma_wvalid,
+            m_axi_wdata   => cdma_wdata,
+            m_axi_wstrb   => cdma_wstrb,
+            m_axi_wlast   => cdma_wlast,
+            m_axi_bready  => cdma_bready,
+            m_axi_bvalid  => cdma_bvalid,
+            m_axi_bresp   => cdma_bresp,
+
+            cdma_idle     => cdma_idle
+        );
+
+    --------------------------------------------------------------------
+    -- AXI Data Width Converter (32 -> 256)
+    --------------------------------------------------------------------
+
+    u_dwidth_conv : entity work.axi_dwidth_converter_0
+        port map (
+            s_axi_aclk    => ui_clk,
+            s_axi_aresetn => ui_rst_n,
+            s_axi_awid    => x0_m00_awid,
+            s_axi_awaddr  => x0_m00_awaddr(30 downto 0),
+            s_axi_awlen   => x0_m00_awlen,
+            s_axi_awsize  => "010",
+            s_axi_awburst => x0_m00_awburst,
+            s_axi_awlock  => "0",
+            s_axi_awcache => "0011",
+            s_axi_awprot  => "000",
+            s_axi_awregion => "0000",
+            s_axi_awqos    => "0000",
+            s_axi_awvalid => x0_m00_awvalid,
+            s_axi_awready => x0_m00_awready,
+            s_axi_wdata   => x0_m00_wdata,
+            s_axi_wstrb   => x0_m00_wstrb,
+            s_axi_wlast   => x0_m00_wlast,
+            s_axi_wvalid  => x0_m00_wvalid,
+            s_axi_wready  => x0_m00_wready,
+            s_axi_bid     => x0_m00_bid,
+            s_axi_bresp   => x0_m00_bresp,
+            s_axi_bvalid  => x0_m00_bvalid,
+            s_axi_bready  => x0_m00_bready,
+            s_axi_arid    => x0_m00_arid,
+            s_axi_araddr  => x0_m00_araddr(30 downto 0),
+            s_axi_arlen   => x0_m00_arlen,
+            s_axi_arsize  => "010",
+            s_axi_arburst => x0_m00_arburst,
+            s_axi_arlock  => "0",
+            s_axi_arcache => "0011",
+            s_axi_arprot  => "000",
+            s_axi_arregion => "0000",
+            s_axi_arqos    => "0000",
+            s_axi_arvalid => x0_m00_arvalid,
+            s_axi_arready => x0_m00_arready,
+            s_axi_rid     => x0_m00_rid,
+            s_axi_rdata   => x0_m00_rdata,
+            s_axi_rresp   => x0_m00_rresp,
+            s_axi_rlast   => x0_m00_rlast,
+            s_axi_rvalid  => x0_m00_rvalid,
+            s_axi_rready  => x0_m00_rready,
 
             m_axi_awaddr  => dwc_awaddr,
             m_axi_awlen   => dwc_awlen,
@@ -402,59 +895,91 @@ begin
             m_axi_rvalid  => dwc_rvalid,
             m_axi_rready  => dwc_rready
         );
-        dwc_awid <= mem_awid;
-        dwc_arid <= mem_arid;
+        dwc_awid <= x0_m00_awid;
+        dwc_arid <= x0_m00_arid;
 
     --------------------------------------------------------------------
-    -- AXI Clock Converter (100 -> UI)
+    -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
 
-    u_clk_conv : entity work.axi_clock_converter_0
+    u_xbar_merger : entity work.axi_crossbar_1
         port map (
-            s_axi_aclk    => clk_100,
-            s_axi_aresetn => rst_100_n,
-            s_axi_awid    => dwc_awid,
-            s_axi_awaddr  => dwc_awaddr,
-            s_axi_awlen   => dwc_awlen,
-            s_axi_awsize  => "101", -- 32 bytes (256-bit)
-            s_axi_awburst => dwc_awburst,
-            s_axi_awlock  => "0",
-            s_axi_awcache => "0011",
-            s_axi_awprot  => "000",
-            s_axi_awregion => "0000",
-            s_axi_awqos    => "0000",
-            s_axi_awvalid => dwc_awvalid,
-            s_axi_awready => dwc_awready,
-            s_axi_wdata   => dwc_wdata,
-            s_axi_wstrb   => dwc_wstrb,
-            s_axi_wlast   => dwc_wlast,
-            s_axi_wvalid  => dwc_wvalid,
-            s_axi_wready  => dwc_wready,
-            s_axi_bid     => dwc_bid,
-            s_axi_bresp   => dwc_bresp,
-            s_axi_bvalid  => dwc_bvalid,
-            s_axi_bready  => dwc_bready,
-            s_axi_arid    => dwc_arid,
-            s_axi_araddr  => dwc_araddr,
-            s_axi_arlen   => dwc_arlen,
-            s_axi_arsize  => "101", -- 32 bytes (256-bit)
-            s_axi_arburst => dwc_arburst,
-            s_axi_arlock  => "0",
-            s_axi_arcache => "0011",
-            s_axi_arprot  => "000",
-            s_axi_arregion => "0000",
-            s_axi_arqos    => "0000",
-            s_axi_arvalid => dwc_arvalid,
-            s_axi_arready => dwc_arready,
-            s_axi_rid     => dwc_rid,
-            s_axi_rdata   => dwc_rdata,
-            s_axi_rresp   => dwc_rresp,
-            s_axi_rlast   => dwc_rlast,
-            s_axi_rvalid  => dwc_rvalid,
-            s_axi_rready  => dwc_rready,
+            aclk          => ui_clk,
+            aresetn       => ui_rst_n,
 
-            m_axi_aclk    => ui_clk,
-            m_axi_aresetn => ui_rst_n,
+            -- S00: from DWC (Bridge), S01: from CDMA Master
+            s_axi_awid(7 downto 4) => (others => '0'),
+            s_axi_awid(3 downto 0) => '0' & dwc_awid(2 downto 0), -- Bridge path
+            s_axi_awaddr(61 downto 31) => cdma_awaddr(30 downto 0),
+            s_axi_awaddr(30 downto 0)  => dwc_awaddr,
+            s_axi_awlen(15 downto 8)   => cdma_awlen,
+            s_axi_awlen(7 downto 0)    => dwc_awlen,
+            s_axi_awsize(5 downto 3)   => cdma_awsize,
+            s_axi_awsize(2 downto 0)   => "101",
+            s_axi_awburst(3 downto 2)  => cdma_awburst,
+            s_axi_awburst(1 downto 0)  => dwc_awburst,
+            s_axi_awlock(1 downto 0)   => (others => '0'),
+            s_axi_awcache(7 downto 4)  => cdma_awcache,
+            s_axi_awcache(3 downto 0)  => "0011",
+            s_axi_awprot(5 downto 3)   => cdma_awprot,
+            s_axi_awprot(2 downto 0)   => "000",
+            s_axi_awqos(7 downto 0)    => (others => '0'),
+            s_axi_awvalid(1) => cdma_awvalid,
+            s_axi_awvalid(0) => dwc_awvalid,
+            s_axi_awready(1) => cdma_awready,
+            s_axi_awready(0) => dwc_awready,
+            s_axi_wdata(511 downto 256) => cdma_wdata,
+            s_axi_wdata(255 downto 0)   => dwc_wdata,
+            s_axi_wstrb(63 downto 32)   => cdma_wstrb,
+            s_axi_wstrb(31 downto 0)   => dwc_wstrb,
+            s_axi_wlast(1) => cdma_wlast,
+            s_axi_wlast(0) => dwc_wlast,
+            s_axi_wvalid(1) => cdma_wvalid,
+            s_axi_wvalid(0) => dwc_wvalid,
+            s_axi_wready(1) => cdma_wready,
+            s_axi_wready(0) => dwc_wready,
+            s_axi_bid(7 downto 4) => open,
+            s_axi_bid(3 downto 0) => open,
+            s_axi_bresp(3 downto 2) => cdma_bresp,
+            s_axi_bresp(1 downto 0) => dwc_bresp,
+            s_axi_bvalid(1) => cdma_bvalid,
+            s_axi_bvalid(0) => dwc_bvalid,
+            s_axi_bready(1) => cdma_bready,
+            s_axi_bready(0) => dwc_bready,
+            s_axi_arid(7 downto 4) => (others => '0'),
+            s_axi_arid(3 downto 0) => '0' & dwc_arid(2 downto 0), -- Bridge path
+            s_axi_araddr(61 downto 31) => cdma_araddr(30 downto 0),
+            s_axi_araddr(30 downto 0)  => dwc_araddr,
+            s_axi_arlen(15 downto 8)   => cdma_arlen,
+            s_axi_arlen(7 downto 0)    => dwc_arlen,
+            s_axi_arsize(5 downto 3)   => cdma_arsize,
+            s_axi_arsize(2 downto 0)   => "101",
+            s_axi_arburst(3 downto 2)  => cdma_arburst,
+            s_axi_arburst(1 downto 0)  => dwc_arburst,
+            s_axi_arlock(1 downto 0)   => (others => '0'),
+            s_axi_arcache(7 downto 4)  => cdma_arcache,
+            s_axi_arcache(3 downto 0)  => "0011",
+            s_axi_arqos(7 downto 0)    => (others => '0'),
+            s_axi_arprot(5 downto 3)   => cdma_arprot,
+            s_axi_arprot(2 downto 0)   => "000",
+            s_axi_arvalid(1) => cdma_arvalid,
+            s_axi_arvalid(0) => dwc_arvalid,
+            s_axi_arready(1) => cdma_arready,
+            s_axi_arready(0) => dwc_arready,
+            s_axi_rid(7 downto 4) => open,
+            s_axi_rid(3 downto 0) => open,
+            s_axi_rdata(511 downto 256) => cdma_rdata,
+            s_axi_rdata(255 downto 0)   => dwc_rdata,
+            s_axi_rresp(3 downto 2) => cdma_rresp,
+            s_axi_rresp(1 downto 0) => dwc_rresp,
+            s_axi_rlast(1) => cdma_rlast,
+            s_axi_rlast(0) => dwc_rlast,
+            s_axi_rvalid(1) => cdma_rvalid,
+            s_axi_rvalid(0) => dwc_rvalid,
+            s_axi_rready(1) => cdma_rready,
+            s_axi_rready(0) => dwc_rready,
+
+            -- M00: to DDR4
             m_axi_awid    => m_awid,
             m_axi_awaddr  => m_awaddr,
             m_axi_awlen   => m_awlen,
@@ -530,7 +1055,8 @@ begin
 
     -- Default values for other LEDs
     led(0) <= not key(0);
-    led(2) <= not key(2);
+    led(1) <= calib_complete;
+    led(2) <= not cdma_idle;
     led(3) <= not key(3);
 
 end RTL;
