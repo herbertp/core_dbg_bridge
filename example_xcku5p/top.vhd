@@ -302,8 +302,6 @@ architecture RTL of top is
     signal cdma_rresp   : std_logic_vector(1 downto 0);
     signal cdma_rlast   : std_logic;
 
-    signal cdma_idle    : std_logic;
-
     --------------------------------------------------------------------
     -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
@@ -349,6 +347,10 @@ architecture RTL of top is
     signal rst_100_n : std_logic;
 
     signal calib_complete : std_logic;
+
+    -- CDMA activity status for LED(2)
+    signal cdma_active : std_logic;
+    signal cdma_active_cnt : unsigned(23 downto 0);
 
 begin
 
@@ -760,7 +762,6 @@ begin
             m_axi_aclk    => ui_clk,
             s_axi_lite_aclk => ui_clk,
             s_axi_lite_aresetn => ui_rst_n,
-            cdma_tms      => '0', -- Not used without SG
             cdma_introut  => open,
 
             -- Slave Interface (AXI Lite Control)
@@ -810,10 +811,32 @@ begin
             m_axi_wlast   => cdma_wlast,
             m_axi_bready  => cdma_bready,
             m_axi_bvalid  => cdma_bvalid,
-            m_axi_bresp   => cdma_bresp,
-
-            cdma_idle     => cdma_idle
+            m_axi_bresp   => cdma_bresp
         );
+
+    --------------------------------------------------------------------
+    -- LED(2) status logic (Active when CDMA is transferring)
+    --------------------------------------------------------------------
+
+    process (ui_clk)
+    begin
+        if rising_edge(ui_clk) then
+            if ui_rst = '1' then
+                cdma_active <= '0';
+                cdma_active_cnt <= (others => '0');
+            else
+                -- Set active if any master activity is detected
+                if cdma_awvalid = '1' or cdma_arvalid = '1' then
+                    cdma_active <= '1';
+                    cdma_active_cnt <= (others => '1');
+                elsif cdma_active_cnt /= 0 then
+                    cdma_active_cnt <= cdma_active_cnt - 1;
+                else
+                    cdma_active <= '0';
+                end if;
+            end if;
+        end if;
+    end process;
 
     --------------------------------------------------------------------
     -- AXI Data Width Converter (32 -> 256)
@@ -1060,7 +1083,7 @@ begin
     -- Default values for other LEDs
     led(0) <= not key(0);
     led(1) <= calib_complete;
-    led(2) <= not cdma_idle;
+    led(2) <= cdma_active;
     led(3) <= not key(3);
 
 end RTL;
