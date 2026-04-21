@@ -31,7 +31,7 @@ set_property TARGET_LANGUAGE VHDL [current_project]
 
 # STEP#2: configure IPs
 
-# Create DDR4 IP
+# Create DDR4 IP (No IDs)
 generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_MemoryPart {MT40A512M16LY-075} \
   CONFIG.C0.DDR4_DataWidth {32} \
@@ -39,42 +39,44 @@ generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_AxiSelection {true} \
   CONFIG.C0.DDR4_AxiDataWidth {256} \
   CONFIG.C0.DDR4_AxiAddressWidth {31} \
-  CONFIG.C0.DDR4_AxiIDWidth {4} \
+  CONFIG.C0.DDR4_AxiIDWidth {0} \
   CONFIG.C0.DDR4_Ordering {Normal} \
   CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
   CONFIG.C0.DDR4_Ecc {false} \
 ]
 
-# Create AXI Clock Converter (Bridge -> UI)
+# Create AXI Clock Converter (No IDs)
 generate_ip axi_clock_converter xilinx.com ip 2.1 axi_clock_converter_0 [list \
   CONFIG.ADDR_WIDTH {32} \
   CONFIG.DATA_WIDTH {32} \
-  CONFIG.ID_WIDTH {4} \
+  CONFIG.ID_WIDTH {0} \
   CONFIG.ACLK_ASYNC {1} \
 ]
 
-# Create AXI Data Width Converter (Up: 32 -> 256)
+# Create AXI Data Width Converter (Up: 32 -> 256, No IDs)
 generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list \
   CONFIG.ADDR_WIDTH {32} \
   CONFIG.SI_DATA_WIDTH {32} \
   CONFIG.MI_DATA_WIDTH {256} \
-  CONFIG.SI_ID_WIDTH {4} \
+  CONFIG.ID_WIDTH {0} \
 ]
 
-# Create AXI Data Width Converter (Down: 256 -> 32)
+# Create AXI Data Width Converter (Down: 256 -> 32, No IDs)
 generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_1 [list \
   CONFIG.ADDR_WIDTH {32} \
   CONFIG.SI_DATA_WIDTH {256} \
   CONFIG.MI_DATA_WIDTH {32} \
+  CONFIG.ID_WIDTH {0} \
 ]
 
-# Create AXI Crossbar (2x2, 256-bit)
+# Create AXI Crossbar (2x2, 256-bit, No IDs)
 generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_0 [list \
   CONFIG.NUM_SI {2} \
   CONFIG.NUM_MI {2} \
   CONFIG.DATA_WIDTH {256} \
   CONFIG.ADDR_WIDTH {32} \
+  CONFIG.ID_WIDTH {0} \
   CONFIG.M00_A00_BASE_ADDR {0x0000000000000000} \
   CONFIG.M00_A00_ADDR_WIDTH {31} \
   CONFIG.M01_A00_BASE_ADDR {0x0000000080000000} \
