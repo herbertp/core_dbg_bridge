@@ -181,7 +181,7 @@ architecture RTL of top is
     signal calib_complete : std_logic;
     signal dma_busy : std_logic;
 
-    -- Bridge signals in UI domain (after Clock Converter)
+    -- UI Domain Signals (after Clock Converter)
     signal bridge_ui_awid    : std_logic_vector(3 downto 0);
     signal bridge_ui_awaddr  : std_logic_vector(31 downto 0);
     signal bridge_ui_awlen   : std_logic_vector(7 downto 0);
@@ -210,7 +210,7 @@ architecture RTL of top is
     signal bridge_ui_rvalid  : std_logic;
     signal bridge_ui_rready  : std_logic;
 
-    -- Bridge signals in 256-bit domain (after DWIDTH Converter)
+    -- DWIDTH Domain Signals (after up-converter)
     signal bridge_dwc_awaddr  : std_logic_vector(31 downto 0);
     signal bridge_dwc_awlen   : std_logic_vector(7 downto 0);
     signal bridge_dwc_awburst : std_logic_vector(1 downto 0);
@@ -235,7 +235,7 @@ architecture RTL of top is
     signal bridge_dwc_rvalid  : std_logic;
     signal bridge_dwc_rready  : std_logic;
 
-    -- Crossbar signals (SI/MI)
+    -- Aggregate signals for Crossbar
     signal xbar_s_awaddr  : std_logic_vector(63 downto 0);
     signal xbar_s_awlen   : std_logic_vector(15 downto 0);
     signal xbar_s_awsize  : std_logic_vector(5 downto 0);
@@ -500,7 +500,6 @@ begin
             m_axi_rdata => bridge_dwc_rdata, m_axi_rresp => bridge_dwc_rresp, m_axi_rlast => bridge_dwc_rlast, m_axi_rvalid => bridge_dwc_rvalid, m_axi_rready => bridge_dwc_rready
         );
 
-    xbar_s_awid    <= "0000" & "0000"; -- No IDs passed to crossbar
     xbar_s_awaddr  <= dma_m_awaddr & bridge_dwc_awaddr;
     xbar_s_awlen   <= dma_m_awlen & bridge_dwc_awlen;
     xbar_s_awsize  <= "101" & "101";
@@ -523,7 +522,6 @@ begin
     bridge_dwc_bvalid  <= xbar_s_bvalid(0);
     dma_m_bvalid       <= xbar_s_bvalid(1);
     xbar_s_bready      <= dma_m_bready & bridge_dwc_bready;
-    xbar_s_arid    <= "0000" & "0000";
     xbar_s_araddr  <= dma_m_araddr & bridge_dwc_araddr;
     xbar_s_arlen   <= dma_m_arlen & bridge_dwc_arlen;
     xbar_s_arsize  <= "101" & "101";
@@ -548,24 +546,24 @@ begin
     u_crossbar : entity work.axi_crossbar_0
         port map (
             aclk => ui_clk, aresetn => ui_rst_n,
-            s_axi_awid => xbar_s_awid, s_axi_awaddr => xbar_s_awaddr, s_axi_awlen => xbar_s_awlen, s_axi_awsize => xbar_s_awsize,
+            s_axi_awaddr => xbar_s_awaddr, s_axi_awlen => xbar_s_awlen, s_axi_awsize => xbar_s_awsize,
             s_axi_awburst => xbar_s_awburst, s_axi_awlock => xbar_s_awlock, s_axi_awcache => xbar_s_awcache, s_axi_awprot => xbar_s_awprot,
             s_axi_awqos => xbar_s_awqos, s_axi_awvalid => xbar_s_awvalid, s_axi_awready => xbar_s_awready,
             s_axi_wdata => xbar_s_wdata, s_axi_wstrb => xbar_s_wstrb, s_axi_wlast => xbar_s_wlast, s_axi_wvalid => xbar_s_wvalid, s_axi_wready => xbar_s_wready,
-            s_axi_bid => xbar_s_bid, s_axi_bresp => xbar_s_bresp, s_axi_bvalid => xbar_s_bvalid, s_axi_bready => xbar_s_bready,
-            s_axi_arid => xbar_s_arid, s_axi_araddr => xbar_s_araddr, s_axi_arlen => xbar_s_arlen, s_axi_arsize => xbar_s_arsize,
+            s_axi_bresp => xbar_s_bresp, s_axi_bvalid => xbar_s_bvalid, s_axi_bready => xbar_s_bready,
+            s_axi_araddr => xbar_s_araddr, s_axi_arlen => xbar_s_arlen, s_axi_arsize => xbar_s_arsize,
             s_axi_arburst => xbar_s_arburst, s_axi_arlock => xbar_s_arlock, s_axi_arcache => xbar_s_arcache, s_axi_arprot => xbar_s_arprot,
             s_axi_arqos => xbar_s_arqos, s_axi_arvalid => xbar_s_arvalid, s_axi_arready => xbar_s_arready,
-            s_axi_rid => xbar_s_rid, s_axi_rdata => xbar_s_rdata, s_axi_rresp => xbar_s_rresp, s_axi_rlast => xbar_s_rlast, s_axi_rvalid => xbar_s_rvalid, s_axi_rready => xbar_s_rready,
-            m_axi_awid => xbar_m_awid, m_axi_awaddr => xbar_m_awaddr, m_axi_awlen => xbar_m_awlen, m_axi_awsize => xbar_m_awsize,
+            s_axi_rdata => xbar_s_rdata, s_axi_rresp => xbar_s_rresp, s_axi_rlast => xbar_s_rlast, s_axi_rvalid => xbar_s_rvalid, s_axi_rready => xbar_s_rready,
+            m_axi_awaddr => xbar_m_awaddr, m_axi_awlen => xbar_m_awlen, m_axi_awsize => xbar_m_awsize,
             m_axi_awburst => xbar_m_awburst, m_axi_awlock => xbar_m_awlock, m_axi_awcache => xbar_m_awcache, m_axi_awprot => xbar_m_awprot,
             m_axi_awregion => xbar_m_awregion, m_axi_awqos => xbar_m_awqos, m_axi_awvalid => xbar_m_awvalid, m_axi_awready => xbar_m_awready,
             m_axi_wdata => xbar_m_wdata, m_axi_wstrb => xbar_m_wstrb, m_axi_wlast => xbar_m_wlast, m_axi_wvalid => xbar_m_wvalid, m_axi_wready => xbar_m_wready,
-            m_axi_bid => xbar_m_bid, m_axi_bresp => xbar_m_bresp, m_axi_bvalid => xbar_m_bvalid, m_axi_bready => xbar_m_bready,
-            m_axi_arid => xbar_m_arid, m_axi_araddr => xbar_m_araddr, m_axi_arlen => xbar_m_arlen, m_axi_arsize => xbar_m_arsize,
+            m_axi_bresp => xbar_m_bresp, m_axi_bvalid => xbar_m_bvalid, m_axi_bready => xbar_m_bready,
+            m_axi_araddr => xbar_m_araddr, m_axi_arlen => xbar_m_arlen, m_axi_arsize => xbar_m_arsize,
             m_axi_arburst => xbar_m_arburst, m_axi_arlock => xbar_m_arlock, m_axi_arcache => xbar_m_arcache, m_axi_arprot => xbar_m_arprot,
             m_axi_arregion => xbar_m_arregion, m_axi_arqos => xbar_m_arqos, m_axi_arvalid => xbar_m_arvalid, m_axi_arready => xbar_m_arready,
-            m_axi_rid => xbar_m_rid, m_axi_rdata => xbar_m_rdata, m_axi_rresp => xbar_m_rresp, m_axi_rlast => xbar_m_rlast, m_axi_rvalid => xbar_m_rvalid, m_axi_rready => xbar_m_rready
+            m_axi_rdata => xbar_m_rdata, m_axi_rresp => xbar_m_rresp, m_axi_rlast => xbar_m_rlast, m_axi_rvalid => xbar_m_rvalid, m_axi_rready => xbar_m_rready
         );
 
     ddr_awaddr <= xbar_m_awaddr(30 downto 0); ddr_awlen <= xbar_m_awlen(7 downto 0); ddr_awburst <= xbar_m_awburst(1 downto 0); ddr_awvalid <= xbar_m_awvalid(0);
