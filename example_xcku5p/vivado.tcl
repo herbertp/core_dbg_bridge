@@ -81,6 +81,8 @@ generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_0 [list \
   CONFIG.M00_A00_ADDR_WIDTH {31} \
   CONFIG.M01_A00_BASE_ADDR {0x0000000080000000} \
   CONFIG.M01_A00_ADDR_WIDTH {16} \
+  CONFIG.S00_SINGLE_THREAD {1} \
+  CONFIG.S01_SINGLE_THREAD {1} \
 ]
 
 # STEP#3: run synthesis, write checkpoint design
