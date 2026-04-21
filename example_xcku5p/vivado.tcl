@@ -86,6 +86,7 @@ generate_ip axi_cdma xilinx.com ip 4.1 axi_cdma_0 [list \
 # Create AXI Protocol Converter (AXI4 to AXI4Lite for CDMA Control)
 generate_ip axi_protocol_converter xilinx.com ip 2.1 axi_protocol_converter_0 [list \
   CONFIG.TRANSLATION_MODE {2} \
+  CONFIG.ID_WIDTH {4} \
 ]
 
 # Create AXI Crossbar (Merger: Bridge & CDMA -> DDR4)
