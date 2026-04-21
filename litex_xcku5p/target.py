@@ -44,6 +44,18 @@ class _CRG(LiteXModule):
         self.comb += self.cd_ic.clk.eq(self.cd_sys.clk)
         self.comb += self.cd_ic.rst.eq(self.cd_sys.rst)
 
+        # IDelayCtrl
+        # Workaround for USIDELAYCTRL ClockDomain name extraction
+        from litex.soc.cores.clock import xilinx_us
+        _old_ClockDomain_init = xilinx_us.ClockDomain.__init__
+        def _new_ClockDomain_init(self, name=None, reset_less=False):
+            if name is None: name = "ic" # LiteX USIDELAYCTRL expects 'ic'
+            _old_ClockDomain_init(self, name, reset_less)
+
+        xilinx_us.ClockDomain.__init__ = _new_ClockDomain_init
+        self.idelayctrl = USIDELAYCTRL(cd_ref=self.cd_sys4x, cd_sys=self.cd_sys)
+        xilinx_us.ClockDomain.__init__ = _old_ClockDomain_init
+
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
@@ -67,10 +79,10 @@ class BaseSoC(SoCCore):
 
         # DDR4 SDRAM -------------------------------------------------------------------------------
         if not self.integrated_main_ram_size:
-            self.ddrphy = usddrphy.USDDRPHY(platform_obj.request("ddr4"),
+            self.ddrphy = usddrphy.USPDDRPHY(platform_obj.request("ddr4"),
                 memtype          = "DDR4",
                 sys_clk_freq     = sys_clk_freq,
-                iodelay_clk_freq = 200e6)
+                iodelay_clk_freq = 4*sys_clk_freq) # Match sys4x
             self.add_sdram("sdram",
                 phy           = self.ddrphy,
                 module        = MT40A512M16(sys_clk_freq, "1:4"),
