@@ -618,6 +618,8 @@ begin
             s_axi_rvalid  => cc_rvalid,
             s_axi_rready  => cc_rready,
 
+            m_axi_awid(7 downto 4)     => x0_m01_awid,
+            m_axi_awid(3 downto 0)     => x0_m00_awid,
             m_axi_awaddr(63 downto 32) => x0_m01_awaddr,
             m_axi_awaddr(31 downto 0)  => x0_m00_awaddr,
             m_axi_awlen(15 downto 8)   => x0_m01_awlen,
@@ -652,6 +654,8 @@ begin
             m_axi_bvalid(0) => x0_m00_bvalid,
             m_axi_bready(1) => x0_m01_bready,
             m_axi_bready(0) => x0_m00_bready,
+            m_axi_arid(7 downto 4)     => x0_m01_arid,
+            m_axi_arid(3 downto 0)     => x0_m00_arid,
             m_axi_araddr(63 downto 32) => x0_m01_araddr,
             m_axi_araddr(31 downto 0)  => x0_m00_araddr,
             m_axi_arlen(15 downto 8)   => x0_m01_arlen,
@@ -909,7 +913,7 @@ begin
 
             -- S00: from DWC (Bridge), S01: from CDMA Master
             s_axi_awid(7 downto 4) => (others => '0'),
-            s_axi_awid(3 downto 0) => '0' & dwc_awid(2 downto 0), -- Bridge path
+            s_axi_awid(3 downto 0) => dwc_awid,
             s_axi_awaddr(61 downto 31) => cdma_awaddr(30 downto 0),
             s_axi_awaddr(30 downto 0)  => dwc_awaddr,
             s_axi_awlen(15 downto 8)   => cdma_awlen,
@@ -939,7 +943,7 @@ begin
             s_axi_wready(1) => cdma_wready,
             s_axi_wready(0) => dwc_wready,
             s_axi_bid(7 downto 4) => open,
-            s_axi_bid(3 downto 0) => open,
+            s_axi_bid(3 downto 0) => dwc_bid, -- Propagate to Bridge path
             s_axi_bresp(3 downto 2) => cdma_bresp,
             s_axi_bresp(1 downto 0) => dwc_bresp,
             s_axi_bvalid(1) => cdma_bvalid,
@@ -947,7 +951,7 @@ begin
             s_axi_bready(1) => cdma_bready,
             s_axi_bready(0) => dwc_bready,
             s_axi_arid(7 downto 4) => (others => '0'),
-            s_axi_arid(3 downto 0) => '0' & dwc_arid(2 downto 0), -- Bridge path
+            s_axi_arid(3 downto 0) => dwc_arid,
             s_axi_araddr(61 downto 31) => cdma_araddr(30 downto 0),
             s_axi_araddr(30 downto 0)  => dwc_araddr,
             s_axi_arlen(15 downto 8)   => cdma_arlen,
@@ -967,7 +971,7 @@ begin
             s_axi_arready(1) => cdma_arready,
             s_axi_arready(0) => dwc_arready,
             s_axi_rid(7 downto 4) => open,
-            s_axi_rid(3 downto 0) => open,
+            s_axi_rid(3 downto 0) => dwc_rid, -- Propagate to Bridge path
             s_axi_rdata(511 downto 256) => cdma_rdata,
             s_axi_rdata(255 downto 0)   => dwc_rdata,
             s_axi_rresp(3 downto 2) => cdma_rresp,

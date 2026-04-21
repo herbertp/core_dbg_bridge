@@ -79,7 +79,6 @@ generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list 
 # Create AXI Central DMA
 generate_ip axi_cdma xilinx.com ip 4.1 axi_cdma_0 [list \
   CONFIG.C_M_AXI_DATA_WIDTH {256} \
-  CONFIG.C_M_AXI_ADDR_WIDTH {32} \
   CONFIG.C_INCLUDE_SG {0} \
   CONFIG.C_INCLUDE_DRE {1} \
 ]
