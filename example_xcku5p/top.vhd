@@ -229,7 +229,6 @@ architecture RTL of top is
 
     signal xbar_m00_awaddr : std_logic_vector(31 downto 0);
     signal xbar_m00_araddr : std_logic_vector(31 downto 0);
-    signal ddr_arburst_len : std_logic_vector(7 downto 0);
 
     signal xbar_m01_awaddr : std_logic_vector(31 downto 0);
     signal xbar_m01_awlen  : std_logic_vector(7 downto 0);
@@ -533,7 +532,7 @@ begin
             m_axi_arcache => open,
             m_axi_arprot  => open,
             m_axi_arregion => open,
-            m_axi_arqos    => open,
+            m_axi_awqos    => open,
             m_axi_arvalid => bridge_ui_arvalid,
             m_axi_arready => bridge_ui_arready,
             m_axi_rid     => bridge_ui_rid,
@@ -622,8 +621,8 @@ begin
             m_axi_rdata   => bridge_dwc_rdata,
             m_axi_rresp   => bridge_dwc_rresp,
             m_axi_rlast   => bridge_dwc_rlast,
-            m_axi_rvalid  => bridge_dwc_rvalid,
-            m_axi_rready  => bridge_dwc_rready
+            s_axi_rvalid  => bridge_dwc_rvalid,
+            s_axi_rready  => bridge_dwc_rready
         );
 
     -- 3. Crossbar (2x2, 256-bit, UI Clock)
@@ -637,147 +636,177 @@ begin
             s_axi_awlen(7 downto 0)    => bridge_dwc_awlen,
             s_axi_awsize(2 downto 0)   => "101",
             s_axi_awburst(1 downto 0)  => bridge_dwc_awburst,
-            s_axi_awlock(0)            => '0',
+            s_axi_awlock(0 downto 0)   => "0",
             s_axi_awcache(3 downto 0)  => "0011",
             s_axi_awprot(2 downto 0)   => "000",
             s_axi_awqos(3 downto 0)    => "0000",
-            s_axi_awvalid(0)           => bridge_dwc_awvalid,
-            s_axi_awready(0)           => bridge_dwc_awready,
+            s_axi_awvalid(0 downto 0)  => (0 => bridge_dwc_awvalid),
+            s_axi_awready(0 downto 0)  => bridge_dwc_awready_vec(0 downto 0),
             s_axi_wdata(255 downto 0)  => bridge_dwc_wdata,
             s_axi_wstrb(31 downto 0)   => bridge_dwc_wstrb,
-            s_axi_wlast(0)             => bridge_dwc_wlast,
-            s_axi_wvalid(0)            => bridge_dwc_wvalid,
-            s_axi_wready(0)            => bridge_dwc_wready,
+            s_axi_wlast(0 downto 0)    => (0 => bridge_dwc_wlast),
+            s_axi_wvalid(0 downto 0)   => (0 => bridge_dwc_wvalid),
+            s_axi_wready(0 downto 0)   => bridge_dwc_wready_vec(0 downto 0),
             s_axi_bresp(1 downto 0)    => bridge_dwc_bresp,
-            s_axi_bvalid(0)            => bridge_dwc_bvalid,
-            s_axi_bready(0)            => bridge_dwc_bready,
+            s_axi_bvalid(0 downto 0)   => bridge_dwc_bvalid_vec(0 downto 0),
+            s_axi_bready(0 downto 0)   => (0 => bridge_dwc_bready),
             s_axi_araddr(31 downto 0)  => bridge_dwc_araddr,
             s_axi_arlen(7 downto 0)    => bridge_dwc_arlen,
             s_axi_arsize(2 downto 0)   => "101",
             s_axi_arburst(1 downto 0)  => bridge_dwc_arburst,
-            s_axi_arlock(0)            => '0',
+            s_axi_arlock(0 downto 0)   => "0",
             s_axi_arcache(3 downto 0)  => "0011",
             s_axi_arprot(2 downto 0)   => "000",
             s_axi_arqos(3 downto 0)    => "0000",
-            s_axi_arvalid(0)           => bridge_dwc_arvalid,
-            s_axi_arready(0)           => bridge_dwc_arready,
+            s_axi_arvalid(0 downto 0)  => (0 => bridge_dwc_arvalid),
+            s_axi_arready(0 downto 0)  => bridge_dwc_arready_vec(0 downto 0),
             s_axi_rdata(255 downto 0)  => bridge_dwc_rdata,
             s_axi_rresp(1 downto 0)    => bridge_dwc_rresp,
-            s_axi_rlast(0)             => bridge_dwc_rlast,
-            s_axi_rvalid(0)            => bridge_dwc_rvalid,
-            s_axi_rready(0)            => bridge_dwc_rready,
+            s_axi_rlast(0 downto 0)    => bridge_dwc_rlast_vec(0 downto 0),
+            s_axi_rvalid(0 downto 0)   => bridge_dwc_rvalid_vec(0 downto 0),
+            s_axi_rready(0 downto 0)   => (0 => bridge_dwc_rready),
 
             -- S01: DMA Master
             s_axi_awaddr(63 downto 32) => dma_m_awaddr,
             s_axi_awlen(15 downto 8)   => dma_m_awlen,
             s_axi_awsize(5 downto 3)   => "101",
             s_axi_awburst(3 downto 2)  => dma_m_awburst,
-            s_axi_awlock(1)            => '0',
+            s_axi_awlock(1 downto 1)   => "0",
             s_axi_awcache(7 downto 4)  => "0011",
             s_axi_awprot(5 downto 3)   => "000",
             s_axi_awqos(7 downto 4)    => "0000",
-            s_axi_awvalid(1)           => dma_m_awvalid,
-            s_axi_awready(1)           => dma_m_awready,
+            s_axi_awvalid(1 downto 1)  => (1 => dma_m_awvalid),
+            s_axi_awready(1 downto 1)  => dma_m_awready_vec(1 downto 1),
             s_axi_wdata(511 downto 256)=> dma_m_wdata,
             s_axi_wstrb(63 downto 32)  => dma_m_wstrb,
-            s_axi_wlast(1)             => dma_m_wlast,
-            s_axi_wvalid(1)            => dma_m_wvalid,
-            s_axi_wready(1)            => dma_m_wready,
+            s_axi_wlast(1 downto 1)    => (1 => dma_m_wlast),
+            s_axi_wvalid(1 downto 1)   => (1 => dma_m_wvalid),
+            s_axi_wready(1 downto 1)   => dma_m_wready_vec(1 downto 1),
             s_axi_bresp(3 downto 2)    => dma_m_bresp,
-            s_axi_bvalid(1)            => dma_m_bvalid,
-            s_axi_bready(1)            => dma_m_bready,
+            s_axi_bvalid(1 downto 1)   => dma_m_bvalid_vec(1 downto 1),
+            s_axi_bready(1 downto 1)   => (1 => dma_m_bready),
             s_axi_araddr(63 downto 32) => dma_m_araddr,
             s_axi_arlen(15 downto 8)   => dma_m_arlen,
             s_axi_arsize(5 downto 3)   => "101",
             s_axi_arburst(3 downto 2)  => dma_m_arburst,
-            s_axi_arlock(1)            => '0',
+            s_axi_arlock(1 downto 1)   => "0",
             s_axi_arcache(7 downto 4)  => "0011",
             s_axi_arprot(5 downto 3)   => "000",
             s_axi_arqos(7 downto 4)    => "0000",
-            s_axi_arvalid(1)           => dma_m_arvalid,
-            s_axi_arready(1)           => dma_m_arready,
+            s_axi_arvalid(1 downto 1)  => (1 => dma_m_arvalid),
+            s_axi_arready(1 downto 1)  => dma_m_arready_vec(1 downto 1),
             s_axi_rdata(511 downto 256)=> dma_m_rdata,
             s_axi_rresp(3 downto 2)    => dma_m_rresp,
-            s_axi_rlast(1)             => dma_m_rlast,
-            s_axi_rvalid(1)            => dma_m_rvalid,
-            s_axi_rready(1)            => dma_m_rready,
+            s_axi_rlast(1 downto 1)    => dma_m_rlast_vec(1 downto 1),
+            s_axi_rvalid(1 downto 1)   => dma_m_rvalid_vec(1 downto 1),
+            s_axi_rready(1 downto 1)   => (1 => dma_m_rready),
 
             -- M00: DDR4
             m_axi_awaddr(31 downto 0)  => xbar_m00_awaddr,
             m_axi_awlen(7 downto 0)    => ddr_awlen,
             m_axi_awsize(2 downto 0)   => open,
             m_axi_awburst(1 downto 0)  => ddr_awburst,
-            m_axi_awlock(0)            => open,
+            m_axi_awlock(0 downto 0)   => open,
             m_axi_awcache(3 downto 0)  => open,
             m_axi_awprot(2 downto 0)   => open,
             m_axi_awregion(3 downto 0) => open,
             m_axi_awqos(3 downto 0)    => open,
-            m_axi_awvalid(0)           => ddr_awvalid,
-            m_axi_awready(0)           => ddr_awready,
+            m_axi_awvalid(0 downto 0)  => ddr_awvalid_vec(0 downto 0),
+            m_axi_awready(0 downto 0)  => (0 => ddr_awready),
             m_axi_wdata(255 downto 0)  => ddr_wdata,
             m_axi_wstrb(31 downto 0)   => ddr_wstrb,
-            m_axi_wlast(0)             => ddr_wlast,
-            m_axi_wvalid(0)            => ddr_wvalid,
-            m_axi_wready(0)            => ddr_wready,
+            m_axi_wlast(0 downto 0)    => ddr_wlast_vec(0 downto 0),
+            m_axi_wvalid(0 downto 0)   => ddr_wvalid_vec(0 downto 0),
+            m_axi_wready(0 downto 0)   => (0 => ddr_wready),
             m_axi_bid(3 downto 0)      => "0000",
             m_axi_bresp(1 downto 0)    => ddr_bresp,
-            m_axi_bvalid(0)            => ddr_bvalid,
-            m_axi_bready(0)            => ddr_bready,
+            m_axi_bvalid(0 downto 0)   => ddr_bvalid_vec(0 downto 0),
+            m_axi_bready(0 downto 0)   => (0 => ddr_bready),
             m_axi_araddr(31 downto 0)  => xbar_m00_araddr,
             m_axi_arlen(7 downto 0)    => open,
             m_axi_arsize(2 downto 0)   => open,
             m_axi_arburst(1 downto 0)  => ddr_arburst,
-            m_axi_arlock(0)            => open,
+            m_axi_arlock(0 downto 0)   => open,
             m_axi_arcache(3 downto 0)  => open,
             m_axi_arprot(2 downto 0)   => open,
             m_axi_arregion(3 downto 0) => open,
             m_axi_arqos(3 downto 0)    => open,
-            m_axi_arvalid(0)           => ddr_arvalid,
-            m_axi_arready(0)           => ddr_arready,
+            m_axi_arvalid(0 downto 0)  => ddr_arvalid_vec(0 downto 0),
+            m_axi_arready(0 downto 0)  => (0 => ddr_arready),
             m_axi_rid(3 downto 0)      => "0000",
             m_axi_rdata(255 downto 0)  => ddr_rdata,
             m_axi_rresp(1 downto 0)    => ddr_rresp,
-            m_axi_rlast(0)             => ddr_rlast,
-            m_axi_rvalid(0)            => ddr_rvalid,
-            m_axi_rready(0)            => ddr_rready,
+            m_axi_rlast(0 downto 0)    => ddr_rlast_vec(0 downto 0),
+            m_axi_rvalid(0 downto 0)   => ddr_rvalid_vec(0 downto 0),
+            m_axi_rready(0 downto 0)   => (0 => ddr_rready),
 
             -- M01: DMA Config (needs downsizing)
             m_axi_awaddr(63 downto 32) => xbar_m01_awaddr,
             m_axi_awlen(15 downto 8)   => xbar_m01_awlen,
             m_axi_awsize(5 downto 3)   => open,
             m_axi_awburst(3 downto 2)  => xbar_m01_awburst,
-            m_axi_awlock(1)            => open,
+            m_axi_awlock(1 downto 1)   => open,
             m_axi_awcache(7 downto 4)  => open,
             m_axi_awprot(5 downto 3)   => open,
             m_axi_awregion(7 downto 4) => open,
             m_axi_awqos(7 downto 4)    => open,
-            m_axi_awvalid(1)           => xbar_m01_awvalid,
-            m_axi_awready(1)           => xbar_m01_awready,
+            m_axi_awvalid(1 downto 1)  => xbar_m01_awvalid_vec(1 downto 1),
+            m_axi_awready(1 downto 1)  => (1 => xbar_m01_awready),
             m_axi_wdata(511 downto 256)=> xbar_m01_wdata,
             m_axi_wstrb(63 downto 32)  => xbar_m01_wstrb,
-            m_axi_wlast(1)             => xbar_m01_wlast,
-            m_axi_wvalid(1)            => xbar_m01_wvalid,
-            m_axi_wready(1)            => xbar_m01_wready,
+            m_axi_wlast(1 downto 1)    => xbar_m01_wlast_vec(1 downto 1),
+            m_axi_wvalid(1 downto 1)   => xbar_m01_wvalid_vec(1 downto 1),
+            m_axi_wready(1 downto 1)   => (1 => xbar_m01_wready),
             m_axi_bresp(3 downto 2)    => xbar_m01_bresp,
-            m_axi_bvalid(1)            => xbar_m01_bvalid,
-            m_axi_bready(1)            => xbar_m01_bready,
+            m_axi_bvalid(1 downto 1)   => xbar_m01_bvalid_vec(1 downto 1),
+            m_axi_bready(1 downto 1)   => (1 => xbar_m01_bready),
             m_axi_araddr(63 downto 32) => xbar_m01_araddr,
             m_axi_arlen(15 downto 8)   => xbar_m01_arlen,
             m_axi_arsize(5 downto 3)   => open,
             m_axi_arburst(3 downto 2)  => xbar_m01_arburst,
-            m_axi_arlock(1)            => open,
+            m_axi_arlock(1 downto 1)   => open,
             m_axi_arcache(7 downto 4)  => open,
             m_axi_arprot(5 downto 3)   => open,
             m_axi_arregion(7 downto 4) => open,
             m_axi_arqos(7 downto 4)    => open,
-            m_axi_arvalid(1)           => xbar_m01_arvalid,
-            m_axi_arready(1)           => xbar_m01_arready,
+            m_axi_arvalid(1 downto 1)  => xbar_m01_arvalid_vec(1 downto 1),
+            m_axi_arready(1 downto 1)  => (1 => xbar_m01_arready),
             m_axi_rdata(511 downto 256)=> xbar_m01_rdata,
             m_axi_rresp(3 downto 2)    => xbar_m01_rresp,
-            m_axi_rlast(1)             => xbar_m01_rlast,
-            m_axi_rvalid(1)            => xbar_m01_rvalid,
-            m_axi_rready(1)            => xbar_m01_rready
+            m_axi_rlast(1 downto 1)    => xbar_m01_rlast_vec(1 downto 1),
+            m_axi_rvalid(1 downto 1)   => xbar_m01_rvalid_vec(1 downto 1),
+            m_axi_rready(1 downto 1)   => (1 => xbar_m01_rready)
         );
+
+    bridge_dwc_awready <= bridge_dwc_awready_vec(0);
+    bridge_dwc_wready  <= bridge_dwc_wready_vec(0);
+    bridge_dwc_bvalid  <= bridge_dwc_bvalid_vec(0);
+    bridge_dwc_arready <= bridge_dwc_arready_vec(0);
+    bridge_dwc_rvalid  <= bridge_dwc_rvalid_vec(0);
+    bridge_dwc_rlast   <= bridge_dwc_rlast_vec(0);
+
+    dma_m_awready      <= dma_m_awready_vec(1);
+    dma_m_wready       <= dma_m_wready_vec(1);
+    dma_m_bvalid       <= dma_m_bvalid_vec(1);
+    dma_m_arready      <= dma_m_arready_vec(1);
+    dma_m_rvalid       <= dma_m_rvalid_vec(1);
+    dma_m_rlast        <= dma_m_rlast_vec(1);
+
+    ddr_awvalid        <= ddr_awvalid_vec(0);
+    ddr_wvalid         <= ddr_wvalid_vec(0);
+    ddr_wlast          <= ddr_wlast_vec(0);
+    ddr_bvalid         <= ddr_bvalid_vec(0);
+    ddr_arvalid        <= ddr_arvalid_vec(0);
+    ddr_rvalid         <= ddr_rvalid_vec(0);
+    ddr_rlast          <= ddr_rlast_vec(0);
+
+    xbar_m01_awvalid   <= xbar_m01_awvalid_vec(1);
+    xbar_m01_wvalid    <= xbar_m01_wvalid_vec(1);
+    xbar_m01_wlast     <= xbar_m01_wlast_vec(1);
+    xbar_m01_bvalid    <= xbar_m01_bvalid_vec(1);
+    xbar_m01_arvalid   <= xbar_m01_arvalid_vec(1);
+    xbar_m01_rvalid    <= xbar_m01_rvalid_vec(1);
+    xbar_m01_rlast     <= xbar_m01_rlast_vec(1);
 
     ddr_awaddr <= xbar_m00_awaddr(30 downto 0);
     ddr_araddr <= xbar_m00_araddr(30 downto 0);
@@ -805,9 +834,11 @@ begin
             s_axi_wlast   => xbar_m01_wlast,
             s_axi_wvalid  => xbar_m01_wvalid,
             s_axi_wready  => xbar_m01_wready,
+            s_axi_bid     => "0000",
             s_axi_bresp   => xbar_m01_bresp,
             s_axi_bvalid  => xbar_m01_bvalid,
             s_axi_bready  => xbar_m01_bready,
+            s_axi_arid    => "0000",
             s_axi_araddr  => xbar_m01_araddr,
             s_axi_arlen   => xbar_m01_arlen,
             s_axi_arsize  => "101",
@@ -819,6 +850,7 @@ begin
             s_axi_arqos    => "0000",
             s_axi_arvalid => xbar_m01_arvalid,
             s_axi_arready => xbar_m01_arready,
+            s_axi_rid     => open,
             s_axi_rdata   => xbar_m01_rdata,
             s_axi_rresp   => xbar_m01_rresp,
             s_axi_rlast   => xbar_m01_rlast,
@@ -841,9 +873,11 @@ begin
             m_axi_wlast   => open,
             m_axi_wvalid  => dma_s_wvalid,
             m_axi_wready  => dma_s_wready,
+            m_axi_bid     => open,
             m_axi_bresp   => dma_s_bresp,
             m_axi_bvalid  => dma_s_bvalid,
             m_axi_bready  => dma_s_bready,
+            m_axi_arid    => open,
             m_axi_araddr  => bridge_araddr_dma,
             m_axi_arlen   => open,
             m_axi_arsize  => open,
@@ -855,6 +889,7 @@ begin
             m_axi_arqos    => open,
             m_axi_arvalid => dma_s_arvalid,
             m_axi_arready => dma_s_arready,
+            m_axi_rid     => open,
             m_axi_rdata   => dma_s_rdata,
             m_axi_rresp   => dma_s_rresp,
             m_axi_rlast   => open,
