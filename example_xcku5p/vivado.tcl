@@ -1,6 +1,6 @@
 # vivado.tcl
 #	RK-XCKU5P-F simple example
-#	Version 1.1 - DMA and SmartConnect
+#	Version 1.1 - DMA and AXI Crossbar
 #
 # Copyright (C) 2026 H.Poetzl
 
@@ -46,35 +46,39 @@ generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_Ecc {false} \
 ]
 
-# Create AXI SmartConnect
-# S00: Debug Bridge (32-bit, 100MHz)
-# S01: DMA Master (256-bit, UI clk)
-# M00: DDR4 (256-bit, UI clk)
-# M01: DMA Config (32-bit, UI clk)
-generate_ip axi_smartconnect xilinx.com ip 1.0 axi_smartconnect_0 [list \
-  CONFIG.NUM_SI {2} \
-  CONFIG.NUM_MI {2} \
-  CONFIG.HAS_ARESETN {1} \
-  CONFIG.NUM_CLKS {2} \
-  CONFIG.S00_HAS_DATA_FIFO {1} \
-  CONFIG.S01_HAS_DATA_FIFO {1} \
-  CONFIG.M00_HAS_DATA_FIFO {1} \
-  CONFIG.M01_HAS_DATA_FIFO {1} \
-  CONFIG.S00_AXI_ADDR_WIDTH {32} \
-  CONFIG.S01_AXI_ADDR_WIDTH {32} \
-  CONFIG.M00_AXI_ADDR_WIDTH {31} \
-  CONFIG.M01_AXI_ADDR_WIDTH {32} \
-  CONFIG.C0_ADDR_RANGE_0 {0x00000000} \
-  CONFIG.C0_ADDR_RANGE_1 {0x80000000} \
-  CONFIG.M00_ADDR_0 {0x0000000000000000} \
-  CONFIG.M00_SIZE_0 {0x80000000} \
-  CONFIG.M01_ADDR_0 {0x0000000080000000} \
-  CONFIG.M01_SIZE_0 {0x00010000} \
+# Create AXI Clock Converter (Bridge -> UI)
+generate_ip axi_clock_converter xilinx.com ip 2.1 axi_clock_converter_0 [list \
+  CONFIG.ADDR_WIDTH {32} \
+  CONFIG.DATA_WIDTH {32} \
+  CONFIG.ID_WIDTH {4} \
+  CONFIG.ACLK_ASYNC {1} \
 ]
 
-# Note: In Non-Project Mode, SmartConnect address mapping can be tricky via properties.
-# If the above property-based mapping fails, we might need a more manual crossbar approach
-# but SmartConnect is generally preferred for its automatic width/clock handling.
+# Create AXI Data Width Converter (Up: 32 -> 256)
+generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_0 [list \
+  CONFIG.ADDR_WIDTH {32} \
+  CONFIG.SI_DATA_WIDTH {32} \
+  CONFIG.MI_DATA_WIDTH {256} \
+]
+
+# Create AXI Data Width Converter (Down: 256 -> 32)
+generate_ip axi_dwidth_converter xilinx.com ip 2.1 axi_dwidth_converter_1 [list \
+  CONFIG.ADDR_WIDTH {32} \
+  CONFIG.SI_DATA_WIDTH {256} \
+  CONFIG.MI_DATA_WIDTH {32} \
+]
+
+# Create AXI Crossbar (2x2, 256-bit)
+generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_0 [list \
+  CONFIG.NUM_SI {2} \
+  CONFIG.NUM_MI {2} \
+  CONFIG.DATA_WIDTH {256} \
+  CONFIG.ADDR_WIDTH {32} \
+  CONFIG.M00_A00_BASE_ADDR {0x0000000000000000} \
+  CONFIG.M00_A00_ADDR_WIDTH {31} \
+  CONFIG.M01_A00_BASE_ADDR {0x0000000080000000} \
+  CONFIG.M01_A00_ADDR_WIDTH {16} \
+]
 
 # STEP#3: run synthesis, write checkpoint design
 

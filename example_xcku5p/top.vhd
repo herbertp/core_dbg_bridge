@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 --  top.vhd
 --	XCKU5P simple VHDL example
---	Version 1.2 - DMA and SmartConnect
+--	Version 1.2 - DMA and AXI Crossbar
 --
 --  Copyright (C) 2026 H.Poetzl
 --
@@ -183,7 +183,78 @@ architecture RTL of top is
     signal calib_complete : std_logic;
     signal dma_busy : std_logic;
 
-    -- Internal signals for dummy address ports
+    -- Internal connectivity signals
+    signal bridge_ui_awid    : std_logic_vector(3 downto 0);
+    signal bridge_ui_awaddr  : std_logic_vector(31 downto 0);
+    signal bridge_ui_awlen   : std_logic_vector(7 downto 0);
+    signal bridge_ui_awburst : std_logic_vector(1 downto 0);
+    signal bridge_ui_wdata   : std_logic_vector(31 downto 0);
+    signal bridge_ui_wstrb   : std_logic_vector(3 downto 0);
+    signal bridge_ui_wlast   : std_logic;
+    signal bridge_ui_wvalid  : std_logic;
+    signal bridge_ui_wready  : std_logic;
+    signal bridge_ui_bid     : std_logic_vector(3 downto 0);
+    signal bridge_ui_bresp   : std_logic_vector(1 downto 0);
+    signal bridge_ui_bvalid  : std_logic;
+    signal bridge_ui_bready  : std_logic;
+    signal bridge_ui_arid    : std_logic_vector(3 downto 0);
+    signal bridge_ui_araddr  : std_logic_vector(31 downto 0);
+    signal bridge_ui_arlen   : std_logic_vector(7 downto 0);
+    signal bridge_ui_arburst : std_logic_vector(1 downto 0);
+    signal bridge_ui_rdata   : std_logic_vector(31 downto 0);
+    signal bridge_ui_rresp   : std_logic_vector(1 downto 0);
+    signal bridge_ui_rlast   : std_logic;
+    signal bridge_ui_rvalid  : std_logic;
+    signal bridge_ui_rready  : std_logic;
+
+    signal bridge_dwc_awaddr  : std_logic_vector(31 downto 0);
+    signal bridge_dwc_awlen   : std_logic_vector(7 downto 0);
+    signal bridge_dwc_awburst : std_logic_vector(1 downto 0);
+    signal bridge_dwc_wdata   : std_logic_vector(255 downto 0);
+    signal bridge_dwc_wstrb   : std_logic_vector(31 downto 0);
+    signal bridge_dwc_wlast   : std_logic;
+    signal bridge_dwc_wvalid  : std_logic;
+    signal bridge_dwc_wready  : std_logic;
+    signal bridge_dwc_bresp   : std_logic_vector(1 downto 0);
+    signal bridge_dwc_bvalid  : std_logic;
+    signal bridge_dwc_bready  : std_logic;
+    signal bridge_dwc_araddr  : std_logic_vector(31 downto 0);
+    signal bridge_dwc_arlen   : std_logic_vector(7 downto 0);
+    signal bridge_dwc_arburst : std_logic_vector(1 downto 0);
+    signal bridge_dwc_rdata   : std_logic_vector(255 downto 0);
+    signal bridge_dwc_rresp   : std_logic_vector(1 downto 0);
+    signal bridge_dwc_rlast   : std_logic;
+    signal bridge_dwc_rvalid  : std_logic;
+    signal bridge_dwc_rready  : std_logic;
+
+    signal xbar_m00_awaddr : std_logic_vector(31 downto 0);
+    signal xbar_m00_araddr : std_logic_vector(31 downto 0);
+    signal ddr_arburst_len : std_logic_vector(7 downto 0);
+
+    signal xbar_m01_awaddr : std_logic_vector(31 downto 0);
+    signal xbar_m01_awlen  : std_logic_vector(7 downto 0);
+    signal xbar_m01_awburst: std_logic_vector(1 downto 0);
+    signal xbar_m01_awvalid: std_logic;
+    signal xbar_m01_awready: std_logic;
+    signal xbar_m01_wdata  : std_logic_vector(255 downto 0);
+    signal xbar_m01_wstrb  : std_logic_vector(31 downto 0);
+    signal xbar_m01_wlast  : std_logic;
+    signal xbar_m01_wvalid : std_logic;
+    signal xbar_m01_wready : std_logic;
+    signal xbar_m01_bresp  : std_logic_vector(1 downto 0);
+    signal xbar_m01_bvalid : std_logic;
+    signal xbar_m01_bready : std_logic;
+    signal xbar_m01_araddr : std_logic_vector(31 downto 0);
+    signal xbar_m01_arlen  : std_logic_vector(7 downto 0);
+    signal xbar_m01_arburst: std_logic_vector(1 downto 0);
+    signal xbar_m01_arvalid: std_logic;
+    signal xbar_m01_arready: std_logic;
+    signal xbar_m01_rdata  : std_logic_vector(255 downto 0);
+    signal xbar_m01_rresp  : std_logic_vector(1 downto 0);
+    signal xbar_m01_rlast  : std_logic;
+    signal xbar_m01_rvalid : std_logic;
+    signal xbar_m01_rready : std_logic;
+
     signal bridge_awaddr_dma : std_logic_vector(31 downto 0);
     signal bridge_araddr_dma : std_logic_vector(31 downto 0);
 
@@ -380,151 +451,415 @@ begin
         );
 
     --------------------------------------------------------------------
-    -- AXI SmartConnect
+    -- AXI Connectivity Logic
     --------------------------------------------------------------------
 
     rst_100_n <= not rst_i;
 
-    u_smartconnect : entity work.axi_smartconnect_0
+    -- 1. Clock Converter (Bridge 100MHz -> UI Clock)
+    u_clk_conv : entity work.axi_clock_converter_0
+        port map (
+            s_axi_aclk    => clk_100,
+            s_axi_aresetn => rst_100_n,
+            s_axi_awid    => bridge_awid,
+            s_axi_awaddr  => bridge_awaddr,
+            s_axi_awlen   => bridge_awlen,
+            s_axi_awsize  => "010",
+            s_axi_awburst => bridge_awburst,
+            s_axi_awlock  => '0',
+            s_axi_awcache => "0011",
+            s_axi_awprot  => "000",
+            s_axi_awregion => "0000",
+            s_axi_awqos    => "0000",
+            s_axi_awvalid => bridge_awvalid,
+            s_axi_awready => bridge_awready,
+            s_axi_wdata   => bridge_wdata,
+            s_axi_wstrb   => bridge_wstrb,
+            s_axi_wlast   => bridge_wlast,
+            s_axi_wvalid  => bridge_wvalid,
+            s_axi_wready  => bridge_wready,
+            s_axi_bid     => bridge_bid,
+            s_axi_bresp   => bridge_bresp,
+            s_axi_bvalid  => bridge_bvalid,
+            s_axi_bready  => bridge_bready,
+            s_axi_arid    => bridge_arid,
+            s_axi_araddr  => bridge_araddr,
+            s_axi_arlen   => bridge_arlen,
+            s_axi_arsize  => "010",
+            s_axi_arburst => bridge_arburst,
+            s_axi_arlock  => '0',
+            s_axi_arcache => "0011",
+            s_axi_arprot  => "000",
+            s_axi_arregion => "0000",
+            s_axi_arqos    => "0000",
+            s_axi_arvalid => bridge_arvalid,
+            s_axi_arready => bridge_arready,
+            s_axi_rid     => bridge_rid,
+            s_axi_rdata   => bridge_rdata,
+            s_axi_rresp   => bridge_rresp,
+            s_axi_rlast   => bridge_rlast,
+            s_axi_rvalid  => bridge_rvalid,
+            s_axi_rready  => bridge_rready,
+
+            m_axi_aclk    => ui_clk,
+            m_axi_aresetn => ui_rst_n,
+            m_axi_awid    => bridge_ui_awid,
+            m_axi_awaddr  => bridge_ui_awaddr,
+            m_axi_awlen   => bridge_ui_awlen,
+            m_axi_awsize  => open,
+            m_axi_awburst => bridge_ui_awburst,
+            m_axi_awlock  => open,
+            m_axi_awcache => open,
+            m_axi_awprot  => open,
+            m_axi_awregion => open,
+            m_axi_awqos    => open,
+            m_axi_awvalid => bridge_ui_awvalid,
+            m_axi_awready => bridge_ui_awready,
+            m_axi_wdata   => bridge_ui_wdata,
+            m_axi_wstrb   => bridge_ui_wstrb,
+            m_axi_wlast   => bridge_ui_wlast,
+            m_axi_wvalid  => bridge_ui_wvalid,
+            m_axi_wready  => bridge_ui_wready,
+            m_axi_bid     => bridge_ui_bid,
+            m_axi_bresp   => bridge_ui_bresp,
+            m_axi_bvalid  => bridge_ui_bvalid,
+            m_axi_bready  => bridge_ui_bready,
+            m_axi_arid    => bridge_ui_arid,
+            m_axi_araddr  => bridge_ui_araddr,
+            m_axi_arlen   => bridge_ui_arlen,
+            m_axi_arsize  => open,
+            m_axi_arburst => bridge_ui_arburst,
+            m_axi_arlock  => open,
+            m_axi_arcache => open,
+            m_axi_arprot  => open,
+            m_axi_arregion => open,
+            m_axi_arqos    => open,
+            m_axi_arvalid => bridge_ui_arvalid,
+            m_axi_arready => bridge_ui_arready,
+            m_axi_rid     => bridge_ui_rid,
+            m_axi_rdata   => bridge_ui_rdata,
+            m_axi_rresp   => bridge_ui_rresp,
+            m_axi_rlast   => bridge_ui_rlast,
+            m_axi_rvalid  => bridge_ui_rvalid,
+            m_axi_rready  => bridge_ui_rready
+        );
+
+    -- 2. Data Width Converter (Bridge 32-bit -> 256-bit)
+    u_dwidth_up : entity work.axi_dwidth_converter_0
+        port map (
+            s_axi_aclk    => ui_clk,
+            s_axi_aresetn => ui_rst_n,
+            s_axi_awid    => bridge_ui_awid,
+            s_axi_awaddr  => bridge_ui_awaddr,
+            s_axi_awlen   => bridge_ui_awlen,
+            s_axi_awsize  => "010",
+            s_axi_awburst => bridge_ui_awburst,
+            s_axi_awlock  => '0',
+            s_axi_awcache => "0011",
+            s_axi_awprot  => "000",
+            s_axi_awregion => "0000",
+            s_axi_awqos    => "0000",
+            s_axi_awvalid => bridge_ui_awvalid,
+            s_axi_awready => bridge_ui_awready,
+            s_axi_wdata   => bridge_ui_wdata,
+            s_axi_wstrb   => bridge_ui_wstrb,
+            s_axi_wlast   => bridge_ui_wlast,
+            s_axi_wvalid  => bridge_ui_wvalid,
+            s_axi_wready  => bridge_ui_wready,
+            s_axi_bid     => bridge_ui_bid,
+            s_axi_bresp   => bridge_ui_bresp,
+            s_axi_bvalid  => bridge_ui_bvalid,
+            s_axi_bready  => bridge_ui_bready,
+            s_axi_arid    => bridge_ui_arid,
+            s_axi_araddr  => bridge_ui_araddr,
+            s_axi_arlen   => bridge_ui_arlen,
+            s_axi_arsize  => "010",
+            s_axi_arburst => bridge_ui_arburst,
+            s_axi_arlock  => '0',
+            s_axi_arcache => "0011",
+            s_axi_arprot  => "000",
+            s_axi_arregion => "0000",
+            s_axi_arqos    => "0000",
+            s_axi_arvalid => bridge_ui_arvalid,
+            s_axi_arready => bridge_ui_arready,
+            s_axi_rid     => bridge_ui_rid,
+            s_axi_rdata   => bridge_ui_rdata,
+            s_axi_rresp   => bridge_ui_rresp,
+            s_axi_rlast   => bridge_ui_rlast,
+            s_axi_rvalid  => bridge_ui_rvalid,
+            s_axi_rready  => bridge_ui_rready,
+
+            m_axi_awaddr  => bridge_dwc_awaddr,
+            m_axi_awlen   => bridge_dwc_awlen,
+            m_axi_awsize  => open,
+            m_axi_awburst => bridge_dwc_awburst,
+            m_axi_awlock  => open,
+            m_axi_awcache => open,
+            m_axi_awprot  => open,
+            m_axi_awregion => open,
+            m_axi_awqos    => open,
+            m_axi_awvalid => bridge_dwc_awvalid,
+            m_axi_awready => bridge_dwc_awready,
+            m_axi_wdata   => bridge_dwc_wdata,
+            m_axi_wstrb   => bridge_dwc_wstrb,
+            m_axi_wlast   => bridge_dwc_wlast,
+            m_axi_wvalid  => bridge_dwc_wvalid,
+            m_axi_wready  => bridge_dwc_wready,
+            m_axi_bresp   => bridge_dwc_bresp,
+            m_axi_bvalid  => bridge_dwc_bvalid,
+            m_axi_bready  => bridge_dwc_bready,
+            m_axi_araddr  => bridge_dwc_araddr,
+            m_axi_arlen   => bridge_dwc_arlen,
+            m_axi_arsize  => open,
+            m_axi_arburst => bridge_dwc_arburst,
+            m_axi_arlock  => open,
+            m_axi_arcache => open,
+            m_axi_arprot  => open,
+            m_axi_arregion => open,
+            m_axi_arqos    => open,
+            m_axi_arvalid => bridge_dwc_arvalid,
+            m_axi_arready => bridge_dwc_arready,
+            m_axi_rdata   => bridge_dwc_rdata,
+            m_axi_rresp   => bridge_dwc_rresp,
+            m_axi_rlast   => bridge_dwc_rlast,
+            m_axi_rvalid  => bridge_dwc_rvalid,
+            m_axi_rready  => bridge_dwc_rready
+        );
+
+    -- 3. Crossbar (2x2, 256-bit, UI Clock)
+    u_crossbar : entity work.axi_crossbar_0
         port map (
             aclk          => ui_clk,
             aresetn       => ui_rst_n,
 
-            -- S00: Bridge (100MHz)
-            s00_axi_aclk    => clk_100,
-            s00_axi_aresetn => rst_100_n,
-            s00_axi_awid    => bridge_awid,
-            s00_axi_awaddr  => bridge_awaddr,
-            s00_axi_awlen   => bridge_awlen,
-            s00_axi_awsize  => "010", -- 4 bytes
-            s00_axi_awburst => bridge_awburst,
-            s00_axi_awlock  => "0",
-            s00_axi_awcache => "0011",
-            s00_axi_awprot  => "000",
-            s00_axi_awqos   => "0000",
-            s00_axi_awvalid => bridge_awvalid,
-            s00_axi_awready => bridge_awready,
-            s00_axi_wdata   => bridge_wdata,
-            s00_axi_wstrb   => bridge_wstrb,
-            s00_axi_wlast   => bridge_wlast,
-            s00_axi_wvalid  => bridge_wvalid,
-            s00_axi_wready  => bridge_wready,
-            s00_axi_bid     => bridge_bid,
-            s00_axi_bresp   => bridge_bresp,
-            s00_axi_bvalid  => bridge_bvalid,
-            s00_axi_bready  => bridge_bready,
-            s00_axi_arid    => bridge_arid,
-            s00_axi_araddr  => bridge_araddr,
-            s00_axi_arlen   => bridge_arlen,
-            s00_axi_arsize  => "010",
-            s00_axi_arburst => bridge_arburst,
-            s00_axi_arlock  => "0",
-            s00_axi_arcache => "0011",
-            s00_axi_arprot  => "000",
-            s00_axi_arqos   => "0000",
-            s00_axi_arvalid => bridge_arvalid,
-            s00_axi_arready => bridge_arready,
-            s00_axi_rid     => bridge_rid,
-            s00_axi_rdata   => bridge_rdata,
-            s00_axi_rresp   => bridge_rresp,
-            s00_axi_rlast   => bridge_rlast,
-            s00_axi_rvalid  => bridge_rvalid,
-            s00_axi_rready  => bridge_rready,
+            -- S00: Bridge (DWC output)
+            s_axi_awaddr(31 downto 0)  => bridge_dwc_awaddr,
+            s_axi_awlen(7 downto 0)    => bridge_dwc_awlen,
+            s_axi_awsize(2 downto 0)   => "101",
+            s_axi_awburst(1 downto 0)  => bridge_dwc_awburst,
+            s_axi_awlock(0)            => '0',
+            s_axi_awcache(3 downto 0)  => "0011",
+            s_axi_awprot(2 downto 0)   => "000",
+            s_axi_awqos(3 downto 0)    => "0000",
+            s_axi_awvalid(0)           => bridge_dwc_awvalid,
+            s_axi_awready(0)           => bridge_dwc_awready,
+            s_axi_wdata(255 downto 0)  => bridge_dwc_wdata,
+            s_axi_wstrb(31 downto 0)   => bridge_dwc_wstrb,
+            s_axi_wlast(0)             => bridge_dwc_wlast,
+            s_axi_wvalid(0)            => bridge_dwc_wvalid,
+            s_axi_wready(0)            => bridge_dwc_wready,
+            s_axi_bresp(1 downto 0)    => bridge_dwc_bresp,
+            s_axi_bvalid(0)            => bridge_dwc_bvalid,
+            s_axi_bready(0)            => bridge_dwc_bready,
+            s_axi_araddr(31 downto 0)  => bridge_dwc_araddr,
+            s_axi_arlen(7 downto 0)    => bridge_dwc_arlen,
+            s_axi_arsize(2 downto 0)   => "101",
+            s_axi_arburst(1 downto 0)  => bridge_dwc_arburst,
+            s_axi_arlock(0)            => '0',
+            s_axi_arcache(3 downto 0)  => "0011",
+            s_axi_arprot(2 downto 0)   => "000",
+            s_axi_arqos(3 downto 0)    => "0000",
+            s_axi_arvalid(0)           => bridge_dwc_arvalid,
+            s_axi_arready(0)           => bridge_dwc_arready,
+            s_axi_rdata(255 downto 0)  => bridge_dwc_rdata,
+            s_axi_rresp(1 downto 0)    => bridge_dwc_rresp,
+            s_axi_rlast(0)             => bridge_dwc_rlast,
+            s_axi_rvalid(0)            => bridge_dwc_rvalid,
+            s_axi_rready(0)            => bridge_dwc_rready,
 
-            -- S01: DMA Master (UI clk)
-            s01_axi_awaddr  => dma_m_awaddr,
-            s01_axi_awlen   => dma_m_awlen,
-            s01_axi_awsize  => "101", -- 32 bytes
-            s01_axi_awburst => dma_m_awburst,
-            s01_axi_awlock  => "0",
-            s01_axi_awcache => "0011",
-            s01_axi_awprot  => "000",
-            s01_axi_awqos   => "0000",
-            s01_axi_awvalid => dma_m_awvalid,
-            s01_axi_awready => dma_m_awready,
-            s01_axi_wdata   => dma_m_wdata,
-            s01_axi_wstrb   => dma_m_wstrb,
-            s01_axi_wlast   => dma_m_wlast,
-            s01_axi_wvalid  => dma_m_wvalid,
-            s01_axi_wready  => dma_m_wready,
-            s01_axi_bresp   => dma_m_bresp,
-            s01_axi_bvalid  => dma_m_bvalid,
-            s01_axi_bready  => dma_m_bready,
-            s01_axi_araddr  => dma_m_araddr,
-            s01_axi_arlen   => dma_m_arlen,
-            s01_axi_arsize  => "101",
-            s01_axi_arburst => dma_m_arburst,
-            s01_axi_arlock  => "0",
-            s01_axi_arcache => "0011",
-            s01_axi_arprot  => "000",
-            s01_axi_arqos   => "0000",
-            s01_axi_arvalid => dma_m_arvalid,
-            s01_axi_arready => dma_m_arready,
-            s01_axi_rdata   => dma_m_rdata,
-            s01_axi_rresp   => dma_m_rresp,
-            s01_axi_rlast   => dma_m_rlast,
-            s01_axi_rvalid  => dma_m_rvalid,
-            s01_axi_rready  => dma_m_rready,
+            -- S01: DMA Master
+            s_axi_awaddr(63 downto 32) => dma_m_awaddr,
+            s_axi_awlen(15 downto 8)   => dma_m_awlen,
+            s_axi_awsize(5 downto 3)   => "101",
+            s_axi_awburst(3 downto 2)  => dma_m_awburst,
+            s_axi_awlock(1)            => '0',
+            s_axi_awcache(7 downto 4)  => "0011",
+            s_axi_awprot(5 downto 3)   => "000",
+            s_axi_awqos(7 downto 4)    => "0000",
+            s_axi_awvalid(1)           => dma_m_awvalid,
+            s_axi_awready(1)           => dma_m_awready,
+            s_axi_wdata(511 downto 256)=> dma_m_wdata,
+            s_axi_wstrb(63 downto 32)  => dma_m_wstrb,
+            s_axi_wlast(1)             => dma_m_wlast,
+            s_axi_wvalid(1)            => dma_m_wvalid,
+            s_axi_wready(1)            => dma_m_wready,
+            s_axi_bresp(3 downto 2)    => dma_m_bresp,
+            s_axi_bvalid(1)            => dma_m_bvalid,
+            s_axi_bready(1)            => dma_m_bready,
+            s_axi_araddr(63 downto 32) => dma_m_araddr,
+            s_axi_arlen(15 downto 8)   => dma_m_arlen,
+            s_axi_arsize(5 downto 3)   => "101",
+            s_axi_arburst(3 downto 2)  => dma_m_arburst,
+            s_axi_arlock(1)            => '0',
+            s_axi_arcache(7 downto 4)  => "0011",
+            s_axi_arprot(5 downto 3)   => "000",
+            s_axi_arqos(7 downto 4)    => "0000",
+            s_axi_arvalid(1)           => dma_m_arvalid,
+            s_axi_arready(1)           => dma_m_arready,
+            s_axi_rdata(511 downto 256)=> dma_m_rdata,
+            s_axi_rresp(3 downto 2)    => dma_m_rresp,
+            s_axi_rlast(1)             => dma_m_rlast,
+            s_axi_rvalid(1)            => dma_m_rvalid,
+            s_axi_rready(1)            => dma_m_rready,
 
             -- M00: DDR4
-            m00_axi_awid    => ddr_awid,
-            m00_axi_awaddr  => ddr_awaddr,
-            m00_axi_awlen   => ddr_awlen,
-            m00_axi_awsize  => open,
-            m00_axi_awburst => ddr_awburst,
-            m00_axi_awlock  => open,
-            m00_axi_awcache => open,
-            m00_axi_awprot  => open,
-            m00_axi_awregion => open,
-            m00_axi_awqos   => open,
-            m00_axi_awvalid => ddr_awvalid,
-            m00_axi_awready => ddr_awready,
-            m00_axi_wdata   => ddr_wdata,
-            m00_axi_wstrb   => ddr_wstrb,
-            m00_axi_wlast   => ddr_wlast,
-            m00_axi_wvalid  => ddr_wvalid,
-            m00_axi_wready  => ddr_wready,
-            m00_axi_bid     => ddr_bid,
-            m00_axi_bresp   => ddr_bresp,
-            m00_axi_bvalid  => ddr_bvalid,
-            m00_axi_bready  => ddr_bready,
-            m00_axi_arid    => ddr_arid,
-            m00_axi_araddr  => ddr_araddr,
-            m00_axi_arlen   => ddr_arlen,
-            m00_axi_arsize  => open,
-            m00_axi_arburst => ddr_arburst,
-            m00_axi_arlock  => open,
-            m00_axi_arcache => open,
-            m00_axi_arprot  => open,
-            m00_axi_arregion => open,
-            m00_axi_arqos   => open,
-            m00_axi_arvalid => ddr_arvalid,
-            m00_axi_arready => ddr_arready,
-            m00_axi_rid     => ddr_rid,
-            m00_axi_rdata   => ddr_rdata,
-            m00_axi_rresp   => ddr_rresp,
-            m00_axi_rlast   => ddr_rlast,
-            m00_axi_rvalid  => ddr_rvalid,
-            m00_axi_rready  => ddr_rready,
+            m_axi_awaddr(31 downto 0)  => xbar_m00_awaddr,
+            m_axi_awlen(7 downto 0)    => ddr_awlen,
+            m_axi_awsize(2 downto 0)   => open,
+            m_axi_awburst(1 downto 0)  => ddr_awburst,
+            m_axi_awlock(0)            => open,
+            m_axi_awcache(3 downto 0)  => open,
+            m_axi_awprot(2 downto 0)   => open,
+            m_axi_awregion(3 downto 0) => open,
+            m_axi_awqos(3 downto 0)    => open,
+            m_axi_awvalid(0)           => ddr_awvalid,
+            m_axi_awready(0)           => ddr_awready,
+            m_axi_wdata(255 downto 0)  => ddr_wdata,
+            m_axi_wstrb(31 downto 0)   => ddr_wstrb,
+            m_axi_wlast(0)             => ddr_wlast,
+            m_axi_wvalid(0)            => ddr_wvalid,
+            m_axi_wready(0)            => ddr_wready,
+            m_axi_bid(3 downto 0)      => "0000",
+            m_axi_bresp(1 downto 0)    => ddr_bresp,
+            m_axi_bvalid(0)            => ddr_bvalid,
+            m_axi_bready(0)            => ddr_bready,
+            m_axi_araddr(31 downto 0)  => xbar_m00_araddr,
+            m_axi_arlen(7 downto 0)    => open,
+            m_axi_arsize(2 downto 0)   => open,
+            m_axi_arburst(1 downto 0)  => ddr_arburst,
+            m_axi_arlock(0)            => open,
+            m_axi_arcache(3 downto 0)  => open,
+            m_axi_arprot(2 downto 0)   => open,
+            m_axi_arregion(3 downto 0) => open,
+            m_axi_arqos(3 downto 0)    => open,
+            m_axi_arvalid(0)           => ddr_arvalid,
+            m_axi_arready(0)           => ddr_arready,
+            m_axi_rid(3 downto 0)      => "0000",
+            m_axi_rdata(255 downto 0)  => ddr_rdata,
+            m_axi_rresp(1 downto 0)    => ddr_rresp,
+            m_axi_rlast(0)             => ddr_rlast,
+            m_axi_rvalid(0)            => ddr_rvalid,
+            m_axi_rready(0)            => ddr_rready,
 
-            -- M01: DMA Config
-            m01_axi_awaddr  => bridge_awaddr_dma,
-            m01_axi_awvalid => dma_s_awvalid,
-            m01_axi_awready => dma_s_awready,
-            m01_axi_wdata   => dma_s_wdata,
-            m01_axi_wstrb   => dma_s_wstrb,
-            m01_axi_wvalid  => dma_s_wvalid,
-            m01_axi_wready  => dma_s_wready,
-            m01_axi_bresp   => dma_s_bresp,
-            m01_axi_bvalid  => dma_s_bvalid,
-            m01_axi_bready  => dma_s_bready,
-            m01_axi_araddr  => bridge_araddr_dma,
-            m01_axi_arvalid => dma_s_arvalid,
-            m01_axi_arready => dma_s_arready,
-            m01_axi_rdata   => dma_s_rdata,
-            m01_axi_rresp   => dma_s_rresp,
-            m01_axi_rvalid  => dma_s_rvalid,
-            m01_axi_rready  => dma_s_rready
+            -- M01: DMA Config (needs downsizing)
+            m_axi_awaddr(63 downto 32) => xbar_m01_awaddr,
+            m_axi_awlen(15 downto 8)   => xbar_m01_awlen,
+            m_axi_awsize(5 downto 3)   => open,
+            m_axi_awburst(3 downto 2)  => xbar_m01_awburst,
+            m_axi_awlock(1)            => open,
+            m_axi_awcache(7 downto 4)  => open,
+            m_axi_awprot(5 downto 3)   => open,
+            m_axi_awregion(7 downto 4) => open,
+            m_axi_awqos(7 downto 4)    => open,
+            m_axi_awvalid(1)           => xbar_m01_awvalid,
+            m_axi_awready(1)           => xbar_m01_awready,
+            m_axi_wdata(511 downto 256)=> xbar_m01_wdata,
+            m_axi_wstrb(63 downto 32)  => xbar_m01_wstrb,
+            m_axi_wlast(1)             => xbar_m01_wlast,
+            m_axi_wvalid(1)            => xbar_m01_wvalid,
+            m_axi_wready(1)            => xbar_m01_wready,
+            m_axi_bresp(3 downto 2)    => xbar_m01_bresp,
+            m_axi_bvalid(1)            => xbar_m01_bvalid,
+            m_axi_bready(1)            => xbar_m01_bready,
+            m_axi_araddr(63 downto 32) => xbar_m01_araddr,
+            m_axi_arlen(15 downto 8)   => xbar_m01_arlen,
+            m_axi_arsize(5 downto 3)   => open,
+            m_axi_arburst(3 downto 2)  => xbar_m01_arburst,
+            m_axi_arlock(1)            => open,
+            m_axi_arcache(7 downto 4)  => open,
+            m_axi_arprot(5 downto 3)   => open,
+            m_axi_arregion(7 downto 4) => open,
+            m_axi_arqos(7 downto 4)    => open,
+            m_axi_arvalid(1)           => xbar_m01_arvalid,
+            m_axi_arready(1)           => xbar_m01_arready,
+            m_axi_rdata(511 downto 256)=> xbar_m01_rdata,
+            m_axi_rresp(3 downto 2)    => xbar_m01_rresp,
+            m_axi_rlast(1)             => xbar_m01_rlast,
+            m_axi_rvalid(1)            => xbar_m01_rvalid,
+            m_axi_rready(1)            => xbar_m01_rready
+        );
+
+    ddr_awaddr <= xbar_m00_awaddr(30 downto 0);
+    ddr_araddr <= xbar_m00_araddr(30 downto 0);
+    ddr_arid <= (others => '0');
+    ddr_awid <= (others => '0');
+
+    -- 4. Data Width Converter (Crossbar 256-bit -> DMA Config 32-bit)
+    u_dwidth_down : entity work.axi_dwidth_converter_1
+        port map (
+            s_axi_aclk    => ui_clk,
+            s_axi_aresetn => ui_rst_n,
+            s_axi_awaddr  => xbar_m01_awaddr,
+            s_axi_awlen   => xbar_m01_awlen,
+            s_axi_awsize  => "101",
+            s_axi_awburst => xbar_m01_awburst,
+            s_axi_awlock  => '0',
+            s_axi_awcache => "0011",
+            s_axi_awprot  => "000",
+            s_axi_awregion => "0000",
+            s_axi_awqos    => "0000",
+            s_axi_awvalid => xbar_m01_awvalid,
+            s_axi_awready => xbar_m01_awready,
+            s_axi_wdata   => xbar_m01_wdata,
+            s_axi_wstrb   => xbar_m01_wstrb,
+            s_axi_wlast   => xbar_m01_wlast,
+            s_axi_wvalid  => xbar_m01_wvalid,
+            s_axi_wready  => xbar_m01_wready,
+            s_axi_bresp   => xbar_m01_bresp,
+            s_axi_bvalid  => xbar_m01_bvalid,
+            s_axi_bready  => xbar_m01_bready,
+            s_axi_araddr  => xbar_m01_araddr,
+            s_axi_arlen   => xbar_m01_arlen,
+            s_axi_arsize  => "101",
+            s_axi_arburst => xbar_m01_arburst,
+            s_axi_arlock  => '0',
+            s_axi_arcache => "0011",
+            s_axi_arprot  => "000",
+            s_axi_arregion => "0000",
+            s_axi_arqos    => "0000",
+            s_axi_arvalid => xbar_m01_arvalid,
+            s_axi_arready => xbar_m01_arready,
+            s_axi_rdata   => xbar_m01_rdata,
+            s_axi_rresp   => xbar_m01_rresp,
+            s_axi_rlast   => xbar_m01_rlast,
+            s_axi_rvalid  => xbar_m01_rvalid,
+            s_axi_rready  => xbar_m01_rready,
+
+            m_axi_awaddr  => bridge_awaddr_dma,
+            m_axi_awlen   => open,
+            m_axi_awsize  => open,
+            m_axi_awburst => open,
+            m_axi_awlock  => open,
+            m_axi_awcache => open,
+            m_axi_awprot  => open,
+            m_axi_awregion => open,
+            m_axi_awqos    => open,
+            m_axi_awvalid => dma_s_awvalid,
+            m_axi_awready => dma_s_awready,
+            m_axi_wdata   => dma_s_wdata,
+            m_axi_wstrb   => dma_s_wstrb,
+            m_axi_wlast   => open,
+            m_axi_wvalid  => dma_s_wvalid,
+            m_axi_wready  => dma_s_wready,
+            m_axi_bresp   => dma_s_bresp,
+            m_axi_bvalid  => dma_s_bvalid,
+            m_axi_bready  => dma_s_bready,
+            m_axi_araddr  => bridge_araddr_dma,
+            m_axi_arlen   => open,
+            m_axi_arsize  => open,
+            m_axi_arburst => open,
+            m_axi_arlock  => open,
+            m_axi_arcache => open,
+            m_axi_arprot  => open,
+            m_axi_arregion => open,
+            m_axi_arqos    => open,
+            m_axi_arvalid => dma_s_arvalid,
+            m_axi_arready => dma_s_arready,
+            m_axi_rdata   => dma_s_rdata,
+            m_axi_rresp   => dma_s_rresp,
+            m_axi_rlast   => open,
+            m_axi_rvalid  => dma_s_rvalid,
+            m_axi_rready  => dma_s_rready
         );
 
     -- SmartConnect output addresses are full width, we only need lower bits for DMA config
