@@ -95,7 +95,7 @@ generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_1 [list \
   CONFIG.NUM_MI {1} \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.DATA_WIDTH {256} \
-  CONFIG.ID_WIDTH {5} \
+  CONFIG.ID_WIDTH {4} \
   CONFIG.M00_A00_BASE_ADDR {0x00000000} \
   CONFIG.M00_A00_ADDR_WIDTH {31} \
 ]

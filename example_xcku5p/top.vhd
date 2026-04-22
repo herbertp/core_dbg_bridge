@@ -303,7 +303,7 @@ architecture RTL of top is
     signal cdma_rlast   : std_logic;
 
     --------------------------------------------------------------------
-    -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
+    -- AXI Interconnect (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
 
     -- SI0: Bridge path, SI1: CDMA path
@@ -322,9 +322,11 @@ architecture RTL of top is
     signal x1_s01_awready : std_logic;
     signal x1_s01_wready  : std_logic;
     signal x1_s01_bvalid  : std_logic;
+    signal x1_s01_bid     : std_logic_vector(3 downto 0);
     signal x1_s01_bresp   : std_logic_vector(1 downto 0);
     signal x1_s01_arready : std_logic;
     signal x1_s01_rvalid  : std_logic;
+    signal x1_s01_rid     : std_logic_vector(3 downto 0);
     signal x1_s01_rdata   : std_logic_vector(255 downto 0);
     signal x1_s01_rresp   : std_logic_vector(1 downto 0);
     signal x1_s01_rlast   : std_logic;
@@ -605,7 +607,7 @@ begin
             aclk          => ui_clk,
             aresetn       => ui_rst_n,
 
-            s_axi_awid    => cc_awid,
+            s_axi_awid(3 downto 0) => cc_awid,
             s_axi_awaddr  => cc_awaddr,
             s_axi_awlen   => cc_awlen,
             s_axi_awsize  => "010",
@@ -625,7 +627,7 @@ begin
             s_axi_bresp   => cc_bresp,
             s_axi_bvalid(0) => cc_bvalid,
             s_axi_bready(0) => cc_bready,
-            s_axi_arid    => cc_arid,
+            s_axi_arid(3 downto 0) => cc_arid,
             s_axi_araddr  => cc_araddr,
             s_axi_arlen   => cc_arlen,
             s_axi_arsize  => "010",
@@ -962,9 +964,9 @@ begin
             aresetn       => ui_rst_n,
 
             -- SI0: Bridge path, SI1: CDMA path
-            -- Config: ID_WIDTH=4, NUM_SI=2 -> SI ports are 4 bits each, MI port is 5 bits.
-            s_axi_awid(7 downto 4) => (others => '0'), -- SI1
-            s_axi_awid(3 downto 0) => dwc_awid,        -- SI0
+            -- Config: ID_WIDTH=4, NUM_SI=2 -> Slave IDs are 4 bits, Master ID is 5 bits.
+            s_axi_awid(7 downto 4) => (others => '0'), -- SI1: CDMA
+            s_axi_awid(3 downto 0) => dwc_awid,        -- SI0: Bridge
             s_axi_awaddr(61 downto 31) => cdma_awaddr(30 downto 0),
             s_axi_awaddr(30 downto 0)  => dwc_awaddr,
             s_axi_awlen(15 downto 8)   => cdma_awlen,
@@ -1001,8 +1003,8 @@ begin
             s_axi_bvalid(0) => x1_s00_bvalid,
             s_axi_bready(1) => cdma_bready,
             s_axi_bready(0) => dwc_bready,
-            s_axi_arid(7 downto 4) => (others => '0'), -- SI1
-            s_axi_arid(3 downto 0) => dwc_arid,        -- SI0
+            s_axi_arid(7 downto 4) => (others => '0'), -- SI1: CDMA
+            s_axi_arid(3 downto 0) => dwc_arid,        -- SI0: Bridge
             s_axi_araddr(61 downto 31) => cdma_araddr(30 downto 0),
             s_axi_araddr(30 downto 0)  => dwc_araddr,
             s_axi_arlen(15 downto 8)   => cdma_arlen,
@@ -1034,7 +1036,7 @@ begin
             s_axi_rready(1) => cdma_rready,
             s_axi_rready(0) => dwc_rready,
 
-            -- Master Interface (MI0: to DDR4)
+            -- Master Interface (to DDR4)
             m_axi_awid(4 downto 0)    => m_awid,
             m_axi_awaddr(30 downto 0) => m_awaddr,
             m_axi_awlen(7 downto 0)   => m_awlen,
@@ -1076,8 +1078,8 @@ begin
             m_axi_rready(0) => m_rready
         );
 
-    -- Routing Merger Slave response outputs back to respective Masters
-    u_xbar_merger_responses : block
+    -- Merger Slave outputs routing
+    u_xbar_merger_resp : block
     begin
         dwc_awready <= x1_s00_awready;
         dwc_wready  <= x1_s00_wready;
