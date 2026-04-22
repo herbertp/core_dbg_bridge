@@ -6,6 +6,7 @@
 
 set ODIR .
 set NAME uart
+set BAUDRATE 4000000
 set_param messaging.defaultLimit 10000
 set_param place.sliceLegEffortLimit 2000
 set_param board.repoPaths [list /opt/Xilinx/XilinxBoardStore/2025.2/boards]
@@ -32,7 +33,7 @@ set_property TARGET_LANGUAGE VHDL [current_project]
 
 # STEP#3: run synthesis, write checkpoint design
 
-synth_design -top top -flatten rebuilt
+synth_design -top top -flatten rebuilt -generic UART_SPEED=$BAUDRATE
 write_checkpoint -force $ODIR/post_synth
 
 # STEP#4: run placement and logic optimzation, write checkpoint design

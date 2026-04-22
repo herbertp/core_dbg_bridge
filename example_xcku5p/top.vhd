@@ -25,6 +25,9 @@ use unisim.VCOMPONENTS.ALL;
 
 
 entity top is
+    generic (
+        UART_SPEED : integer := 115200
+    );
     port (
 	sys_clk_p : IN std_logic;
 	sys_clk_n : IN std_logic;
@@ -269,7 +272,7 @@ begin
     u_bridge : entity work.dbg_bridge
         generic map (
             CLK_FREQ     => 100000000,
-            UART_SPEED   => 115200
+            UART_SPEED   => UART_SPEED
         )
         port map (
             clk_i          => clk_100,

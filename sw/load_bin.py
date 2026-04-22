@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', dest='type',    default='uart',                     help='Device type (uart|socket|litex)')
     parser.add_argument('-d', dest='device',  default='/dev/ttyUSB1',             help='Serial Device')
-    parser.add_argument('-b', dest='baud',    default=1000000,       type=int,    help='Baud rate')
+    parser.add_argument('-b', dest='baud',    default=4000000,       type=int,    help='Baud rate')
     parser.add_argument('-f', dest='filename',required=True,                      help='File to load')
     parser.add_argument('-a', dest='address', default="0",                        help='Address to write to (default to 0x0)')
     parser.add_argument('-s', dest='size',    default=-1,            type=int,    help='Size override')
