@@ -588,8 +588,6 @@ begin
             s_axi_awlock  => "0",
             s_axi_awcache => "0011",
             s_axi_awprot  => "000",
-            s_axi_awregion => "0000",
-            s_axi_awqos    => "0000",
             s_axi_awvalid => bridge_awvalid,
             s_axi_awready => bridge_awready,
             s_axi_wdata   => bridge_wdata,
@@ -609,8 +607,6 @@ begin
             s_axi_arlock  => "0",
             s_axi_arcache => "0011",
             s_axi_arprot  => "000",
-            s_axi_arregion => "0000",
-            s_axi_arqos    => "0000",
             s_axi_arvalid => bridge_arvalid,
             s_axi_arready => bridge_arready,
             s_axi_rid     => bridge_rid,
@@ -630,8 +626,6 @@ begin
             m_axi_awlock  => open,
             m_axi_awcache => open,
             m_axi_awprot  => open,
-            m_axi_awregion => open,
-            m_axi_awqos    => open,
             m_axi_awvalid => cc_awvalid,
             m_axi_awready => cc_awready,
             m_axi_wdata   => cc_wdata,
@@ -651,8 +645,6 @@ begin
             m_axi_arlock  => open,
             m_axi_arcache => open,
             m_axi_arprot  => open,
-            m_axi_arregion => open,
-            m_axi_arqos    => open,
             m_axi_arvalid => cc_arvalid,
             m_axi_arready => cc_arready,
             m_axi_rid     => cc_rid,
@@ -803,8 +795,6 @@ begin
             s_axi_awlock(0) => '0',
             s_axi_awcache => "0011",
             s_axi_awprot  => "000",
-            s_axi_awregion => "0000",
-            s_axi_awqos   => "0000",
             s_axi_awvalid => x0_m01_awvalid,
             s_axi_awready => x0_m01_awready,
             s_axi_wdata   => x0_mi_wdata(63 downto 32),
@@ -823,8 +813,6 @@ begin
             s_axi_arburst => x0_mi_arburst(3 downto 2),
             s_axi_arlock(0) => '0',
             s_axi_arcache => "0011",
-            s_axi_arregion => "0000",
-            s_axi_arqos   => "0000",
             s_axi_arprot  => "000",
             s_axi_arvalid => x0_m01_arvalid,
             s_axi_arready => x0_m01_arready,
@@ -953,8 +941,6 @@ begin
             s_axi_awlock(0) => '0',
             s_axi_awcache => "0011",
             s_axi_awprot  => "000",
-            s_axi_awregion => "0000",
-            s_axi_awqos    => "0000",
             s_axi_awvalid => x0_m00_awvalid,
             s_axi_awready => x0_m00_awready,
             s_axi_wdata   => x0_mi_wdata(31 downto 0),
@@ -973,8 +959,7 @@ begin
             s_axi_arburst => x0_m00_arburst,
             s_axi_arlock(0) => '0',
             s_axi_arcache => "0011",
-            s_axi_arregion => "0000",
-            s_axi_arqos    => "0000",
+            s_axi_arprot  => "000",
             s_axi_arvalid => x0_m00_arvalid,
             s_axi_arready => x0_m00_arready,
             s_axi_rid     => dwc_rid,
@@ -984,6 +969,7 @@ begin
             s_axi_rvalid  => dwc_rvalid,
             s_axi_rready  => dwc_rready,
 
+            m_axi_awid    => dwc_awid,
             m_axi_awaddr  => dwc_awaddr,
             m_axi_awlen   => dwc_awlen,
             m_axi_awsize  => open,
@@ -991,8 +977,6 @@ begin
             m_axi_awlock  => open,
             m_axi_awcache => open,
             m_axi_awprot  => open,
-            m_axi_awregion => open,
-            m_axi_awqos    => open,
             m_axi_awvalid => dwc_awvalid,
             m_axi_awready => dwc_awready,
             m_axi_wdata   => dwc_wdata,
@@ -1003,6 +987,7 @@ begin
             m_axi_bresp   => dwc_bresp,
             m_axi_bvalid  => dwc_bvalid,
             m_axi_bready  => dwc_bready,
+            m_axi_arid    => dwc_arid,
             m_axi_araddr  => dwc_araddr,
             m_axi_arlen   => dwc_arlen,
             m_axi_arsize  => open,
@@ -1010,8 +995,6 @@ begin
             m_axi_arlock  => open,
             m_axi_arcache => open,
             m_axi_arprot  => open,
-            m_axi_arregion => open,
-            m_axi_arqos    => open,
             m_axi_arvalid => dwc_arvalid,
             m_axi_arready => dwc_arready,
             m_axi_rdata   => dwc_rdata,
@@ -1033,7 +1016,7 @@ begin
 
     -- SI[1]: CDMA Master, SI[0]: Bridge (via DWC)
     x1_si_awid(7 downto 4) <= (others => '0');
-    x1_si_awid(3 downto 0) <= x0_m00_awid;
+    x1_si_awid(3 downto 0) <= dwc_awid;
     x1_si_awaddr(61 downto 31) <= cdma_awaddr(30 downto 0);
     x1_si_awaddr(30 downto 0)  <= dwc_awaddr;
     x1_si_awlen(15 downto 8)   <= cdma_awlen;
@@ -1060,7 +1043,7 @@ begin
     x1_si_bready(1) <= cdma_bready;
     x1_si_bready(0) <= dwc_bready;
     x1_si_arid(7 downto 4) <= (others => '0');
-    x1_si_arid(3 downto 0) <= x0_m00_arid;
+    x1_si_arid(3 downto 0) <= dwc_arid;
     x1_si_araddr(61 downto 31) <= cdma_araddr(30 downto 0);
     x1_si_araddr(30 downto 0)  <= dwc_araddr;
     x1_si_arlen(15 downto 8)   <= cdma_arlen;
