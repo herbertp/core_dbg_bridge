@@ -90,6 +90,8 @@ generate_ip axi_protocol_converter xilinx.com ip 2.1 axi_protocol_converter_0 [l
 ]
 
 # Create AXI Crossbar (Merger: Bridge & CDMA -> DDR4)
+# To match DDR4 5-bit ID width (MI), we use SI ID_WIDTH 4.
+# MI ID_WIDTH = SI_ID_WIDTH + log2(NUM_SI) = 4 + 1 = 5.
 generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_1 [list \
   CONFIG.NUM_SI {2} \
   CONFIG.NUM_MI {1} \
