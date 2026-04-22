@@ -16,9 +16,9 @@ source ../helper.tcl
 
 read_vhdl -vhdl2008 ../vivado_pkg.vhd
 
-read_verilog ../dbg_bridge_fifo.v
-read_verilog ../dbg_bridge_uart.v
-read_verilog ../dbg_bridge.v
+read_verilog ../../src_v/dbg_bridge.v
+read_verilog ../../src_v/dbg_bridge_fifo.v
+read_verilog ../../src_v/dbg_bridge_uart.v
 
 read_vhdl -vhdl2008 ../async_div.vhd
 read_vhdl -vhdl2008 ../top.vhd
@@ -43,6 +43,7 @@ generate_ip ddr4 xilinx.com ip 2.2 ddr4_0 [list \
   CONFIG.C0.DDR4_AxiIDWidth {4} \
   CONFIG.C0.DDR4_Ordering {Normal} \
   CONFIG.C0.DDR4_AxiArbitrationScheme {RD_PRI_REG} \
+  CONFIG.C0.DDR4_Ecc {false} \
   CONFIG.ADDN_UI_CLKOUT1_FREQ_HZ {100} \
 ]
 
