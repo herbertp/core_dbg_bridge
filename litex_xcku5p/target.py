@@ -27,6 +27,7 @@ class _CRG(LiteXModule):
         self.cd_sys       = ClockDomain("sys")
         self.cd_sys4x     = ClockDomain("sys4x")
         self.cd_sys4x_dqs = ClockDomain("sys4x_dqs")
+        self.cd_ic        = ClockDomain("ic")
 
         # # #
 
@@ -39,6 +40,9 @@ class _CRG(LiteXModule):
         pll.create_clkout(self.cd_sys,       sys_clk_freq)
         pll.create_clkout(self.cd_sys4x,     4*sys_clk_freq)
         pll.create_clkout(self.cd_sys4x_dqs, 4*sys_clk_freq, phase=90)
+
+        self.comb += self.cd_ic.clk.eq(self.cd_sys.clk)
+        self.comb += self.cd_ic.rst.eq(self.cd_sys.rst)
 
         # IDelayCtrl
         self.specials += Instance("IDELAYCTRL",
