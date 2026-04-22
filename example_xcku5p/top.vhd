@@ -302,10 +302,39 @@ architecture RTL of top is
     signal cdma_rresp   : std_logic_vector(1 downto 0);
     signal cdma_rlast   : std_logic;
 
+    signal cdma_idle    : std_logic;
+
     --------------------------------------------------------------------
     -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
 
+    -- S00: from DWC (Bridge path)
+    signal x1_s00_awready : std_logic;
+    signal x1_s00_wready  : std_logic;
+    signal x1_s00_bvalid  : std_logic;
+    signal x1_s00_bid     : std_logic_vector(3 downto 0);
+    signal x1_s00_bresp   : std_logic_vector(1 downto 0);
+    signal x1_s00_arready : std_logic;
+    signal x1_s00_rvalid  : std_logic;
+    signal x1_s00_rid     : std_logic_vector(3 downto 0);
+    signal x1_s00_rdata   : std_logic_vector(255 downto 0);
+    signal x1_s00_rresp   : std_logic_vector(1 downto 0);
+    signal x1_s00_rlast   : std_logic;
+
+    -- S01: from CDMA Master
+    signal x1_s01_awready : std_logic;
+    signal x1_s01_wready  : std_logic;
+    signal x1_s01_bvalid  : std_logic;
+    signal x1_s01_bid     : std_logic_vector(3 downto 0);
+    signal x1_s01_bresp   : std_logic_vector(1 downto 0);
+    signal x1_s01_arready : std_logic;
+    signal x1_s01_rvalid  : std_logic;
+    signal x1_s01_rid     : std_logic_vector(3 downto 0);
+    signal x1_s01_rdata   : std_logic_vector(255 downto 0);
+    signal x1_s01_rresp   : std_logic_vector(1 downto 0);
+    signal x1_s01_rlast   : std_logic;
+
+    -- Master side (to DDR4)
     signal m_awvalid : std_logic;
     signal m_awready : std_logic;
     signal m_awaddr  : std_logic_vector(30 downto 0);
@@ -825,7 +854,7 @@ begin
     process (ui_clk)
     begin
         if rising_edge(ui_clk) then
-            if ui_rst = '1' then
+            if ui_rst_n = '0' then
                 cdma_active <= '0';
                 cdma_active_cnt <= (others => '0');
             else
@@ -938,9 +967,10 @@ begin
             aclk          => ui_clk,
             aresetn       => ui_rst_n,
 
-            -- S00: from DWC (Bridge), S01: from CDMA Master
-            s_axi_awid(7 downto 4) => (others => '0'),
-            s_axi_awid(3 downto 0) => dwc_awid,
+            -- Slave Interfaces (SI0: Bridge/DWC, SI1: CDMA Master)
+            -- Configuration: ID_WIDTH=4, NUM_SI=2 -> Slave IDs are 4 bits, Master IDs are 5 bits.
+            s_axi_awid(7 downto 4) => (others => '0'), -- SI1: CDMA
+            s_axi_awid(3 downto 0) => dwc_awid,        -- SI0: Bridge
             s_axi_awaddr(61 downto 31) => cdma_awaddr(30 downto 0),
             s_axi_awaddr(30 downto 0)  => dwc_awaddr,
             s_axi_awlen(15 downto 8)   => cdma_awlen,
@@ -957,8 +987,8 @@ begin
             s_axi_awqos(7 downto 0)    => (others => '0'),
             s_axi_awvalid(1) => cdma_awvalid,
             s_axi_awvalid(0) => dwc_awvalid,
-            s_axi_awready(1) => cdma_awready,
-            s_axi_awready(0) => dwc_awready,
+            s_axi_awready(1) => x1_s01_awready,
+            s_axi_awready(0) => x1_s00_awready,
             s_axi_wdata(511 downto 256) => cdma_wdata,
             s_axi_wdata(255 downto 0)   => dwc_wdata,
             s_axi_wstrb(63 downto 32)   => cdma_wstrb,
@@ -967,18 +997,18 @@ begin
             s_axi_wlast(0) => dwc_wlast,
             s_axi_wvalid(1) => cdma_wvalid,
             s_axi_wvalid(0) => dwc_wvalid,
-            s_axi_wready(1) => cdma_wready,
-            s_axi_wready(0) => dwc_wready,
-            s_axi_bid(7 downto 4) => open,
-            s_axi_bid(3 downto 0) => dwc_bid,
-            s_axi_bresp(3 downto 2) => cdma_bresp,
-            s_axi_bresp(1 downto 0) => dwc_bresp,
-            s_axi_bvalid(1) => cdma_bvalid,
-            s_axi_bvalid(0) => dwc_bvalid,
+            s_axi_wready(1) => x1_s01_wready,
+            s_axi_wready(0) => x1_s00_wready,
+            s_axi_bid(7 downto 4) => x1_s01_bid,
+            s_axi_bid(3 downto 0) => x1_s00_bid,
+            s_axi_bresp(3 downto 2) => x1_s01_bresp,
+            s_axi_bresp(1 downto 0) => x1_s00_bresp,
+            s_axi_bvalid(1) => x1_s01_bvalid,
+            s_axi_bvalid(0) => x1_s00_bvalid,
             s_axi_bready(1) => cdma_bready,
             s_axi_bready(0) => dwc_bready,
-            s_axi_arid(7 downto 4) => (others => '0'),
-            s_axi_arid(3 downto 0) => dwc_arid,
+            s_axi_arid(7 downto 4) => (others => '0'), -- SI1: CDMA
+            s_axi_arid(3 downto 0) => dwc_arid,        -- SI0: Bridge
             s_axi_araddr(61 downto 31) => cdma_araddr(30 downto 0),
             s_axi_araddr(30 downto 0)  => dwc_araddr,
             s_axi_arlen(15 downto 8)   => cdma_arlen,
@@ -995,22 +1025,22 @@ begin
             s_axi_arprot(2 downto 0)   => "000",
             s_axi_arvalid(1) => cdma_arvalid,
             s_axi_arvalid(0) => dwc_arvalid,
-            s_axi_arready(1) => cdma_arready,
-            s_axi_arready(0) => dwc_arready,
-            s_axi_rid(7 downto 4) => open,
-            s_axi_rid(3 downto 0) => dwc_rid,
-            s_axi_rdata(511 downto 256) => cdma_rdata,
-            s_axi_rdata(255 downto 0)   => dwc_rdata,
-            s_axi_rresp(3 downto 2) => cdma_rresp,
-            s_axi_rresp(1 downto 0) => dwc_rresp,
-            s_axi_rlast(1) => cdma_rlast,
-            s_axi_rlast(0) => dwc_rlast,
-            s_axi_rvalid(1) => cdma_rvalid,
-            s_axi_rvalid(0) => dwc_rvalid,
+            s_axi_arready(1) => x1_s01_arready,
+            s_axi_arready(0) => x1_s00_arready,
+            s_axi_rid(7 downto 4) => x1_s01_rid,
+            s_axi_rid(3 downto 0) => x1_s00_rid,
+            s_axi_rdata(511 downto 256) => x1_s01_rdata,
+            s_axi_rdata(255 downto 0)   => x1_s00_rdata,
+            s_axi_rresp(3 downto 2) => x1_s01_rresp,
+            s_axi_rresp(1 downto 0) => x1_s00_rresp,
+            s_axi_rlast(1) => x1_s01_rlast,
+            s_axi_rlast(0) => x1_s00_rlast,
+            s_axi_rvalid(1) => x1_s01_rvalid,
+            s_axi_rvalid(0) => x1_s00_rvalid,
             s_axi_rready(1) => cdma_rready,
             s_axi_rready(0) => dwc_rready,
 
-            -- M00: to DDR4
+            -- Master Interface (to DDR4)
             m_axi_awid    => m_awid,
             m_axi_awaddr  => m_awaddr,
             m_axi_awlen   => m_awlen,
@@ -1051,6 +1081,29 @@ begin
             m_axi_rvalid(0) => m_rvalid,
             m_axi_rready(0) => m_rready
         );
+
+    -- Routing Merger Slave outputs to respective Masters
+    dwc_awready <= x1_s00_awready;
+    dwc_wready  <= x1_s00_wready;
+    dwc_bvalid  <= x1_s00_bvalid;
+    dwc_bid     <= x1_s00_bid;
+    dwc_bresp   <= x1_s00_bresp;
+    dwc_arready <= x1_s00_arready;
+    dwc_rvalid  <= x1_s00_rvalid;
+    dwc_rid     <= x1_s00_rid;
+    dwc_rdata   <= x1_s00_rdata;
+    dwc_rresp   <= x1_s00_rresp;
+    dwc_rlast   <= x1_s00_rlast;
+
+    cdma_awready <= x1_s01_awready;
+    cdma_wready  <= x1_s01_wready;
+    cdma_bvalid  <= x1_s01_bvalid;
+    cdma_bresp   <= x1_s01_bresp;
+    cdma_arready <= x1_s01_arready;
+    cdma_rvalid  <= x1_s01_rvalid;
+    cdma_rdata   <= x1_s01_rdata;
+    cdma_rresp   <= x1_s01_rresp;
+    cdma_rlast   <= x1_s01_rlast;
 
     --------------------------------------------------------------------
     -- Blinking DONE LED

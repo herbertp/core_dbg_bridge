@@ -5,6 +5,7 @@ import time
 import random
 import subprocess
 import os
+import re
 
 # CDMA Register Map (Offsets)
 CDMACR    = 0x00  # Control Register
@@ -22,10 +23,16 @@ def poke(addr, value, args):
     subprocess.check_call(cmd)
 
 def peek(addr, args):
-    cmd = [sys.executable, 'sw/peek.py', '-t', args.type, '-d', args.device, '-b', str(args.baud), '-a', f"0x{addr:08x}", '-q']
-    # peek.py -q returns the value as exit code
-    result = subprocess.run(cmd)
-    return result.returncode
+    cmd = [sys.executable, 'sw/peek.py', '-t', args.type, '-d', args.device, '-b', str(args.baud), '-a', f"0x{addr:08x}"]
+    result = subprocess.check_output(cmd, text=True)
+    # Parse output: "00000000: 0x12345678 (305419896)"
+    # We want the second hexadecimal number if the address is also hex prefixed
+    # Standard output: <addr>: <value> (<decimal>)
+    parts = result.split(':')
+    if len(parts) > 1:
+        val_str = parts[1].strip().split()[0]
+        return int(val_str, 16)
+    raise ValueError(f"Could not parse peek output: {result}")
 
 def main():
     parser = argparse.ArgumentParser(description="Test script for AXI CDMA transfer using peek/poke")
@@ -43,8 +50,10 @@ def main():
 
     # 1. Write some test data to source
     print("Writing test data to source...")
+    test_vals = []
     for i in range(0, min(args.len, 64), 4):
         val = random.getrandbits(32)
+        test_vals.append(val)
         poke(args.src + i, val, args)
 
     # 2. Clear destination start
@@ -71,7 +80,7 @@ def main():
     # 6. Poll for completion
     print("Polling for completion...")
     start_time = time.time()
-    timeout = 5.0 # seconds
+    timeout = 10.0 # seconds
     while True:
         status = peek(cdma_base + CDMASR, args)
         if status & SR_IDLE:
@@ -80,22 +89,19 @@ def main():
         if time.time() - start_time > timeout:
             print("Timeout waiting for DMA completion!")
             sys.exit(1)
-        time.sleep(0.05)
+        time.sleep(0.1)
 
     # 7. Verify some data
     print("Verifying data samples...")
-    # We only verify the first few words to keep the test reasonably fast with subprocess calls
-    for i in range(0, min(args.len, 64), 4):
-        src_val = peek(args.src + i, args)
-        dst_val = peek(args.dst + i, args)
-        if src_val != dst_val:
-            print(f"FAILURE: Data mismatch at offset {i}! Expected 0x{src_val:08x}, got 0x{dst_val:08x}")
+    for i in range(len(test_vals)):
+        dst_val = peek(args.dst + i*4, args)
+        if test_vals[i] != dst_val:
+            print(f"FAILURE: Data mismatch at offset {i*4}! Expected 0x{test_vals[i]:08x}, got 0x{dst_val:08x}")
             sys.exit(1)
 
     print("SUCCESS: Sampled data matches!")
 
 if __name__ == "__main__":
-    # Ensure we are in the repo root or can find sw/
     if not os.path.exists('sw/peek.py'):
         print("Error: sw/peek.py not found. Please run from the repository root.")
         sys.exit(1)
