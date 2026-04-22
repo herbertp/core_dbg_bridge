@@ -8,7 +8,7 @@ class UartBusInterface:
     """
     UartBusInterface provides a bus master interface over a serial port.
     """
-    def __init__(self, iface: str = '/dev/ttyUSB1', baud: int = 115200):
+    def __init__(self, iface: str = '/dev/ttyUSB1', baud: int = 4000000):
         self.interface = iface
         self.baud = baud
         self.uart: Optional[serial.Serial] = None

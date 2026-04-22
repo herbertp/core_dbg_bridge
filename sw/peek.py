@@ -11,7 +11,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', dest='type',   default='uart',                     help='Device type (uart|socket|litex)')
     parser.add_argument('-d', dest='device', default='/dev/ttyUSB1',             help='Serial Device')
-    parser.add_argument('-b', dest='baud',   default=1000000,       type=int,    help='Baud rate')
+    parser.add_argument('-b', dest='baud',   default=4000000,       type=int,    help='Baud rate')
     parser.add_argument('-a', dest='address',required=True,                      help='Address to read')
     parser.add_argument('-q', dest='quiet',  action='store_true', default=False, help='Quiet mode - set exit code to read value')
     args = parser.parse_args()

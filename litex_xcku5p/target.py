@@ -111,6 +111,7 @@ def main():
 
     parser.set_defaults(bus_standard="axi")
     parser.set_defaults(uart_name="uartbone")
+    parser.set_defaults(uart_baudrate=4000000)
     parser.set_defaults(integrated_rom_size=0)
 
     args = parser.parse_args()
