@@ -322,11 +322,9 @@ architecture RTL of top is
     signal x1_s01_awready : std_logic;
     signal x1_s01_wready  : std_logic;
     signal x1_s01_bvalid  : std_logic;
-    signal x1_s01_bid     : std_logic_vector(3 downto 0);
     signal x1_s01_bresp   : std_logic_vector(1 downto 0);
     signal x1_s01_arready : std_logic;
     signal x1_s01_rvalid  : std_logic;
-    signal x1_s01_rid     : std_logic_vector(3 downto 0);
     signal x1_s01_rdata   : std_logic_vector(255 downto 0);
     signal x1_s01_rresp   : std_logic_vector(1 downto 0);
     signal x1_s01_rlast   : std_logic;
@@ -1079,27 +1077,30 @@ begin
         );
 
     -- Routing Merger Slave response outputs back to respective Masters
-    dwc_awready <= x1_s00_awready;
-    dwc_wready  <= x1_s00_wready;
-    dwc_bvalid  <= x1_s00_bvalid;
-    dwc_bid     <= x1_s00_bid;
-    dwc_bresp   <= x1_s00_bresp;
-    dwc_arready <= x1_s00_arready;
-    dwc_rvalid  <= x1_s00_rvalid;
-    dwc_rid     <= x1_s00_rid;
-    dwc_rdata   <= x1_s00_rdata;
-    dwc_rresp   <= x1_s00_rresp;
-    dwc_rlast   <= x1_s00_rlast;
+    u_xbar_merger_responses : block
+    begin
+        dwc_awready <= x1_s00_awready;
+        dwc_wready  <= x1_s00_wready;
+        dwc_bvalid  <= x1_s00_bvalid;
+        dwc_bid     <= x1_s00_bid;
+        dwc_bresp   <= x1_s00_bresp;
+        dwc_arready <= x1_s00_arready;
+        dwc_rvalid  <= x1_s00_rvalid;
+        dwc_rid     <= x1_s00_rid;
+        dwc_rdata   <= x1_s00_rdata;
+        dwc_rresp   <= x1_s00_rresp;
+        dwc_rlast   <= x1_s00_rlast;
 
-    cdma_awready <= x1_s01_awready;
-    cdma_wready  <= x1_s01_wready;
-    cdma_bvalid  <= x1_s01_bvalid;
-    cdma_bresp   <= x1_s01_bresp;
-    cdma_arready <= x1_s01_arready;
-    cdma_rvalid  <= x1_s01_rvalid;
-    cdma_rdata   <= x1_s01_rdata;
-    cdma_rresp   <= x1_s01_rresp;
-    cdma_rlast   <= x1_s01_rlast;
+        cdma_awready <= x1_s01_awready;
+        cdma_wready  <= x1_s01_wready;
+        cdma_bvalid  <= x1_s01_bvalid;
+        cdma_bresp   <= x1_s01_bresp;
+        cdma_arready <= x1_s01_arready;
+        cdma_rvalid  <= x1_s01_rvalid;
+        cdma_rdata   <= x1_s01_rdata;
+        cdma_rresp   <= x1_s01_rresp;
+        cdma_rlast   <= x1_s01_rlast;
+    end block;
 
     --------------------------------------------------------------------
     -- Blinking DONE LED
