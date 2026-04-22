@@ -94,6 +94,11 @@ class BaseSoC(SoCCore):
         self.buttons = GPIOIn(
             pads         = platform_obj.request_all("user_btn"))
 
+    def do_finalize(self):
+        SoCCore.do_finalize(self)
+        # Add Tcl constraint to ensure all IDELAYCTRL (including replicated ones) have correct SIM_DEVICE
+        self.platform.add_platform_command("set_property SIM_DEVICE ULTRASCALE_PLUS [get_cells -hierarchical -filter {{REF_NAME == IDELAYCTRL || ORIG_REF_NAME == IDELAYCTRL}}]")
+
 # Build --------------------------------------------------------------------------------------------
 
 def main():
