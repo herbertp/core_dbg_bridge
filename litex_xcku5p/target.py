@@ -46,7 +46,7 @@ class _CRG(LiteXModule):
 
         # IDelayCtrl
         self.specials += Instance("IDELAYCTRL",
-            p_SIM_DEVICE = "ULTRASCALE_PLUS",
+            p_SIM_DEVICE = "ULTRASCALE",
             i_REFCLK     = self.cd_sys4x.clk,
             i_RST        = self.cd_sys4x.rst
         )
@@ -97,7 +97,7 @@ class BaseSoC(SoCCore):
     def do_finalize(self):
         SoCCore.do_finalize(self)
         # Add Tcl constraint to ensure all IDELAYCTRL (including replicated ones) have correct SIM_DEVICE
-        self.platform.add_platform_command("set_property SIM_DEVICE ULTRASCALE_PLUS [get_cells -hierarchical -filter {{REF_NAME == IDELAYCTRL || ORIG_REF_NAME == IDELAYCTRL}}]")
+        self.platform.add_platform_command("set_property SIM_DEVICE ULTRASCALE [get_cells -hierarchical -filter {{REF_NAME == IDELAYCTRL || ORIG_REF_NAME == IDELAYCTRL}}]")
 
 # Build --------------------------------------------------------------------------------------------
 

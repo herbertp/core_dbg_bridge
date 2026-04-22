@@ -1,5 +1,5 @@
 from typing import Callable, Optional
-from litex.tools.remote import RemoteClient
+from litex.tools.litex_client import RemoteClient
 
 ##################################################################
 # LiteXBusInterface: LiteX UART -> Bus master interface
