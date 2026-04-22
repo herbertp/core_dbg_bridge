@@ -195,10 +195,29 @@ architecture RTL of top is
     signal x0_m01_rvalid  : std_logic;
     signal x0_m01_rready  : std_logic;
 
+    signal x0_m00_awid    : std_logic_vector(3 downto 0);
+    signal x0_m00_awaddr  : std_logic_vector(31 downto 0);
+    signal x0_m00_awlen   : std_logic_vector(7 downto 0);
+    signal x0_m00_awburst : std_logic_vector(1 downto 0);
+    signal x0_m00_awvalid : std_logic;
     signal x0_m00_awready : std_logic;
+
+    signal x0_m00_wready  : std_logic;
+
+    signal x0_m00_bid     : std_logic_vector(3 downto 0);
+    signal x0_m00_bresp   : std_logic_vector(1 downto 0);
     signal x0_m00_bvalid  : std_logic;
     signal x0_m00_bready  : std_logic;
+
+    signal x0_m00_arid    : std_logic_vector(3 downto 0);
+    signal x0_m00_araddr  : std_logic_vector(31 downto 0);
+    signal x0_m00_arlen   : std_logic_vector(7 downto 0);
+    signal x0_m00_arburst : std_logic_vector(1 downto 0);
+    signal x0_m00_arvalid : std_logic;
     signal x0_m00_arready : std_logic;
+
+    signal x0_m00_rid     : std_logic_vector(3 downto 0);
+    signal x0_m00_rresp   : std_logic_vector(1 downto 0);
     signal x0_m00_rvalid  : std_logic;
     signal x0_m00_rready  : std_logic;
 
@@ -342,15 +361,34 @@ architecture RTL of top is
     signal x1_si_rvalid  : std_logic_vector(1 downto 0);
     signal x1_si_rready  : std_logic_vector(1 downto 0);
 
+    signal x1_mi_awid     : std_logic_vector(4 downto 0);
+    signal x1_mi_awaddr   : std_logic_vector(30 downto 0);
+    signal x1_mi_awlen    : std_logic_vector(7 downto 0);
+    signal x1_mi_awburst  : std_logic_vector(1 downto 0);
     signal x1_mi_awvalid  : std_logic_vector(0 downto 0);
     signal x1_mi_awready  : std_logic_vector(0 downto 0);
+
+    signal x1_mi_wdata    : std_logic_vector(255 downto 0);
+    signal x1_mi_wstrb    : std_logic_vector(31 downto 0);
     signal x1_mi_wlast    : std_logic_vector(0 downto 0);
     signal x1_mi_wvalid   : std_logic_vector(0 downto 0);
     signal x1_mi_wready   : std_logic_vector(0 downto 0);
+
+    signal x1_mi_bid      : std_logic_vector(4 downto 0);
+    signal x1_mi_bresp    : std_logic_vector(1 downto 0);
     signal x1_mi_bvalid   : std_logic_vector(0 downto 0);
     signal x1_mi_bready   : std_logic_vector(0 downto 0);
+
+    signal x1_mi_arid     : std_logic_vector(4 downto 0);
+    signal x1_mi_araddr   : std_logic_vector(30 downto 0);
+    signal x1_mi_arlen    : std_logic_vector(7 downto 0);
+    signal x1_mi_arburst  : std_logic_vector(1 downto 0);
     signal x1_mi_arvalid  : std_logic_vector(0 downto 0);
     signal x1_mi_arready  : std_logic_vector(0 downto 0);
+
+    signal x1_mi_rid      : std_logic_vector(4 downto 0);
+    signal x1_mi_rdata    : std_logic_vector(255 downto 0);
+    signal x1_mi_rresp    : std_logic_vector(1 downto 0);
     signal x1_mi_rlast    : std_logic_vector(0 downto 0);
     signal x1_mi_rvalid   : std_logic_vector(0 downto 0);
     signal x1_mi_rready   : std_logic_vector(0 downto 0);
@@ -637,7 +675,7 @@ begin
     x0_si_bready(0) <= cc_bready;
     x0_si_arvalid(0) <= cc_arvalid;
     cc_arready <= x0_si_arready(0);
-    cc_rlast(0) <= cc_rlast;
+    x0_si_rlast(0) <= cc_rlast;
     cc_rvalid <= x0_si_rvalid(0);
     x0_si_rready(0) <= cc_rready;
 
