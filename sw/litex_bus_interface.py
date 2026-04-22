@@ -1,5 +1,5 @@
 from typing import Callable, Optional
-from litex.tools.litex_client import RemoteClient
+from litex.tools.remote.comm_uart import CommUART
 
 ##################################################################
 # LiteXBusInterface: LiteX UART -> Bus master interface
@@ -13,7 +13,7 @@ class LiteXBusInterface:
         self.interface = iface
         self.baud = baud
         self.csr_csv = csr_csv
-        self.client: Optional[RemoteClient] = None
+        self.client: Optional[CommUART] = None
         self.prog_cb: Optional[Callable[[int, int], None]] = None
 
     def set_progress_cb(self, prog_cb: Callable[[int, int], None]):
@@ -22,7 +22,7 @@ class LiteXBusInterface:
 
     def connect(self):
         """Open connection."""
-        self.client = RemoteClient(
+        self.client = CommUART(
             port=self.interface,
             baudrate=self.baud,
             csr_csv=self.csr_csv,
@@ -47,31 +47,36 @@ class LiteXBusInterface:
         if self.client is None:
             self.connect()
 
-        # LiteX RemoteClient handles block transfers efficiently
-        # but doesn't have a direct 'write block' to raw address easily exposed
-        # that handles addr_incr=False. We'll loop for now to match interface.
+        # CommUART handles block transfers
+        burst = "incr" if addr_incr else "fixed"
 
+        # Prepare list of 32-bit integers
+        values = []
         for i in range(0, length, 4):
             val = int.from_bytes(data[i:i+4], 'little')
-            self.client.write(addr, val)
-            if addr_incr:
-                addr += 4
-            if self.prog_cb:
-                self.prog_cb(i + 4, length)
+            values.append(val)
+
+        self.client.write(addr, values, burst=burst)
+
+        if self.prog_cb:
+            self.prog_cb(length, length)
 
     def read(self, addr: int, length: int, addr_incr: bool = True, max_block_size: int = -1) -> bytearray:
         """Read a block of data from a specified address."""
         if self.client is None:
             self.connect()
 
+        burst = "incr" if addr_incr else "fixed"
+        num_words = (length + 3) // 4
+        values = self.client.read(addr, length=num_words, burst=burst)
+
         data = bytearray()
-        for i in range(0, length, 4):
-            val = self.client.read(addr)
+        for val in values:
             data.extend(val.to_bytes(4, 'little'))
-            if addr_incr:
-                addr += 4
-            if self.prog_cb:
-                self.prog_cb(i + 4, length)
+
+        if self.prog_cb:
+            self.prog_cb(length, length)
+
         return data[:length]
 
     def read_gpio(self) -> int:
