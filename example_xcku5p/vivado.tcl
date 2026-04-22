@@ -90,7 +90,7 @@ generate_ip axi_protocol_converter xilinx.com ip 2.1 axi_protocol_converter_0 [l
 ]
 
 # Create AXI SmartConnect (Merger: Bridge & CDMA -> DDR4)
-generate_ip axi_smartconnect xilinx.com ip 1.0 axi_smartconnect_1 [list \
+generate_ip smartconnect xilinx.com ip 1.0 axi_smartconnect_1 [list \
   CONFIG.NUM_SI {2} \
   CONFIG.NUM_MI {1} \
   CONFIG.ADDR_WIDTH {31} \
