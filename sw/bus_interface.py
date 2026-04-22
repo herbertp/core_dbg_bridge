@@ -1,5 +1,6 @@
 from uart_bus_interface import UartBusInterface
 from socket_interface import SocketInterface
+from litex_bus_interface import LiteXBusInterface
 
 ##################################################################
 # BusInterface: Bus Interface Wrapper
@@ -14,6 +15,8 @@ class BusInterface:
             self.bus = UartBusInterface(iface, baud)
         elif iface_type == "socket":
             self.bus = SocketInterface(iface)
+        elif iface_type == "litex":
+            self.bus = LiteXBusInterface(iface, baud)
         else:
             self.bus = None
 

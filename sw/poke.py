@@ -9,7 +9,7 @@ from bus_interface import BusInterface
 ##################################################################
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', dest='type',   default='uart',                  help='Device type (uart|socket)')
+    parser.add_argument('-t', dest='type',   default='uart',                  help='Device type (uart|socket|litex)')
     parser.add_argument('-d', dest='device', default='/dev/ttyUSB1',          help='Serial Device')
     parser.add_argument('-b', dest='baud',   default=1000000,       type=int, help='Baud rate')
     parser.add_argument('-a', dest='address',required=True,                   help='Address to write')

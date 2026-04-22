@@ -27,7 +27,6 @@ class _CRG(LiteXModule):
         self.cd_sys       = ClockDomain("sys")
         self.cd_sys4x     = ClockDomain("sys4x")
         self.cd_sys4x_dqs = ClockDomain("sys4x_dqs")
-        self.cd_ic        = ClockDomain("ic")
 
         # # #
 
@@ -41,20 +40,12 @@ class _CRG(LiteXModule):
         pll.create_clkout(self.cd_sys4x,     4*sys_clk_freq)
         pll.create_clkout(self.cd_sys4x_dqs, 4*sys_clk_freq, phase=90)
 
-        self.comb += self.cd_ic.clk.eq(self.cd_sys.clk)
-        self.comb += self.cd_ic.rst.eq(self.cd_sys.rst)
-
         # IDelayCtrl
-        # Workaround for USIDELAYCTRL ClockDomain name extraction
-        from litex.soc.cores.clock import xilinx_us
-        _old_ClockDomain_init = xilinx_us.ClockDomain.__init__
-        def _new_ClockDomain_init(self, name=None, reset_less=False):
-            if name is None: name = "ic" # LiteX USIDELAYCTRL expects 'ic'
-            _old_ClockDomain_init(self, name, reset_less)
-
-        xilinx_us.ClockDomain.__init__ = _new_ClockDomain_init
-        self.idelayctrl = USIDELAYCTRL(cd_ref=self.cd_sys4x, cd_sys=self.cd_sys)
-        xilinx_us.ClockDomain.__init__ = _old_ClockDomain_init
+        self.specials += Instance("IDELAYCTRL",
+            p_SIM_DEVICE = "ULTRASCALE_PLUS",
+            i_REFCLK     = self.cd_sys4x.clk,
+            i_RST        = self.cd_sys4x.rst
+        )
 
 # BaseSoC ------------------------------------------------------------------------------------------
 
@@ -115,7 +106,7 @@ def main():
 
     args = parser.parse_args()
 
-    # Workaround for LiteX 2024.12 CSR/ClockDomain name extraction bug in sandbox
+    # Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
     from litex.soc.interconnect import csr
     _old_CSRBase_init = csr._CSRBase.__init__
     def _new_CSRBase_init(self, size, name=None, n=None):
