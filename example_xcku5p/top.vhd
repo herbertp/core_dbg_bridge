@@ -303,8 +303,33 @@ architecture RTL of top is
     signal cdma_rlast   : std_logic;
 
     --------------------------------------------------------------------
-    -- AXI Interconnect (Merger: Bridge & CDMA -> DDR4, 256-bit)
+    -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
+
+    -- SI0: Bridge path, SI1: CDMA path
+    signal x1_s00_awready : std_logic;
+    signal x1_s00_wready  : std_logic;
+    signal x1_s00_bvalid  : std_logic;
+    signal x1_s00_bid     : std_logic_vector(3 downto 0);
+    signal x1_s00_bresp   : std_logic_vector(1 downto 0);
+    signal x1_s00_arready : std_logic;
+    signal x1_s00_rvalid  : std_logic;
+    signal x1_s00_rid     : std_logic_vector(3 downto 0);
+    signal x1_s00_rdata   : std_logic_vector(255 downto 0);
+    signal x1_s00_rresp   : std_logic_vector(1 downto 0);
+    signal x1_s00_rlast   : std_logic;
+
+    signal x1_s01_awready : std_logic;
+    signal x1_s01_wready  : std_logic;
+    signal x1_s01_bvalid  : std_logic;
+    signal x1_s01_bid     : std_logic_vector(3 downto 0);
+    signal x1_s01_bresp   : std_logic_vector(1 downto 0);
+    signal x1_s01_arready : std_logic;
+    signal x1_s01_rvalid  : std_logic;
+    signal x1_s01_rid     : std_logic_vector(3 downto 0);
+    signal x1_s01_rdata   : std_logic_vector(255 downto 0);
+    signal x1_s01_rresp   : std_logic_vector(1 downto 0);
+    signal x1_s01_rlast   : std_logic;
 
     signal m_awvalid : std_logic;
     signal m_awready : std_logic;
@@ -582,7 +607,7 @@ begin
             aclk          => ui_clk,
             aresetn       => ui_rst_n,
 
-            s_axi_awid(3 downto 0) => cc_awid,
+            s_axi_awid    => cc_awid,
             s_axi_awaddr  => cc_awaddr,
             s_axi_awlen   => cc_awlen,
             s_axi_awsize  => "010",
@@ -602,7 +627,7 @@ begin
             s_axi_bresp   => cc_bresp,
             s_axi_bvalid(0) => cc_bvalid,
             s_axi_bready(0) => cc_bready,
-            s_axi_arid(3 downto 0) => cc_arid,
+            s_axi_arid    => cc_arid,
             s_axi_araddr  => cc_araddr,
             s_axi_arlen   => cc_arlen,
             s_axi_arsize  => "010",
@@ -930,133 +955,151 @@ begin
         dwc_arid <= x0_m00_arid;
 
     --------------------------------------------------------------------
-    -- AXI SmartConnect (Merger: Bridge & CDMA -> DDR4, 256-bit)
+    -- AXI Crossbar 1 (Merger: Bridge & CDMA -> DDR4, 256-bit)
     --------------------------------------------------------------------
 
-    u_merger : entity work.axi_smartconnect_1
+    u_xbar_merger : entity work.axi_crossbar_1
         port map (
             aclk          => ui_clk,
             aresetn       => ui_rst_n,
 
-            -- S00: from DWC (Bridge)
-            s00_axi_awid    => dwc_awid,
-            s00_axi_awaddr  => dwc_awaddr,
-            s00_axi_awlen   => dwc_awlen,
-            s00_axi_awsize  => "101",
-            s00_axi_awburst => dwc_awburst,
-            s00_axi_awlock(0) => '0',
-            s00_axi_awcache => "0011",
-            s00_axi_awprot  => "000",
-            s00_axi_awqos   => "0000",
-            s00_axi_awvalid => dwc_awvalid,
-            s00_axi_awready => dwc_awready,
-            s00_axi_wdata   => dwc_wdata,
-            s00_axi_wstrb   => dwc_wstrb,
-            s00_axi_wlast   => dwc_wlast,
-            s00_axi_wvalid  => dwc_wvalid,
-            s00_axi_wready  => dwc_wready,
-            s00_axi_bid     => dwc_bid,
-            s00_axi_bresp   => dwc_bresp,
-            s00_axi_bvalid  => dwc_bvalid,
-            s00_axi_bready  => dwc_bready,
-            s00_axi_arid    => dwc_arid,
-            s00_axi_araddr  => dwc_araddr,
-            s00_axi_arlen   => dwc_arlen,
-            s00_axi_arsize  => "101",
-            s00_axi_arburst => dwc_arburst,
-            s00_axi_arlock(0) => '0',
-            s00_axi_arcache => "0011",
-            s00_axi_arprot  => "000",
-            s00_axi_arqos   => "0000",
-            s00_axi_arvalid => dwc_arvalid,
-            s00_axi_arready => dwc_arready,
-            s00_axi_rid     => dwc_rid,
-            s00_axi_rdata   => dwc_rdata,
-            s00_axi_rresp   => dwc_rresp,
-            s00_axi_rlast   => dwc_rlast,
-            s00_axi_rvalid  => dwc_rvalid,
-            s00_axi_rready  => dwc_rready,
+            -- SI0: Bridge path, SI1: CDMA path
+            -- Config: ID_WIDTH=4, NUM_SI=2 -> SI ports are 4 bits each, MI port is 5 bits.
+            s_axi_awid(7 downto 4) => (others => '0'), -- SI1
+            s_axi_awid(3 downto 0) => dwc_awid,        -- SI0
+            s_axi_awaddr(61 downto 31) => cdma_awaddr(30 downto 0),
+            s_axi_awaddr(30 downto 0)  => dwc_awaddr,
+            s_axi_awlen(15 downto 8)   => cdma_awlen,
+            s_axi_awlen(7 downto 0)    => dwc_awlen,
+            s_axi_awsize(5 downto 3)   => cdma_awsize,
+            s_axi_awsize(2 downto 0)   => "101",
+            s_axi_awburst(3 downto 2)  => cdma_awburst,
+            s_axi_awburst(1 downto 0)  => dwc_awburst,
+            s_axi_awlock(1 downto 0)   => (others => '0'),
+            s_axi_awcache(7 downto 4)  => cdma_awcache,
+            s_axi_awcache(3 downto 0)  => "0011",
+            s_axi_awprot(5 downto 3)   => cdma_awprot,
+            s_axi_awprot(2 downto 0)   => "000",
+            s_axi_awqos(7 downto 0)    => (others => '0'),
+            s_axi_awvalid(1) => cdma_awvalid,
+            s_axi_awvalid(0) => dwc_awvalid,
+            s_axi_awready(1) => x1_s01_awready,
+            s_axi_awready(0) => x1_s00_awready,
+            s_axi_wdata(511 downto 256) => cdma_wdata,
+            s_axi_wdata(255 downto 0)   => dwc_wdata,
+            s_axi_wstrb(63 downto 32)   => cdma_wstrb,
+            s_axi_wstrb(31 downto 0)   => dwc_wstrb,
+            s_axi_wlast(1) => cdma_wlast,
+            s_axi_wlast(0) => dwc_wlast,
+            s_axi_wvalid(1) => cdma_wvalid,
+            s_axi_wvalid(0) => dwc_wvalid,
+            s_axi_wready(1) => x1_s01_wready,
+            s_axi_wready(0) => x1_s00_wready,
+            s_axi_bid(7 downto 4) => x1_s01_bid,
+            s_axi_bid(3 downto 0) => x1_s00_bid,
+            s_axi_bresp(3 downto 2) => x1_s01_bresp,
+            s_axi_bresp(1 downto 0) => x1_s00_bresp,
+            s_axi_bvalid(1) => x1_s01_bvalid,
+            s_axi_bvalid(0) => x1_s00_bvalid,
+            s_axi_bready(1) => cdma_bready,
+            s_axi_bready(0) => dwc_bready,
+            s_axi_arid(7 downto 4) => (others => '0'), -- SI1
+            s_axi_arid(3 downto 0) => dwc_arid,        -- SI0
+            s_axi_araddr(61 downto 31) => cdma_araddr(30 downto 0),
+            s_axi_araddr(30 downto 0)  => dwc_araddr,
+            s_axi_arlen(15 downto 8)   => cdma_arlen,
+            s_axi_arlen(7 downto 0)    => dwc_arlen,
+            s_axi_arsize(5 downto 3)   => cdma_arsize,
+            s_axi_arsize(2 downto 0)   => "101",
+            s_axi_arburst(3 downto 2)  => cdma_arburst,
+            s_axi_arburst(1 downto 0)  => dwc_arburst,
+            s_axi_arlock(1 downto 0)   => (others => '0'),
+            s_axi_arcache(7 downto 4)  => cdma_arcache,
+            s_axi_arcache(3 downto 0)  => "0011",
+            s_axi_arqos(7 downto 0)    => (others => '0'),
+            s_axi_arprot(5 downto 3)   => cdma_arprot,
+            s_axi_arprot(2 downto 0)   => "000",
+            s_axi_arvalid(1) => cdma_arvalid,
+            s_axi_arvalid(0) => dwc_arvalid,
+            s_axi_arready(1) => x1_s01_arready,
+            s_axi_arready(0) => x1_s00_arready,
+            s_axi_rid(7 downto 4) => x1_s01_rid,
+            s_axi_rid(3 downto 0) => x1_s00_rid,
+            s_axi_rdata(511 downto 256) => x1_s01_rdata,
+            s_axi_rdata(255 downto 0)   => x1_s00_rdata,
+            s_axi_rresp(3 downto 2) => x1_s01_rresp,
+            s_axi_rresp(1 downto 0) => x1_s00_rresp,
+            s_axi_rlast(1) => x1_s01_rlast,
+            s_axi_rlast(0) => x1_s00_rlast,
+            s_axi_rvalid(1) => x1_s01_rvalid,
+            s_axi_rvalid(0) => x1_s00_rvalid,
+            s_axi_rready(1) => cdma_rready,
+            s_axi_rready(0) => dwc_rready,
 
-            -- S01: from CDMA Master
-            s01_axi_awid    => (others => '0'),
-            s01_axi_awaddr  => cdma_awaddr(30 downto 0),
-            s01_axi_awlen   => cdma_awlen,
-            s01_axi_awsize  => cdma_awsize,
-            s01_axi_awburst => cdma_awburst,
-            s01_axi_awlock(0) => '0',
-            s01_axi_awcache => cdma_awcache,
-            s01_axi_awprot  => cdma_awprot,
-            s01_axi_awqos   => "0000",
-            s01_axi_awvalid => cdma_awvalid,
-            s01_axi_awready => cdma_awready,
-            s01_axi_wdata   => cdma_wdata,
-            s01_axi_wstrb   => cdma_wstrb,
-            s01_axi_wlast   => cdma_wlast,
-            s01_axi_wvalid  => cdma_wvalid,
-            s01_axi_wready  => cdma_wready,
-            s01_axi_bid     => open,
-            s01_axi_bresp   => cdma_bresp,
-            s01_axi_bvalid  => cdma_bvalid,
-            s01_axi_bready  => cdma_bready,
-            s01_axi_arid    => (others => '0'),
-            s01_axi_araddr  => cdma_araddr(30 downto 0),
-            s01_axi_arlen   => cdma_arlen,
-            s01_axi_arsize  => cdma_arsize,
-            s01_axi_arburst => cdma_arburst,
-            s01_axi_arlock(0) => '0',
-            s01_axi_arcache => cdma_arcache,
-            s01_axi_arprot  => cdma_arprot,
-            s01_axi_arqos   => "0000",
-            s01_axi_arvalid => cdma_arvalid,
-            s01_axi_arready => cdma_arready,
-            s01_axi_rid     => open,
-            s01_axi_rdata   => cdma_rdata,
-            s01_axi_rresp   => cdma_rresp,
-            s01_axi_rlast   => cdma_rlast,
-            s01_axi_rvalid  => cdma_rvalid,
-            s01_axi_rready  => cdma_rready,
-
-            -- M00: to DDR4
-            m00_axi_awid    => m_awid,
-            m00_axi_awaddr  => m_awaddr,
-            m00_axi_awlen   => m_awlen,
-            m00_axi_awsize  => open,
-            m00_axi_awburst => m_awburst,
-            m00_axi_awlock  => open,
-            m00_axi_awcache => open,
-            m00_axi_awprot  => open,
-            m00_axi_awregion => open,
-            m00_axi_awqos    => open,
-            m00_axi_awvalid => m_awvalid,
-            m00_axi_awready => m_awready,
-            m00_axi_wdata   => m_wdata,
-            m00_axi_wstrb   => m_wstrb,
-            m00_axi_wlast   => m_wlast,
-            m00_axi_wvalid  => m_wvalid,
-            m00_axi_wready  => m_wready,
-            m00_axi_bid     => m_bid,
-            m00_axi_bresp   => m_bresp,
-            m00_axi_bvalid  => m_bvalid,
-            m00_axi_bready  => m_bready,
-            m00_axi_arid    => m_arid,
-            m00_axi_araddr  => m_araddr,
-            m00_axi_arlen   => m_arlen,
-            m00_axi_arsize  => open,
-            m00_axi_arburst => m_arburst,
-            m00_axi_arlock  => open,
-            m00_axi_arcache => open,
-            m00_axi_arprot  => open,
-            m00_axi_arregion => open,
-            m00_axi_arqos    => open,
-            m00_axi_arvalid => m_arvalid,
-            m00_axi_arready => m_arready,
-            m00_axi_rid     => m_rid,
-            m00_axi_rdata   => m_rdata,
-            m00_axi_rresp   => m_rresp,
-            m00_axi_rlast   => m_rlast,
-            m00_axi_rvalid  => m_rvalid,
-            m00_axi_rready  => m_rready
+            -- Master Interface (MI0: to DDR4)
+            m_axi_awid(4 downto 0)    => m_awid,
+            m_axi_awaddr(30 downto 0) => m_awaddr,
+            m_axi_awlen(7 downto 0)   => m_awlen,
+            m_axi_awsize  => open,
+            m_axi_awburst(1 downto 0) => m_awburst,
+            m_axi_awlock  => open,
+            m_axi_awcache => open,
+            m_axi_awprot  => open,
+            m_axi_awregion => open,
+            m_axi_awqos    => open,
+            m_axi_awvalid(0) => m_awvalid,
+            m_axi_awready(0) => m_awready,
+            m_axi_wdata   => m_wdata,
+            m_axi_wstrb   => m_wstrb,
+            m_axi_wlast(0) => m_wlast,
+            m_axi_wvalid(0) => m_wvalid,
+            m_axi_wready(0) => m_wready,
+            m_axi_bid(4 downto 0)     => m_bid,
+            m_axi_bresp   => m_bresp,
+            m_axi_bvalid(0) => m_bvalid,
+            m_axi_bready(0) => m_bready,
+            m_axi_arid(4 downto 0)    => m_arid,
+            m_axi_araddr(30 downto 0) => m_araddr,
+            m_axi_arlen(7 downto 0)   => m_arlen,
+            m_axi_arsize  => open,
+            m_axi_arburst(1 downto 0) => m_arburst,
+            m_axi_arlock  => open,
+            m_axi_arcache => open,
+            m_axi_arprot  => open,
+            m_axi_arregion => open,
+            m_axi_arqos    => open,
+            m_axi_arvalid(0) => m_arvalid,
+            m_axi_arready(0) => m_arready,
+            m_axi_rid(4 downto 0)     => m_rid,
+            m_axi_rdata   => m_rdata,
+            m_axi_rresp   => m_rresp,
+            m_axi_rlast(0) => m_rlast,
+            m_axi_rvalid(0) => m_rvalid,
+            m_axi_rready(0) => m_rready
         );
+
+    -- Routing Merger Slave response outputs back to respective Masters
+    dwc_awready <= x1_s00_awready;
+    dwc_wready  <= x1_s00_wready;
+    dwc_bvalid  <= x1_s00_bvalid;
+    dwc_bid     <= x1_s00_bid;
+    dwc_bresp   <= x1_s00_bresp;
+    dwc_arready <= x1_s00_arready;
+    dwc_rvalid  <= x1_s00_rvalid;
+    dwc_rid     <= x1_s00_rid;
+    dwc_rdata   <= x1_s00_rdata;
+    dwc_rresp   <= x1_s00_rresp;
+    dwc_rlast   <= x1_s00_rlast;
+
+    cdma_awready <= x1_s01_awready;
+    cdma_wready  <= x1_s01_wready;
+    cdma_bvalid  <= x1_s01_bvalid;
+    cdma_bresp   <= x1_s01_bresp;
+    cdma_arready <= x1_s01_arready;
+    cdma_rvalid  <= x1_s01_rvalid;
+    cdma_rdata   <= x1_s01_rdata;
+    cdma_rresp   <= x1_s01_rresp;
+    cdma_rlast   <= x1_s01_rlast;
 
     --------------------------------------------------------------------
     -- Blinking DONE LED

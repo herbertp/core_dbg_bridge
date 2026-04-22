@@ -89,13 +89,15 @@ generate_ip axi_protocol_converter xilinx.com ip 2.1 axi_protocol_converter_0 [l
   CONFIG.ID_WIDTH {4} \
 ]
 
-# Create AXI SmartConnect (Merger: Bridge & CDMA -> DDR4)
-generate_ip smartconnect xilinx.com ip 1.0 axi_smartconnect_1 [list \
+# Create AXI Crossbar (Merger: Bridge & CDMA -> DDR4)
+generate_ip axi_crossbar xilinx.com ip 2.1 axi_crossbar_1 [list \
   CONFIG.NUM_SI {2} \
   CONFIG.NUM_MI {1} \
   CONFIG.ADDR_WIDTH {31} \
   CONFIG.DATA_WIDTH {256} \
   CONFIG.ID_WIDTH {4} \
+  CONFIG.M00_A00_BASE_ADDR {0x00000000} \
+  CONFIG.M00_A00_ADDR_WIDTH {31} \
 ]
 
 # STEP#3: run synthesis, write checkpoint design
