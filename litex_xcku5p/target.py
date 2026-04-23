@@ -9,6 +9,71 @@ try:
 except ImportError:
     import platform
 
+# Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
+from litex.soc.interconnect import csr
+from migen.util.misc import xdir
+
+# If name extraction fails, use a placeholder "unnamed"
+_old_CSRBase_init = csr._CSRBase.__init__
+def _new_CSRBase_init(self, size, name=None, n=None):
+    try:
+        _old_CSRBase_init(self, size, name, n)
+    except ValueError:
+        _old_CSRBase_init(self, size, name or "unnamed", n)
+csr._CSRBase.__init__ = _new_CSRBase_init
+
+_old_CSRConstant_init = csr.CSRConstant.__init__
+def _new_CSRConstant_init(self, value, bits_sign=None, name=None, n=None):
+    try:
+        _old_CSRConstant_init(self, value, bits_sign, name, n)
+    except ValueError:
+        _old_CSRConstant_init(self, value, bits_sign, name or "unnamed", n)
+csr.CSRConstant.__init__ = _new_CSRConstant_init
+
+# In get_csrs, if we find an "unnamed" CSR, try to use its attribute name
+def _new_get_csrs(self, sort=False):
+    try: exclude = self.autocsr_exclude
+    except AttributeError: exclude = {}
+    try: prefixed = self._AutoCSR__prefixed
+    except AttributeError: prefixed = self._AutoCSR__prefixed = set()
+    r = []
+    for k, v in xdir(self, True):
+        if k not in exclude:
+            if isinstance(v, csr._CSRBase):
+                if v.name == "unnamed":
+                    v.name = k
+                    if v.name.startswith("_"): v.name = v.name[1:]
+                r.append(v)
+            elif hasattr(v, "get_csrs") and callable(v.get_csrs):
+                items = v.get_csrs()
+                csr.csrprefix(k + "_", items, prefixed)
+                r += items
+    r = sorted(r, key=lambda x: x.duid)
+    if sort: r = csr._sort_gathered_items(r)
+    return r
+csr.AutoCSR.get_csrs = _new_get_csrs
+
+def _new_get_constants(self, sort=False):
+    try: exclude = self.autocsr_exclude
+    except AttributeError: exclude = {}
+    try: prefixed = self._AutoCSR__prefixed
+    except AttributeError: prefixed = self._AutoCSR__prefixed = set()
+    r = []
+    for k, v in xdir(self, True):
+        if k not in exclude:
+            if isinstance(v, csr.CSRConstant):
+                if v.name == "unnamed":
+                    v.name = k
+                    if v.name.startswith("_"): v.name = v.name[1:]
+                r.append(v)
+            elif hasattr(v, "get_constants") and callable(v.get_constants):
+                items = v.get_constants()
+                csr.csrprefix(k + "_", items, prefixed)
+                r += items
+    r = sorted(r, key=lambda x: x.duid)
+    return r
+csr.AutoCSR.get_constants = _new_get_constants
+
 from litex.soc.cores.clock import *
 from litex.soc.integration.soc import *
 from litex.soc.integration.soc_core import *
@@ -233,14 +298,6 @@ def main():
     parser.set_defaults(integrated_rom_size=0)
 
     args = parser.parse_args()
-
-    # Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
-    from litex.soc.interconnect import csr
-    _old_CSRBase_init = csr._CSRBase.__init__
-    def _new_CSRBase_init(self, size, name=None, n=None):
-        if name is None: name = "unnamed"
-        _old_CSRBase_init(self, size, name, n)
-    csr._CSRBase.__init__ = _new_CSRBase_init
 
     # Final check: remove cpu_type from soc_core_argdict to avoid double passing
     kwargs = soc_core_argdict(args)
