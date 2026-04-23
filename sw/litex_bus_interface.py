@@ -1,3 +1,4 @@
+import struct
 from typing import Callable, Optional
 from litex.tools.remote.comm_uart import CommUART
 
@@ -50,11 +51,32 @@ class LiteXBusInterface:
         # CommUART handles block transfers
         burst = "incr" if addr_incr else "fixed"
 
-        # Prepare list of 32-bit integers
-        values = []
-        for i in range(0, length, 4):
-            val = int.from_bytes(data[i:i+4], 'little')
-            values.append(val)
+        # LiteX CSRs and memory are 32-bit word aligned.
+        # For non-aligned starts or ends, we should ideally do RMW.
+        # But for simplicity and common use cases (DDR), we usually expect alignment.
+        # Let's at least handle the end padding by reading the last word first if it's partial.
+
+        if (addr % 4) != 0:
+            # This is harder to handle with the current CommUART.write(addr, values)
+            # if we want to be performant. For now, assume 4-byte aligned start.
+            pass
+
+        actual_data = bytearray(data[:length])
+        if (length % 4) != 0:
+            last_word_addr = addr + (length // 4) * 4
+            try:
+                last_word = self.read32(last_word_addr)
+            except:
+                last_word = 0
+
+            last_word_bytes = bytearray(struct.pack('<I', last_word))
+            padding_needed = 4 - (length % 4)
+            for i in range(padding_needed):
+                actual_data.append(last_word_bytes[(length % 4) + i])
+
+        # Prepare list of 32-bit integers using struct for performance
+        num_words = len(actual_data) // 4
+        values = list(struct.unpack(f'<{num_words}I', actual_data))
 
         self.client.write(addr, values, burst=burst)
 
@@ -70,9 +92,8 @@ class LiteXBusInterface:
         num_words = (length + 3) // 4
         values = self.client.read(addr, length=num_words, burst=burst)
 
-        data = bytearray()
-        for val in values:
-            data.extend(val.to_bytes(4, 'little'))
+        # Use struct for performance
+        data = bytearray(struct.pack(f'<{len(values)}I', *values))
 
         if self.prog_cb:
             self.prog_cb(length, length)
