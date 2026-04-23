@@ -156,14 +156,18 @@ class BaseSoC(SoCCore):
 
         # Monkeypatch VexRiscv to use our preferred memory map
         # This is necessary because LiteX CPUs have hardcoded memory maps that override SoC settings.
-        vexriscv.VexRiscv.mem_map = {
-            "rom":            0x80000000,
-            "sram":           0x81000000,
-            "main_ram":       0x00000000,
-            "csr":            0xf0000000,
-            "vexriscv_debug": 0xf00f0000,
-        }
-        vexriscv.VexRiscv.io_regions = {0xf0000000: 0x10000000} # Only CSRs are IO
+        # We must override it as a property since it is defined as one in the base class.
+        def get_mem_map(self):
+            return {
+                "rom":            0x80000000,
+                "sram":           0x81000000,
+                "main_ram":       0x00000000,
+                "csr":            0xf0000000,
+                "vexriscv_debug": 0xf00f0000,
+            }
+        vexriscv.VexRiscv.mem_map = property(get_mem_map)
+        # Also ensure IO regions are limited to CSRs to allow caching of high-address ROM/SRAM
+        vexriscv.VexRiscv.io_regions = {0xf0000000: 0x10000000}
 
         # Force main ram at 0x00000000 for backwards compatibility
         kwargs["integrated_main_ram_size"] = 0 # Ensure we use LiteDRAM
@@ -296,7 +300,7 @@ def main():
         **kwargs
     )
 
-    builder = Builder(soc, csr_csv="csr.csv", compile_software=False)
+    builder = Builder(soc, csr_csv="csr.csv", compile_software=True)
     if args.build:
         builder.build(build_name="rk_xcku5p")
     else:
