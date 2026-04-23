@@ -11,6 +11,10 @@ class BusInterface:
     device over either UART or a socket connection.
     """
     def __init__(self, iface_type: str = 'uart', iface: str = '/dev/ttyUSB1', baud: int = 115200):
+        # Default to litex if interface looks like a TCP address
+        if iface_type == 'uart' and ':' in iface:
+            iface_type = 'litex'
+
         if iface_type == "uart":
             self.bus = UartBusInterface(iface, baud)
         elif iface_type == "socket":

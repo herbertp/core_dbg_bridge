@@ -13,6 +13,7 @@ from litex.soc.cores.clock import *
 from litex.soc.integration.soc import *
 from litex.soc.integration.soc_core import *
 from litex.soc.integration.builder import *
+from litex.soc.cores.cpu import vexriscv
 from litex.soc.cores.led import LedChaser
 from litex.soc.cores.gpio import GPIOIn
 from litex.soc.interconnect import stream
@@ -153,17 +154,39 @@ class BaseSoC(SoCCore):
     def __init__(self, sys_clk_freq=125e6, **kwargs):
         platform_obj = platform.Platform()
 
+        # Monkeypatch VexRiscv to use our preferred memory map
+        # This is necessary because LiteX CPUs have hardcoded memory maps that override SoC settings.
+        vexriscv.VexRiscv.mem_map = {
+            "rom":            0x80000000,
+            "sram":           0x81000000,
+            "main_ram":       0x00000000,
+            "csr":            0xf0000000,
+            "vexriscv_debug": 0xf00f0000,
+        }
+        vexriscv.VexRiscv.io_regions = {0xf0000000: 0x10000000} # Only CSRs are IO
+
         # Force main ram at 0x00000000 for backwards compatibility
         kwargs["integrated_main_ram_size"] = 0 # Ensure we use LiteDRAM
         SoCCore.mem_map["main_ram"] = 0x00000000
-        SoCCore.mem_map["sram"]     = 0x80000000 # Move SRAM out of the way
-        SoCCore.mem_map["csr"]      = 0xf0000000 # Move CSR out of the way
+        SoCCore.mem_map["rom"]      = 0x80000000
+        SoCCore.mem_map["sram"]     = 0x81000000
+        SoCCore.mem_map["csr"]      = 0xf0000000
 
         # SoCCore ----------------------------------------------------------------------------------
         SoCCore.__init__(self, platform_obj, sys_clk_freq,
-            cpu_type       = None, # Force no CPU
             ident          = "LiteX SoC on RK-XCKU5P-F",
             **kwargs)
+
+        # Force main_ram back to 0x00000000 (VexRiscv might have moved it)
+        self.mem_map["main_ram"] = 0x00000000
+
+        # Move CPU's reset address to 0x80000000 (ROM)
+        if hasattr(self, "cpu") and self.cpu.human_name != "None":
+            self.cpu.set_reset_address(self.mem_map["rom"])
+
+        # UART Bridge ------------------------------------------------------------------------------
+        if kwargs.get("uart_name") == "crossover":
+            self.add_uartbone(baudrate=kwargs.get("uart_baudrate", 4000000))
 
         # CRG --------------------------------------------------------------------------------------
         self.crg = _CRG(platform_obj, sys_clk_freq)
@@ -183,10 +206,46 @@ class BaseSoC(SoCCore):
 
         # Leds -------------------------------------------------------------------------------------
         user_leds = platform_obj.request_all("user_led")
-        chaser_leds = Signal(len(user_leds))
-        self.leds = LedChaser(
-            pads         = chaser_leds,
-            sys_clk_freq = sys_clk_freq)
+
+        # Heartbeat LED (LED 0)
+        heartbeat = Signal(32)
+        self.sync += heartbeat.eq(heartbeat + 1)
+        self.comb += user_leds[0].eq(heartbeat[26])
+
+        # DDR4 Training Done (LED 1)
+        self.ddr_done = CSRStorage(description="Set to 1 by BIOS when DDR4 training is done")
+        self.comb += user_leds[1].eq(self.ddr_done.storage)
+
+        # Bus Activity (LED 2 & 3)
+        read_led  = Signal()
+        write_led = Signal()
+        read_timer  = Signal(32)
+        write_timer = Signal(32)
+
+        # Monitor system bus for activity
+        bus = getattr(self, "bus", None)
+        if bus is not None:
+            if hasattr(bus, "ar"): # AXI
+                self.sync += [
+                    If(bus.ar.valid & bus.ar.ready,
+                        read_timer.eq(sys_clk_freq // 10)
+                    ).Elif(read_timer != 0,
+                        read_timer.eq(read_timer - 1)
+                    ),
+                    read_led.eq(read_timer != 0),
+
+                    If(bus.aw.valid & bus.aw.ready,
+                        write_timer.eq(sys_clk_freq // 10)
+                    ).Elif(write_timer != 0,
+                        write_timer.eq(write_timer - 1)
+                    ),
+                    write_led.eq(write_timer != 0),
+                ]
+
+        self.comb += [
+            user_leds[2].eq(read_led),
+            user_leds[3].eq(write_led),
+        ]
 
         # Buttons ----------------------------------------------------------------------------------
         self.buttons = GPIOIn(
@@ -197,20 +256,6 @@ class BaseSoC(SoCCore):
             reader_port = self.sdram.crossbar.get_port(data_width=256),
             writer_port = self.sdram.crossbar.get_port(data_width=256),
         )
-
-        # LED Visualization ------------------------------------------------------------------------
-        dma_leds = Signal(4)
-        self.comb += [
-            dma_leds[0].eq(self.memcopy.busy.status),
-            dma_leds[1].eq(reduce(xor, self.memcopy.data_xor)),
-            dma_leds[2].eq(reduce(and_, self.memcopy.data_and)),
-            dma_leds[3].eq(reduce(or_, self.memcopy.data_or)),
-        ]
-        for i in range(len(user_leds)):
-            if i < 4:
-                self.comb += user_leds[i].eq(Mux(self.memcopy.busy.status, dma_leds[i], chaser_leds[i]))
-            else:
-                self.comb += user_leds[i].eq(chaser_leds[i])
 
     def do_finalize(self):
         SoCCore.do_finalize(self)
@@ -228,9 +273,10 @@ def main():
     parser.add_argument("--sys-clk-freq", default=125e6, type=float, help="System clock frequency")
 
     parser.set_defaults(bus_standard="axi")
-    parser.set_defaults(uart_name="uartbone")
+    parser.set_defaults(uart_name="crossover")
     parser.set_defaults(uart_baudrate=4000000)
-    parser.set_defaults(integrated_rom_size=0)
+    parser.set_defaults(integrated_rom_size=0x10000)
+    parser.set_defaults(integrated_sram_size=0x4000)
 
     args = parser.parse_args()
 
@@ -244,8 +290,6 @@ def main():
 
     # Final check: remove cpu_type from soc_core_argdict to avoid double passing
     kwargs = soc_core_argdict(args)
-    if "cpu_type" in kwargs:
-        del kwargs["cpu_type"]
 
     soc = BaseSoC(
         sys_clk_freq = args.sys_clk_freq,

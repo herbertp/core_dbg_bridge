@@ -1,20 +1,21 @@
 import struct
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
 from litex.tools.remote.comm_uart import CommUART
+from litex.tools.litex_client import RemoteClient
 
 ##################################################################
-# LiteXBusInterface: LiteX UART -> Bus master interface
+# LiteXBusInterface: LiteX UART/TCP -> Bus master interface
 ##################################################################
 class LiteXBusInterface:
     """
     LiteXBusInterface provides a bus master interface over a serial port
-    using the LiteX/Etherbone protocol.
+    or TCP connection using the LiteX protocol.
     """
     def __init__(self, iface: str = '/dev/ttyUSB1', baud: int = 115200, csr_csv: str = "csr.csv"):
         self.interface = iface
         self.baud = baud
         self.csr_csv = csr_csv
-        self.client: Optional[CommUART] = None
+        self.client: Optional[Union[CommUART, RemoteClient]] = None
         self.prog_cb: Optional[Callable[[int, int], None]] = None
         # Max words per UART burst (protocol uses a single byte for length)
         # We use 255 which is the theoretical max, or 128 for more robustness.
@@ -27,12 +28,23 @@ class LiteXBusInterface:
 
     def connect(self):
         """Open connection."""
-        self.client = CommUART(
-            port=self.interface,
-            baudrate=self.baud,
-            csr_csv=self.csr_csv,
-            debug=False
-        )
+        if ":" in self.interface:
+            # TCP connection (host:port)
+            host, port = self.interface.split(":")
+            self.client = RemoteClient(
+                host=host,
+                port=int(port),
+                csr_csv=self.csr_csv,
+                debug=False
+            )
+        else:
+            # Serial connection
+            self.client = CommUART(
+                port=self.interface,
+                baudrate=self.baud,
+                csr_csv=self.csr_csv,
+                debug=False
+            )
         self.client.open()
 
     def read32(self, addr: int) -> int:
