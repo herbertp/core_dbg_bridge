@@ -283,16 +283,30 @@ def main():
 
     args = parser.parse_args()
 
-    # Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
-    from litex.soc.interconnect import csr
-    _old_CSRBase_init = csr._CSRBase.__init__
-    csr_count = [0]
-    def _new_CSRBase_init(self, size, name=None, n=None):
-        if name is None:
-            name = f"unnamed{csr_count[0]}"
-            csr_count[0] += 1
-        _old_CSRBase_init(self, size, name, n)
-    csr._CSRBase.__init__ = _new_CSRBase_init
+    # Workaround for LiteX / Migen CSR name extraction bug in Python 3.11+
+    import migen.fhdl.tracer as tracer
+    import opcode
+    _old_get_var_name = tracer.get_var_name
+    def _new_get_var_name(frame):
+        try:
+            code = frame.f_code
+            lasti = frame.f_lasti
+            for i in range(lasti + 2, min(lasti + 20, len(code.co_code)), 2):
+                op = code.co_code[i]
+                opc = opcode.opname[op]
+                if opc in ["STORE_NAME", "STORE_ATTR", "STORE_FAST", "STORE_DEREF", "STORE_GLOBAL"]:
+                    name_idx = code.co_code[i+1]
+                    if opc == "STORE_FAST":
+                        return code.co_varnames[name_idx]
+                    if opc == "STORE_DEREF":
+                        # Python 3.11+ cellvars and freevars are combined in some contexts
+                        combined = code.co_cellvars + code.co_freevars
+                        return combined[name_idx]
+                    return code.co_names[name_idx]
+        except:
+            pass
+        return _old_get_var_name(frame)
+    tracer.get_var_name = _new_get_var_name
 
     # Final check: remove cpu_type from soc_core_argdict to avoid double passing
     kwargs = soc_core_argdict(args)
