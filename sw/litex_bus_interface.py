@@ -16,6 +16,10 @@ class LiteXBusInterface:
         self.csr_csv = csr_csv
         self.client: Optional[CommUART] = None
         self.prog_cb: Optional[Callable[[int, int], None]] = None
+        # Max words per UART burst (protocol uses a single byte for length)
+        # We use 255 which is the theoretical max, or 128 for more robustness.
+        # LiteX uses 8 for writes, but we want performance. Let's use 255.
+        self.MAX_WORDS_PER_BURST = 255
 
     def set_progress_cb(self, prog_cb: Callable[[int, int], None]):
         """Set progress callback."""
@@ -48,17 +52,13 @@ class LiteXBusInterface:
         if self.client is None:
             self.connect()
 
-        # CommUART handles block transfers
-        burst = "incr" if addr_incr else "fixed"
-
-        # LiteX CSRs and memory are 32-bit word aligned.
-        # For non-aligned starts or ends, we should ideally do RMW.
-        # But for simplicity and common use cases (DDR), we usually expect alignment.
-        # Let's at least handle the end padding by reading the last word first if it's partial.
-
         if (addr % 4) != 0:
             raise ValueError(f"LiteX address must be 4-byte aligned (0x{addr:08x})")
 
+        burst = "incr" if addr_incr else "fixed"
+
+        # LiteDRAM and LiteX memory are 32-bit word aligned.
+        # Perform RMW for the last word if it's partial.
         actual_data = bytearray(data[:length])
         if (length % 4) != 0:
             last_word_addr = addr + (length // 4) * 4
@@ -68,14 +68,22 @@ class LiteXBusInterface:
                 last_word = 0
 
             last_word_bytes = struct.pack('<I', last_word)
-            padding_needed = 4 - (length % 4)
             actual_data.extend(last_word_bytes[length % 4:])
 
-        # Prepare list of 32-bit integers using struct for performance
-        num_words = len(actual_data) // 4
-        values = list(struct.unpack(f'<{num_words}I', actual_data))
+        # Protocol limit chunking (max 255 words per burst)
+        num_words_total = len(actual_data) // 4
+        words_written = 0
 
-        self.client.write(addr, values, burst=burst)
+        while words_written < num_words_total:
+            words_to_write = min(self.MAX_WORDS_PER_BURST, num_words_total - words_written)
+            chunk_data = actual_data[words_written*4 : (words_written + words_to_write)*4]
+            values = list(struct.unpack(f'<{words_to_write}I', chunk_data))
+
+            # Mask to 32-bit unsigned to prevent ValueError in struct.pack later
+            values = [v & 0xFFFFFFFF for v in values]
+
+            self.client.write(addr + words_written*4, values, burst=burst)
+            words_written += words_to_write
 
         if self.prog_cb:
             self.prog_cb(length, length)
@@ -86,21 +94,25 @@ class LiteXBusInterface:
             self.connect()
 
         burst = "incr" if addr_incr else "fixed"
-        num_words = (length + 3) // 4
-        values = self.client.read(addr, length=num_words, burst=burst)
 
-        # Handle single int response for num_words=1
-        if not isinstance(values, list):
-            values = [values]
+        num_words_total = (length + 3) // 4
+        values = []
 
-        # Use struct for performance
-        try:
-            data = bytearray(struct.pack(f'<{len(values)}I', *values))
-        except Exception:
-            # Fallback if values are not 32-bit ints (though they should be)
-            data = bytearray()
-            for val in values:
-                data.extend(struct.pack('<I', val & 0xFFFFFFFF))
+        words_read = 0
+        while words_read < num_words_total:
+            words_to_read = min(self.MAX_WORDS_PER_BURST, num_words_total - words_read)
+            chunk_values = self.client.read(addr + words_read*4, length=words_to_read, burst=burst)
+
+            if not isinstance(chunk_values, list):
+                chunk_values = [chunk_values]
+
+            values.extend(chunk_values)
+            words_read += words_to_read
+
+        # Use struct for performance and safety
+        data = bytearray()
+        for v in values:
+            data.extend(struct.pack('<I', v & 0xFFFFFFFF))
 
         if self.prog_cb:
             self.prog_cb(length, length)

@@ -35,6 +35,7 @@ def main():
         sys.stderr.write(f"Error: Invalid address or size format: {e}\n")
         sys.exit(1)
 
+    # Use a larger chunk size for high-level reads to balance performance and memory
     chunk_size = 1024 * 1024
 
     remaining = size

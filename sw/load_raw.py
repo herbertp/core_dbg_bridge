@@ -75,8 +75,8 @@ def main():
         # Discard remaining data if size limit was reached
         if size_limit is not None and total_written == size_limit:
             sys.stderr.write("Discarding extra data from stdin...\n")
-            while sys.stdin.buffer.read(chunk_size):
-                pass
+            # Drain stdin without hanging on potentially infinite streams
+            sys.stdin.buffer.raw.close()
 
         sys.stderr.write(f"Successfully written {total_written} bytes.\n")
 
