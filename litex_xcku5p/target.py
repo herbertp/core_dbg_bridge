@@ -189,8 +189,7 @@ class BaseSoC(SoCCore):
             self.cpu.set_reset_address(self.mem_map["rom"])
 
         # UART Bridge ------------------------------------------------------------------------------
-        if kwargs.get("uart_name") == "crossover":
-            self.add_uartbone(baudrate=kwargs.get("uart_baudrate", 4000000))
+        # (Handled automatically by SoCCore when uart_name="crossover+uartbone")
 
         # CRG --------------------------------------------------------------------------------------
         self.crg = _CRG(platform_obj, sys_clk_freq)
@@ -277,7 +276,7 @@ def main():
     parser.add_argument("--sys-clk-freq", default=125e6, type=float, help="System clock frequency")
 
     parser.set_defaults(bus_standard="axi")
-    parser.set_defaults(uart_name="crossover")
+    parser.set_defaults(uart_name="crossover+uartbone")
     parser.set_defaults(uart_baudrate=4000000)
     parser.set_defaults(integrated_rom_size=0x10000)
     parser.set_defaults(integrated_sram_size=0x4000)
@@ -287,8 +286,11 @@ def main():
     # Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
     from litex.soc.interconnect import csr
     _old_CSRBase_init = csr._CSRBase.__init__
+    csr_count = [0]
     def _new_CSRBase_init(self, size, name=None, n=None):
-        if name is None: name = "unnamed"
+        if name is None:
+            name = f"unnamed{csr_count[0]}"
+            csr_count[0] += 1
         _old_CSRBase_init(self, size, name, n)
     csr._CSRBase.__init__ = _new_CSRBase_init
 
