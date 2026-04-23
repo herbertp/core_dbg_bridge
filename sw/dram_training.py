@@ -6,7 +6,6 @@ import time
 import struct
 import argparse
 import json
-import re
 from typing import List, Optional, Dict
 
 # Add sw/ to path for bus_interface
@@ -34,8 +33,11 @@ class DRAMTrainer:
         self.csr_csv = csr_csv
         self.rdphase = 0
         self.wrphase = 0
+        # Default settings for RK-XCKU5P-F (Kintex UltraScale+)
         self.num_modules = 4
         self.dfi_bytes = 8
+        self.phy_phases = 4
+        self.phy_bitslips = 8
 
     def load_config(self):
         with open(self.csr_csv, 'r') as f:
@@ -121,7 +123,7 @@ class DRAMTrainer:
         return pattern
 
     def write_read_check_test_pattern(self, module: int, seed: int) -> int:
-        pattern = self.get_test_pattern(seed, SDRAM_PHY_PHASES, self.dfi_bytes)
+        pattern = self.get_test_pattern(seed, self.phy_phases, self.dfi_bytes)
 
         # Activate
         self.regs.sdram_dfii_pi0_address.write(0)
@@ -130,7 +132,7 @@ class DRAMTrainer:
         self.regs.sdram_dfii_pi0_command_issue.write(1)
 
         # Write Data
-        for p in range(SDRAM_PHY_PHASES):
+        for p in range(self.phy_phases):
             val = struct.unpack("<Q", pattern[p])[0] if self.dfi_bytes == 8 else struct.unpack("<I", pattern[p])[0]
             getattr(self.regs, f"sdram_dfii_pi{p}_wrdata").write(val)
 
@@ -148,7 +150,7 @@ class DRAMTrainer:
         self.regs.sdram_dfii_pi0_command_issue.write(1)
 
         errors = 0
-        for p in range(SDRAM_PHY_PHASES):
+        for p in range(self.phy_phases):
             read_val = getattr(self.regs, f"sdram_dfii_pi{p}_rddata").read()
             read_bytes = struct.pack("<Q", read_val) if self.dfi_bytes == 8 else struct.pack("<I", read_val)
 
@@ -172,9 +174,9 @@ class DRAMTrainer:
             print(f"  Module {m}: ", end="")
             best_bitslip = -1
             best_delay = -1
-            max_window = 0
+            max_window = -1
 
-            for b in range(SDRAM_PHY_BITSLIPS):
+            for b in range(self.phy_bitslips):
                 # Set bitslip
                 self.regs.ddrphy_dly_sel.write(1 << m)
                 self.regs.ddrphy_rdly_dq_bitslip_rst.write(1)
@@ -329,28 +331,14 @@ class DRAMTrainer:
 
         if self.memtest():
             print("\nTraining successful!")
-            print("\nSane defaults for target.py BaseSoC (add to do_finalize):")
+            print("\nSane defaults for target.py (Note: these should be applied via software/BIOS or a reset FSM):")
             print("-" * 40)
-            print("    def do_finalize(self):")
-            print("        SoCCore.do_finalize(self)")
-            print("        ...")
-            print("        # Sane Defaults from sw/dram_training.py")
-            print("        dram_settings = {")
+            print("        # Successful Training Settings:")
             for res in results:
-                print(f"            {res['module']}: {{'bitslip': {res['bitslip']}, 'delay': {res['delay']}}},")
-            print("        }")
-            print("        for m, settings in dram_settings.items():")
-            print("            self.comb += [")
-            print("                self.ddrphy._dly_sel.storage.eq(1 << m),")
-            print("                self.ddrphy._rdly_dq_bitslip_rst.re.eq(1),")
-            print("                self.ddrphy._rdly_dq_rst.re.eq(1),")
-            print("            ]")
-            print("            for _ in range(settings['bitslip']):")
-            print("                self.comb += self.ddrphy._rdly_dq_bitslip.re.eq(1)")
-            print("            for _ in range(settings['delay']):")
-            print("                self.comb += self.ddrphy._rdly_dq_inc.re.eq(1)")
+                m, b, d = res["module"], res["bitslip"], res["delay"]
+                print(f"        # Module {m}: bitslip={b}, delay={d}")
 
-            print("\nAlternatively, save to dram_settings.json and load in target.py:")
+            print("\nDetailed settings (JSON):")
             with open("dram_settings.json", "w") as f:
                 json.dump(results, f, indent=4)
             print("dram_settings.json has been created.")
