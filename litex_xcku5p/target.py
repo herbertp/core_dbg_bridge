@@ -15,9 +15,105 @@ from litex.soc.integration.soc_core import *
 from litex.soc.integration.builder import *
 from litex.soc.cores.led import LedChaser
 from litex.soc.cores.gpio import GPIOIn
+from litex.soc.interconnect import stream
 
 from litedram.modules import MT40A512M16
 from litedram.phy import usddrphy
+from litedram.frontend.dma import LiteDRAMDMAReader, LiteDRAMDMAWriter
+
+from functools import reduce
+from operator import xor, and_, or_
+
+# DMA ----------------------------------------------------------------------------------------------
+
+class MemCopyDMA(LiteXModule):
+    def __init__(self, reader_port, writer_port):
+        self.source = CSRStorage(32, name="source", description="Source address (256-bit word aligned)")
+        self.dest   = CSRStorage(32, name="dest", description="Destination address (256-bit word aligned)")
+        self.length = CSRStorage(32, name="length", description="Transfer length in 256-bit beats")
+        self.ctl    = CSRStorage(name="ctl", fields=[
+            CSRField("start", size=1, pulse=True, description="Start DMA transfer"),
+        ])
+        self.busy   = CSRStatus(name="busy", description="DMA transfer in progress")
+
+        # # #
+
+        # Readers / Writers
+        self.reader = reader = LiteDRAMDMAReader(reader_port, fifo_depth=32)
+        self.writer = writer = LiteDRAMDMAWriter(writer_port, fifo_depth=32)
+
+        # Internal Registers
+        src_addr  = Signal(32)
+        dst_addr  = Signal(32)
+        remaining = Signal(32)
+
+        # Visualization signals
+        self.data_xor = Signal(256)
+        self.data_and = Signal(256)
+        self.data_or  = Signal(256)
+
+        # Control FSM
+        self.fsm = fsm = FSM(reset_state="IDLE")
+        fsm.act("IDLE",
+            If(self.ctl.fields.start & (self.length.storage != 0),
+                NextValue(src_addr,  self.source.storage),
+                NextValue(dst_addr,  self.dest.storage),
+                NextValue(remaining, self.length.storage),
+                NextState("TRANSFER")
+            )
+        )
+        fsm.act("TRANSFER",
+            self.busy.status.eq(1),
+
+            # Reader Sink (Address)
+            If(remaining != 0,
+                reader.sink.valid.eq(1),
+                reader.sink.address.eq(src_addr),
+                If(reader.sink.ready,
+                    NextValue(src_addr, src_addr + 1),
+                    NextValue(remaining, remaining - 1)
+                )
+            ),
+
+            # Data Path & Writer Sink
+            # Connect Reader Source to Writer Sink (including address)
+            reader.source.connect(writer.sink, omit={"address"}),
+            writer.sink.address.eq(dst_addr),
+
+            # Increment Writer Address
+            If(writer.sink.valid & writer.sink.ready,
+                NextValue(dst_addr, dst_addr + 1),
+            ),
+
+            # Termination
+            If((remaining == 0) & (writer.sink.valid == 0),
+                NextState("FINISH")
+            )
+        )
+
+        # Beat counters to ensure all data is written
+        beats_written = Signal(32)
+
+        self.sync += [
+            If(fsm.ongoing("IDLE"),
+                beats_written.eq(0)
+            ).Elif(fsm.ongoing("TRANSFER"),
+                If(writer.sink.valid & writer.sink.ready,
+                    beats_written.eq(beats_written + 1),
+                    # Visualization capture
+                    self.data_xor.eq(writer.sink.data),
+                    self.data_and.eq(writer.sink.data),
+                    self.data_or.eq(writer.sink.data),
+                )
+            )
+        ]
+
+        fsm.act("FINISH",
+            self.busy.status.eq(1),
+            If(beats_written == self.length.storage,
+                NextState("IDLE")
+            )
+        )
 
 # CRG ----------------------------------------------------------------------------------------------
 
@@ -86,13 +182,35 @@ class BaseSoC(SoCCore):
             )
 
         # Leds -------------------------------------------------------------------------------------
+        user_leds = platform_obj.request_all("user_led")
+        chaser_leds = Signal(len(user_leds))
         self.leds = LedChaser(
-            pads         = platform_obj.request_all("user_led"),
+            pads         = chaser_leds,
             sys_clk_freq = sys_clk_freq)
 
         # Buttons ----------------------------------------------------------------------------------
         self.buttons = GPIOIn(
             pads         = platform_obj.request_all("user_btn"))
+
+        # DMA --------------------------------------------------------------------------------------
+        self.memcopy = MemCopyDMA(
+            reader_port = self.sdram.crossbar.get_port(data_width=256),
+            writer_port = self.sdram.crossbar.get_port(data_width=256),
+        )
+
+        # LED Visualization ------------------------------------------------------------------------
+        dma_leds = Signal(4)
+        self.comb += [
+            dma_leds[0].eq(self.memcopy.busy.status),
+            dma_leds[1].eq(reduce(xor, self.memcopy.data_xor)),
+            dma_leds[2].eq(reduce(and_, self.memcopy.data_and)),
+            dma_leds[3].eq(reduce(or_, self.memcopy.data_or)),
+        ]
+        for i in range(len(user_leds)):
+            if i < 4:
+                self.comb += user_leds[i].eq(Mux(self.memcopy.busy.status, dma_leds[i], chaser_leds[i]))
+            else:
+                self.comb += user_leds[i].eq(chaser_leds[i])
 
     def do_finalize(self):
         SoCCore.do_finalize(self)
