@@ -26,8 +26,6 @@ def main():
     parser.add_argument('-s', dest='size',    required=True,                      help='Size to dump')
     args = parser.parse_args()
 
-    # We use 'litex' as requested, but BusInterface allows others.
-    # The requirement said LiteX support is enough for now.
     bus_if = BusInterface('litex', args.device, args.baud)
 
     try:
@@ -37,8 +35,6 @@ def main():
         sys.stderr.write(f"Error: Invalid address or size format: {e}\n")
         sys.exit(1)
 
-    # Chunk size for large transfers to avoid excessive memory usage.
-    # 1MB is a good compromise between overhead and memory usage.
     chunk_size = 1024 * 1024
 
     remaining = size

@@ -57,9 +57,7 @@ class LiteXBusInterface:
         # Let's at least handle the end padding by reading the last word first if it's partial.
 
         if (addr % 4) != 0:
-            # This is harder to handle with the current CommUART.write(addr, values)
-            # if we want to be performant. For now, assume 4-byte aligned start.
-            pass
+            raise ValueError(f"LiteX address must be 4-byte aligned (0x{addr:08x})")
 
         actual_data = bytearray(data[:length])
         if (length % 4) != 0:
@@ -69,10 +67,9 @@ class LiteXBusInterface:
             except:
                 last_word = 0
 
-            last_word_bytes = bytearray(struct.pack('<I', last_word))
+            last_word_bytes = struct.pack('<I', last_word)
             padding_needed = 4 - (length % 4)
-            for i in range(padding_needed):
-                actual_data.append(last_word_bytes[(length % 4) + i])
+            actual_data.extend(last_word_bytes[length % 4:])
 
         # Prepare list of 32-bit integers using struct for performance
         num_words = len(actual_data) // 4
@@ -92,8 +89,18 @@ class LiteXBusInterface:
         num_words = (length + 3) // 4
         values = self.client.read(addr, length=num_words, burst=burst)
 
+        # Handle single int response for num_words=1
+        if not isinstance(values, list):
+            values = [values]
+
         # Use struct for performance
-        data = bytearray(struct.pack(f'<{len(values)}I', *values))
+        try:
+            data = bytearray(struct.pack(f'<{len(values)}I', *values))
+        except Exception:
+            # Fallback if values are not 32-bit ints (though they should be)
+            data = bytearray()
+            for val in values:
+                data.extend(struct.pack('<I', val & 0xFFFFFFFF))
 
         if self.prog_cb:
             self.prog_cb(length, length)
