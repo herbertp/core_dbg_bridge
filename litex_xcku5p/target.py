@@ -138,7 +138,7 @@ class _CRG(LiteXModule):
         pll.create_clkout(self.cd_sys,       sys_clk_freq)
         pll.create_clkout(self.cd_sys4x,     4*sys_clk_freq)
         pll.create_clkout(self.cd_sys4x_dqs, 4*sys_clk_freq, phase=90)
-        pll.create_clkout(self.cd_idelay,    500e6)
+        pll.create_clkout(self.cd_idelay,    400e6)
 
         self.comb += self.cd_ic.clk.eq(self.cd_sys.clk)
         self.comb += self.cd_ic.rst.eq(self.cd_sys.rst)
@@ -153,7 +153,7 @@ class _CRG(LiteXModule):
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
-    def __init__(self, sys_clk_freq=250e6, **kwargs):
+    def __init__(self, sys_clk_freq=200e6, **kwargs):
         platform_obj = platform.Platform()
 
         # Monkeypatch VexRiscv to use our preferred memory map
@@ -205,7 +205,7 @@ class BaseSoC(SoCCore):
             self.ddrphy = usddrphy.USPDDRPHY(platform_obj.request("ddr4"),
                 memtype          = "DDR4",
                 sys_clk_freq     = sys_clk_freq,
-                iodelay_clk_freq = 500e6)
+                iodelay_clk_freq = 400e6)
             self.add_sdram("sdram",
                 phy           = self.ddrphy,
                 module        = MT40A512M16(sys_clk_freq, "1:4"),
@@ -279,7 +279,7 @@ def main():
     soc_core_args(parser)
     parser.add_argument("--build", action="store_true", help="Build bitstream")
     parser.add_argument("--load",  action="store_true", help="Load bitstream")
-    parser.add_argument("--sys-clk-freq", default=250e6, type=float, help="System clock frequency")
+    parser.add_argument("--sys-clk-freq", default=200e6, type=float, help="System clock frequency")
 
     parser.set_defaults(bus_standard="axi")
     parser.set_defaults(uart_name="crossover")
