@@ -100,13 +100,6 @@ def main():
 
     args = parser.parse_args()
 
-    # Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
-    from litex.soc.interconnect import csr
-    _old_CSRBase_init = csr._CSRBase.__init__
-    def _new_CSRBase_init(self, size, name=None, n=None):
-        if name is None: name = "unnamed"
-        _old_CSRBase_init(self, size, name, n)
-    csr._CSRBase.__init__ = _new_CSRBase_init
 
     soc = BaseSoC(
         sys_clk_freq = args.sys_clk_freq,
