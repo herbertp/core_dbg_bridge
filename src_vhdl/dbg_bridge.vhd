@@ -192,8 +192,8 @@ begin
     u_fifo_rx : entity work.dbg_bridge_fifo
         generic map (
             WIDTH  => 8,
-            DEPTH  => 8,
-            ADDR_W => 3
+            DEPTH  => 64,
+            ADDR_W => 6
         )
         port map (
             clk_i      => clk_i,
