@@ -13,6 +13,7 @@ from litex.soc.cores.clock import *
 from litex.soc.integration.soc import *
 from litex.soc.integration.soc_core import *
 from litex.soc.integration.builder import *
+from litex.soc.cores.cpu import vexriscv
 from litex.soc.cores.led import LedChaser
 from litex.soc.cores.gpio import GPIOIn
 from litex.soc.interconnect import stream
@@ -124,6 +125,7 @@ class _CRG(LiteXModule):
         self.cd_sys4x     = ClockDomain("sys4x")
         self.cd_sys4x_dqs = ClockDomain("sys4x_dqs")
         self.cd_ic        = ClockDomain("ic")
+        self.cd_idelay    = ClockDomain("idelay")
 
         # # #
 
@@ -136,6 +138,7 @@ class _CRG(LiteXModule):
         pll.create_clkout(self.cd_sys,       sys_clk_freq)
         pll.create_clkout(self.cd_sys4x,     4*sys_clk_freq)
         pll.create_clkout(self.cd_sys4x_dqs, 4*sys_clk_freq, phase=90)
+        pll.create_clkout(self.cd_idelay,    400e6)
 
         self.comb += self.cd_ic.clk.eq(self.cd_sys.clk)
         self.comb += self.cd_ic.rst.eq(self.cd_sys.rst)
@@ -143,27 +146,56 @@ class _CRG(LiteXModule):
         # IDelayCtrl
         self.specials += Instance("IDELAYCTRL",
             p_SIM_DEVICE = "ULTRASCALE",
-            i_REFCLK     = self.cd_sys4x.clk,
-            i_RST        = self.cd_sys4x.rst
+            i_REFCLK     = self.cd_idelay.clk,
+            i_RST        = self.cd_idelay.rst
         )
 
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
-    def __init__(self, sys_clk_freq=125e6, **kwargs):
+    def __init__(self, sys_clk_freq=200e6, **kwargs):
         platform_obj = platform.Platform()
+
+        # Monkeypatch VexRiscv to use our preferred memory map
+        # This is necessary because LiteX CPUs have hardcoded memory maps that override SoC settings.
+        # We must override it as a property since it is defined as one in the base class.
+        def get_mem_map(self):
+            return {
+                "rom":            0x80000000,
+                "sram":           0x81000000,
+                "main_ram":       0x00000000,
+                "csr":            0xf0000000,
+                "vexriscv_debug": 0xf00f0000,
+            }
+        vexriscv.VexRiscv.mem_map = property(get_mem_map)
+        # Also ensure IO regions are limited to CSRs to allow caching of high-address ROM/SRAM
+        vexriscv.VexRiscv.io_regions = {0xf0000000: 0x10000000}
 
         # Force main ram at 0x00000000 for backwards compatibility
         kwargs["integrated_main_ram_size"] = 0 # Ensure we use LiteDRAM
         SoCCore.mem_map["main_ram"] = 0x00000000
-        SoCCore.mem_map["sram"]     = 0x80000000 # Move SRAM out of the way
-        SoCCore.mem_map["csr"]      = 0xf0000000 # Move CSR out of the way
+        SoCCore.mem_map["rom"]      = 0x80000000
+        SoCCore.mem_map["sram"]     = 0x81000000
+        SoCCore.mem_map["csr"]      = 0xf0000000
 
         # SoCCore ----------------------------------------------------------------------------------
         SoCCore.__init__(self, platform_obj, sys_clk_freq,
-            cpu_type       = None, # Force no CPU
             ident          = "LiteX SoC on RK-XCKU5P-F",
             **kwargs)
+
+        # Force main_ram back to 0x00000000 (VexRiscv might have moved it)
+        self.mem_map["main_ram"] = 0x00000000
+
+        # Move CPU's reset address to 0x80000000 (ROM)
+        if hasattr(self, "cpu") and self.cpu.human_name != "None":
+            self.cpu.set_reset_address(self.mem_map["rom"])
+
+        # UART Bridge ------------------------------------------------------------------------------
+        # (Handled automatically by SoCCore when uart_name="crossover+uartbone")
+
+        # Constants for DDR4 Training
+        self.add_constant("SDRAM_PHY_PHASES", 4)
+        self.add_constant("SDRAM_PHY_BITSLIPS", 8)
 
         # CRG --------------------------------------------------------------------------------------
         self.crg = _CRG(platform_obj, sys_clk_freq)
@@ -173,7 +205,7 @@ class BaseSoC(SoCCore):
             self.ddrphy = usddrphy.USPDDRPHY(platform_obj.request("ddr4"),
                 memtype          = "DDR4",
                 sys_clk_freq     = sys_clk_freq,
-                iodelay_clk_freq = 4*sys_clk_freq) # Match sys4x
+                iodelay_clk_freq = 400e6)
             self.add_sdram("sdram",
                 phy           = self.ddrphy,
                 module        = MT40A512M16(sys_clk_freq, "1:4"),
@@ -183,10 +215,46 @@ class BaseSoC(SoCCore):
 
         # Leds -------------------------------------------------------------------------------------
         user_leds = platform_obj.request_all("user_led")
-        chaser_leds = Signal(len(user_leds))
-        self.leds = LedChaser(
-            pads         = chaser_leds,
-            sys_clk_freq = sys_clk_freq)
+
+        # Heartbeat LED (LED 0)
+        heartbeat = Signal(32)
+        self.sync += heartbeat.eq(heartbeat + 1)
+        self.comb += user_leds[0].eq(heartbeat[26])
+
+        # DDR4 Training Done (LED 1)
+        self.ddr_done = CSRStorage(description="Set to 1 by BIOS when DDR4 training is done")
+        self.comb += user_leds[1].eq(self.ddr_done.storage)
+
+        # Bus Activity (LED 2 & 3)
+        read_led  = Signal()
+        write_led = Signal()
+        read_timer  = Signal(32)
+        write_timer = Signal(32)
+
+        # Monitor system bus for activity
+        bus = getattr(self, "bus", None)
+        if bus is not None:
+            if hasattr(bus, "ar"): # AXI
+                self.sync += [
+                    If(bus.ar.valid & bus.ar.ready,
+                        read_timer.eq(sys_clk_freq // 10)
+                    ).Elif(read_timer != 0,
+                        read_timer.eq(read_timer - 1)
+                    ),
+                    read_led.eq(read_timer != 0),
+
+                    If(bus.aw.valid & bus.aw.ready,
+                        write_timer.eq(sys_clk_freq // 10)
+                    ).Elif(write_timer != 0,
+                        write_timer.eq(write_timer - 1)
+                    ),
+                    write_led.eq(write_timer != 0),
+                ]
+
+        self.comb += [
+            user_leds[2].eq(read_led),
+            user_leds[3].eq(write_led),
+        ]
 
         # Buttons ----------------------------------------------------------------------------------
         self.buttons = GPIOIn(
@@ -197,20 +265,6 @@ class BaseSoC(SoCCore):
             reader_port = self.sdram.crossbar.get_port(data_width=256),
             writer_port = self.sdram.crossbar.get_port(data_width=256),
         )
-
-        # LED Visualization ------------------------------------------------------------------------
-        dma_leds = Signal(4)
-        self.comb += [
-            dma_leds[0].eq(self.memcopy.busy.status),
-            dma_leds[1].eq(reduce(xor, self.memcopy.data_xor)),
-            dma_leds[2].eq(reduce(and_, self.memcopy.data_and)),
-            dma_leds[3].eq(reduce(or_, self.memcopy.data_or)),
-        ]
-        for i in range(len(user_leds)):
-            if i < 4:
-                self.comb += user_leds[i].eq(Mux(self.memcopy.busy.status, dma_leds[i], chaser_leds[i]))
-            else:
-                self.comb += user_leds[i].eq(chaser_leds[i])
 
     def do_finalize(self):
         SoCCore.do_finalize(self)
@@ -225,34 +279,51 @@ def main():
     soc_core_args(parser)
     parser.add_argument("--build", action="store_true", help="Build bitstream")
     parser.add_argument("--load",  action="store_true", help="Load bitstream")
-    parser.add_argument("--sys-clk-freq", default=125e6, type=float, help="System clock frequency")
+    parser.add_argument("--sys-clk-freq", default=200e6, type=float, help="System clock frequency")
 
     parser.set_defaults(bus_standard="axi")
-    parser.set_defaults(uart_name="uartbone")
+    parser.set_defaults(uart_name="crossover")
+    parser.set_defaults(with_uartbone=True)
     parser.set_defaults(uart_baudrate=4000000)
-    parser.set_defaults(integrated_rom_size=0)
+    parser.set_defaults(integrated_rom_size=0x10000)
+    parser.set_defaults(integrated_sram_size=0x4000)
 
     args = parser.parse_args()
 
-    # Workaround for LiteX 2024.12 CSR name extraction bug in sandbox
-    from litex.soc.interconnect import csr
-    _old_CSRBase_init = csr._CSRBase.__init__
-    def _new_CSRBase_init(self, size, name=None, n=None):
-        if name is None: name = "unnamed"
-        _old_CSRBase_init(self, size, name, n)
-    csr._CSRBase.__init__ = _new_CSRBase_init
+    # Workaround for LiteX / Migen CSR name extraction bug in Python 3.11+
+    import migen.fhdl.tracer as tracer
+    import opcode
+    _old_get_var_name = tracer.get_var_name
+    def _new_get_var_name(frame):
+        try:
+            code = frame.f_code
+            lasti = frame.f_lasti
+            for i in range(lasti + 2, min(lasti + 20, len(code.co_code)), 2):
+                op = code.co_code[i]
+                opc = opcode.opname[op]
+                if opc in ["STORE_NAME", "STORE_ATTR", "STORE_FAST", "STORE_DEREF", "STORE_GLOBAL"]:
+                    name_idx = code.co_code[i+1]
+                    if opc == "STORE_FAST":
+                        return code.co_varnames[name_idx]
+                    if opc == "STORE_DEREF":
+                        # Python 3.11+ cellvars and freevars are combined in some contexts
+                        combined = code.co_cellvars + code.co_freevars
+                        return combined[name_idx]
+                    return code.co_names[name_idx]
+        except:
+            pass
+        return _old_get_var_name(frame)
+    tracer.get_var_name = _new_get_var_name
 
     # Final check: remove cpu_type from soc_core_argdict to avoid double passing
     kwargs = soc_core_argdict(args)
-    if "cpu_type" in kwargs:
-        del kwargs["cpu_type"]
 
     soc = BaseSoC(
         sys_clk_freq = args.sys_clk_freq,
         **kwargs
     )
 
-    builder = Builder(soc, csr_csv="csr.csv", compile_software=False)
+    builder = Builder(soc, csr_csv="csr.csv", compile_software=True)
     if args.build:
         builder.build(build_name="rk_xcku5p")
     else:

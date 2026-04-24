@@ -24,4 +24,28 @@ Examples:
 
 # Write a memory word (0x0 = 0x12345678)
 ./sw/poke.py -d /dev/ttyUSB1 -b 115200 -a 0x0 -v 0x12345678
-``` 
+```
+
+#### LiteX Crossover UART Usage
+
+The LiteX based examples (e.g., `litex_xcku5p`) use a crossover UART. This allows multiple clients to share the same physical UART for both a CPU console and a memory bridge.
+
+1.  **Start the LiteX Server:**
+    In a dedicated terminal, start the server to manage the physical UART connection:
+    ```bash
+    litex_server --uart --uart-port /dev/ttyUSB1 --uart-baudrate 4000000
+    ```
+
+2.  **Access the CPU Console:**
+    In another terminal, connect to the server's console port:
+    ```bash
+    litex_term crossover
+    ```
+    (Note: `litex_term` connects to `localhost:1234` by default when the port is specified as `crossover`).
+
+3.  **Use the Software Tools:**
+    The provided tools in `sw/` automatically detect the TCP address and connect via the server:
+    ```bash
+    # Read DDR4 location
+    ./sw/peek.py -d localhost:1234 -a 0x0
+    ```
