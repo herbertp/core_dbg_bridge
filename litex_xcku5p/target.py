@@ -125,6 +125,7 @@ class _CRG(LiteXModule):
         self.cd_sys4x     = ClockDomain("sys4x")
         self.cd_sys4x_dqs = ClockDomain("sys4x_dqs")
         self.cd_ic        = ClockDomain("ic")
+        self.cd_idelay    = ClockDomain("idelay")
 
         # # #
 
@@ -137,6 +138,7 @@ class _CRG(LiteXModule):
         pll.create_clkout(self.cd_sys,       sys_clk_freq)
         pll.create_clkout(self.cd_sys4x,     4*sys_clk_freq)
         pll.create_clkout(self.cd_sys4x_dqs, 4*sys_clk_freq, phase=90)
+        pll.create_clkout(self.cd_idelay,    300e6)
 
         self.comb += self.cd_ic.clk.eq(self.cd_sys.clk)
         self.comb += self.cd_ic.rst.eq(self.cd_sys.rst)
@@ -144,14 +146,14 @@ class _CRG(LiteXModule):
         # IDelayCtrl
         self.specials += Instance("IDELAYCTRL",
             p_SIM_DEVICE = "ULTRASCALE",
-            i_REFCLK     = self.cd_sys4x.clk,
-            i_RST        = self.cd_sys4x.rst
+            i_REFCLK     = self.cd_idelay.clk,
+            i_RST        = self.cd_idelay.rst
         )
 
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
-    def __init__(self, sys_clk_freq=125e6, **kwargs):
+    def __init__(self, sys_clk_freq=300e6, **kwargs):
         platform_obj = platform.Platform()
 
         # Monkeypatch VexRiscv to use our preferred memory map
@@ -191,6 +193,10 @@ class BaseSoC(SoCCore):
         # UART Bridge ------------------------------------------------------------------------------
         # (Handled automatically by SoCCore when uart_name="crossover+uartbone")
 
+        # Constants for DDR4 Training
+        self.add_constant("SDRAM_PHY_PHASES", 4)
+        self.add_constant("SDRAM_PHY_BITSLIPS", 8)
+
         # CRG --------------------------------------------------------------------------------------
         self.crg = _CRG(platform_obj, sys_clk_freq)
 
@@ -199,7 +205,7 @@ class BaseSoC(SoCCore):
             self.ddrphy = usddrphy.USPDDRPHY(platform_obj.request("ddr4"),
                 memtype          = "DDR4",
                 sys_clk_freq     = sys_clk_freq,
-                iodelay_clk_freq = 4*sys_clk_freq) # Match sys4x
+                iodelay_clk_freq = 300e6)
             self.add_sdram("sdram",
                 phy           = self.ddrphy,
                 module        = MT40A512M16(sys_clk_freq, "1:4"),
@@ -273,10 +279,11 @@ def main():
     soc_core_args(parser)
     parser.add_argument("--build", action="store_true", help="Build bitstream")
     parser.add_argument("--load",  action="store_true", help="Load bitstream")
-    parser.add_argument("--sys-clk-freq", default=125e6, type=float, help="System clock frequency")
+    parser.add_argument("--sys-clk-freq", default=300e6, type=float, help="System clock frequency")
 
     parser.set_defaults(bus_standard="axi")
-    parser.set_defaults(uart_name="crossover+uartbone")
+    parser.set_defaults(uart_name="crossover")
+    parser.set_defaults(with_uartbone=True)
     parser.set_defaults(uart_baudrate=4000000)
     parser.set_defaults(integrated_rom_size=0x10000)
     parser.set_defaults(integrated_sram_size=0x4000)
