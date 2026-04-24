@@ -52,7 +52,7 @@ class _CRG(LiteXModule):
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
-    def __init__(self, sys_clk_freq=125e6, **kwargs):
+    def __init__(self, sys_clk_freq=300e6, **kwargs):
         platform_obj = platform.Platform()
 
         # SoCCore ----------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ def main():
     soc_core_args(parser)
     parser.add_argument("--build", action="store_true", help="Build bitstream")
     parser.add_argument("--load",  action="store_true", help="Load bitstream")
-    parser.add_argument("--sys-clk-freq", default=125e6, type=float, help="System clock frequency")
+    parser.add_argument("--sys-clk-freq", default=300e6, type=float, help="System clock frequency")
 
     parser.set_defaults(bus_standard="axi")
     parser.set_defaults(uart_name="serial")
