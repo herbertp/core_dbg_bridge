@@ -41,4 +41,11 @@ python3 target.py --load
 
 The SoC is configured with a VexRiscv CPU and a standard serial UART at 115200 baud. The BIOS will automatically perform DDR4 training on startup.
 
-Python tools in the `sw/` directory can still be used if the SoC is built with `uartbone` or if a bridge is active. By default, the UART is dedicated to the CPU console.
+**Configuration for 2400MT/s:**
+The SoC runs at 300MHz to achieve 2400MT/s on the DDR4. To facilitate timing closure, the CPU runs on a separate 150MHz clock domain.
+
+**Memory Map:**
+- Main RAM (DDR4): 0x00000000 (2GB)
+- ROM: 0x80000000
+- SRAM: 0x81000000
+- CSR: 0xf0000000
