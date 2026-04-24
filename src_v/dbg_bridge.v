@@ -212,8 +212,8 @@ u_fifo_tx
 dbg_bridge_fifo
 #(
     .WIDTH(8),
-    .DEPTH(8),
-    .ADDR_W(3)
+    .DEPTH(64),
+    .ADDR_W(6)
 )
 u_fifo_rx
 (

@@ -20,13 +20,14 @@ def print_progress(iteration, total, prefix='Progress', suffix='', decimals=1, b
 
 def main():
     parser = argparse.ArgumentParser(description="Dump memory to stdout as raw binary data")
+    parser.add_argument('-t', dest='type',    default='uart',                     help='Device type (uart|socket|litex)')
     parser.add_argument('-d', dest='device',  default='/dev/ttyUSB1',             help='Serial Device')
     parser.add_argument('-b', dest='baud',    default=4000000,       type=int,    help='Baud rate')
     parser.add_argument('-a', dest='address', required=True,                      help='Address to dump from')
     parser.add_argument('-s', dest='size',    required=True,                      help='Size to dump')
     args = parser.parse_args()
 
-    bus_if = BusInterface('litex', args.device, args.baud)
+    bus_if = BusInterface(args.type, args.device, args.baud)
 
     try:
         addr = int(args.address, 0)

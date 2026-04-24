@@ -130,7 +130,6 @@ class UartBusInterface:
             self.connect()
 
         idx = 0
-        remainder = length
         data = bytearray(length)
 
         if self.prog_cb:
@@ -139,35 +138,53 @@ class UartBusInterface:
         if max_block_size == -1:
             max_block_size = self.BLOCK_SIZE
 
-        while remainder > 0:
-            l = min(max_block_size, remainder)
+        # Pipelined read parameters
+        # max_in_flight * 6 bytes (cmd) must fit in target RX FIFO (64 bytes)
+        # 8 * 6 = 48 bytes < 64.
+        max_in_flight = 8
 
-            cmd = bytearray([
-                self.CMD_READ,
-                l & 0xFF,
-                (addr >> 24) & 0xFF,
-                (addr >> 16) & 0xFF,
-                (addr >> 8)  & 0xFF,
-                (addr >> 0)  & 0xFF
-            ])
+        commands_issued = 0
+        bytes_requested = 0
+        bytes_received = 0
 
-            # Write to serial port
-            self.uart.write(cmd)
+        current_read_addr = addr
+        pending_lengths = []
 
-            # Read block response
-            resp = self.uart.read(l)
-            if len(resp) < l:
-                raise Exception(f"Timeout reading from UART (expected {l}, got {len(resp)})")
+        while bytes_received < length:
+            # Fill pipeline
+            while commands_issued < max_in_flight and bytes_requested < length:
+                l = min(max_block_size, length - bytes_requested)
 
-            data[idx:idx+l] = resp
-            idx += l
+                cmd = bytearray([
+                    self.CMD_READ,
+                    l & 0xFF,
+                    (current_read_addr >> 24) & 0xFF,
+                    (current_read_addr >> 16) & 0xFF,
+                    (current_read_addr >> 8)  & 0xFF,
+                    (current_read_addr >> 0)  & 0xFF
+                ])
 
-            if self.prog_cb:
-                self.prog_cb(idx, length)
+                self.uart.write(cmd)
 
-            if addr_incr:
-                addr += l
-            remainder -= l
+                pending_lengths.append(l)
+                bytes_requested += l
+                commands_issued += 1
+                if addr_incr:
+                    current_read_addr += l
+
+            # Receive one block
+            if pending_lengths:
+                l = pending_lengths.pop(0)
+                resp = self.uart.read(l)
+                if len(resp) < l:
+                    raise Exception(f"Timeout reading from UART (expected {l}, got {len(resp)})")
+
+                data[bytes_received:bytes_received+l] = resp
+                bytes_received += l
+                commands_issued -= 1
+
+                if self.prog_cb:
+                    self.prog_cb(bytes_received, length)
 
         return data
 
